@@ -14,7 +14,8 @@ export function PwaUpdate() {
 
   useEffect(() => {
     if (process.env.NODE_ENV === "development") return;
-    if (typeof window === "undefined" || !("serviceWorker" in navigator)) return;
+    if (typeof window === "undefined" || !("serviceWorker" in navigator))
+      return;
 
     let cancelled = false;
     (async () => {
@@ -44,11 +45,11 @@ export function PwaUpdate() {
   if (!skip) return null;
 
   return (
-    <div className="fixed bottom-4 left-1/2 z-50 flex -translate-x-1/2 items-center gap-3 rounded-xl border border-charcoal bg-ash px-4 py-3 shadow-lg">
+    <div className="fixed bottom-4 left-1/2 z-50 w-max max-w-[96vw] flex -translate-x-1/2 items-center gap-3 rounded-xl border border-charcoal bg-ash px-4 py-3 shadow-lg">
       <span className="text-sm text-silver">Có bản cập nhật mới</span>
       <button
         onClick={skip}
-        className="flex items-center gap-1.5 rounded-lg bg-azure px-3 py-1.5 text-sm font-medium text-[#08233f] transition hover:brightness-110"
+        className="flex items-center w-max gap-1.5 rounded-lg bg-azure px-3 py-1.5 text-sm font-medium text-[#08233f] transition hover:brightness-110"
       >
         <ArrowClockwise size={15} /> Tải lại
       </button>
