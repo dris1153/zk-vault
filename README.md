@@ -70,6 +70,10 @@ scripts/        verify, db-reset, zero-knowledge guard
 Design system: `DESIGN.md` (Electric Azure on Obsidian, dark-only).
 Implementation plan + history: `plans/260605-1204-zk-credential-vault/`.
 
+In-app user guide (Vietnamese, with diagrams): the **`/docs`** route - storage
+workflow, unlock flow, deployment A-Z, recovery, and FAQ. This README is the
+English dev reference; `/docs` is the canonical user-facing guide.
+
 ## Status
 
 v1 complete: crypto, backend, session, CRUD, UI, hardening (export/import,

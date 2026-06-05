@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { X } from "@phosphor-icons/react/dist/ssr";
+import Link from "next/link";
+import { X, BookOpen } from "@phosphor-icons/react/dist/ssr";
 import { useSettings } from "@/lib/vault/settings-store";
 import { useVault } from "@/lib/vault/use-vault";
 import { Modal, IconButton, Field } from "./ui-kit";
@@ -59,6 +60,15 @@ export function SettingsDialog({
         {tab === "security" && <SecuritySettings />}
         {tab === "backup" && dek && <SettingsBackup dek={dek} />}
         {tab === "account" && <SettingsAccount />}
+      </div>
+
+      <div className="border-t border-charcoal px-5 py-3">
+        <Link
+          href="/docs"
+          className="inline-flex items-center gap-1.5 text-sm text-silver transition hover:text-snow"
+        >
+          <BookOpen size={15} /> Tài liệu & hướng dẫn
+        </Link>
       </div>
     </Modal>
   );

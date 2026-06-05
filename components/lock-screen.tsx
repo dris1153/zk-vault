@@ -1,7 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Eye, EyeSlash, Vault, ArrowRight } from "@phosphor-icons/react/dist/ssr";
+import Link from "next/link";
+import {
+  Eye,
+  EyeSlash,
+  Vault,
+  ArrowRight,
+  BookOpen,
+} from "@phosphor-icons/react/dist/ssr";
 import { useVault } from "@/lib/vault/use-vault";
 import { PillButton } from "./ui-kit";
 
@@ -105,6 +112,13 @@ export function LockScreen({
             (Settings &rarr; Export).
           </p>
         )}
+
+        <Link
+          href="/docs"
+          className="mt-5 inline-flex items-center gap-1.5 text-sm text-silver transition hover:text-snow"
+        >
+          <BookOpen size={15} /> Tài liệu
+        </Link>
       </div>
     </main>
   );
