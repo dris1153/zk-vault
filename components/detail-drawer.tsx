@@ -10,6 +10,7 @@ import {
   ArrowSquareOut,
   Trash,
   Timer,
+  Check,
 } from "@phosphor-icons/react/dist/ssr";
 import type { VaultItem } from "@/lib/vault/items";
 import { TYPE_ICON, TYPE_LABEL } from "@/lib/ui/icons";
@@ -83,7 +84,8 @@ export function DetailDrawer({
                 </h3>
                 <p className="mt-0.5 text-xs text-smoke">
                   {TYPE_LABEL[item.type]}
-                  {tags.length > 0 && " · " + tags.map((t) => "#" + t).join(" ")}
+                  {tags.length > 0 &&
+                    " · " + tags.map((t) => "#" + t).join(" ")}
                 </p>
               </div>
               <IconButton onClick={() => onEdit(item)} aria-label="Edit">
@@ -125,7 +127,9 @@ export function DetailDrawer({
             </div>
 
             <div className="flex items-center justify-between border-t border-charcoal px-5 py-3.5 text-xs text-smoke">
-              <span>Updated {new Date(item.updatedAt).toLocaleDateString()}</span>
+              <span>
+                Updated {new Date(item.updatedAt).toLocaleDateString()}
+              </span>
               {confirming ? (
                 <span className="flex items-center gap-2">
                   <button
@@ -177,6 +181,7 @@ function Row({
   favicon?: boolean;
 }) {
   const text = typeof value === "string" ? value : "";
+  const [copiedTemp, setCopiedTemp] = useState(false);
   if (!text) return null;
   const isSecret = field.kind === "secret";
   const isSeed = field.name === "seed_phrase";
@@ -199,7 +204,9 @@ function Row({
                 size={18}
                 favicon={favicon}
               />
-              <span className="truncate">{findPlatform(text)?.name ?? text}</span>
+              <span className="truncate">
+                {findPlatform(text)?.name ?? text}
+              </span>
             </span>
           ) : field.kind === "db_engine" ? (
             <span className="flex min-w-0 flex-1 items-center gap-2 text-sm">
@@ -210,7 +217,7 @@ function Row({
             <span
               className={`min-w-0 flex-1 break-all text-sm ${
                 isSecret ? "font-mono" : ""
-              }`}
+              } ${field.name === "content" ? "whitespace-pre-wrap" : ""}`}
             >
               {isSecret && !revealed ? "••••••••••••" : text}
             </span>
@@ -230,8 +237,21 @@ function Row({
               <ArrowSquareOut size={17} />
             </a>
           )}
-          <IconButton onClick={() => onCopy(text)} aria-label="Copy">
-            <Copy size={17} />
+          <IconButton
+            onClick={() => {
+              onCopy(text);
+              setCopiedTemp(true);
+              setTimeout(() => {
+                setCopiedTemp(false);
+              }, 1500);
+            }}
+            aria-label="Copy"
+          >
+            {copiedTemp ? (
+              <Check size={17} className="fill-azure" />
+            ) : (
+              <Copy size={17} />
+            )}
           </IconButton>
         </div>
       )}
@@ -263,7 +283,9 @@ function SeedGrid({ phrase }: { phrase: string }) {
           key={i}
           className="rounded-md border border-charcoal bg-ash px-2 py-1.5 font-mono text-[13px]"
         >
-          <span className="mr-1 text-smoke">{String(i + 1).padStart(2, "0")}</span>
+          <span className="mr-1 text-smoke">
+            {String(i + 1).padStart(2, "0")}
+          </span>
           {w}
         </span>
       ))}

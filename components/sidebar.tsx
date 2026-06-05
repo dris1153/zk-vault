@@ -133,15 +133,17 @@ export function Sidebar({
               <button
                 key={t}
                 onClick={() => onToggleTag(t)}
-                className={`flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-sm transition ${
+                className={`flex items-center justify-between rounded-lg px-2.5 py-1.5 text-sm max-w-full overflow-hidden transition ${
                   on
-                    ? "bg-azure/[0.08] text-snow"
+                    ? "bg-azure/8 text-snow"
                     : "text-silver hover:bg-ash hover:text-snow"
                 }`}
               >
+                <div className="flex items-center gap-2 flex-1 overflow-hidden">
+                  <Hash size={14} className="text-graphite shrink-0" />
+                  <span className="truncate">{t}</span>
+                </div>
                 <CheckboxBox checked={on} />
-                <Hash size={14} className="text-graphite" />
-                <span className="truncate">{t}</span>
               </button>
             );
           })}
