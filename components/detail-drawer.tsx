@@ -64,7 +64,7 @@ export function DetailDrawer({
         onClick={onClose}
       />
       <aside
-        className={`fixed right-0 top-0 z-40 flex h-full w-[420px] max-w-[92vw] flex-col border-l border-charcoal bg-obsidian transition-transform duration-200 ${
+        className={`fixed right-0 top-0 z-40 flex h-full w-full flex-col border-l border-charcoal bg-obsidian transition-transform duration-200 sm:w-[420px] sm:max-w-[92vw] ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -241,7 +241,7 @@ function Row({
 function SeedGrid({ phrase }: { phrase: string }) {
   const words = phrase.trim().split(/\s+/);
   return (
-    <div className="grid grid-cols-3 gap-2">
+    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
       {words.map((w, i) => (
         <span
           key={i}

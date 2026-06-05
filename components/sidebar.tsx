@@ -24,6 +24,8 @@ interface SidebarProps {
   onOpenSettings: () => void;
   onOpenSecurity: () => void;
   issueCount: number;
+  className?: string;
+  onNavigate?: () => void;
 }
 
 export function Sidebar({
@@ -35,16 +37,26 @@ export function Sidebar({
   onOpenSettings,
   onOpenSecurity,
   issueCount,
+  className = "",
+  onNavigate,
 }: SidebarProps) {
-  const countOf = (t: VaultItemType) => items.filter((i) => i.type === t).length;
+  const countOf = (t: VaultItemType) =>
+    items.filter((i) => i.type === t).length;
   const favCount = items.filter((i) => i.favorite).length;
   const tags = uniqueTags(items);
+  // Wrap an action so mobile (drawer) usage closes after selecting.
+  const nav = (fn: () => void) => () => {
+    fn();
+    onNavigate?.();
+  };
 
   return (
-    <aside className="flex w-60 shrink-0 flex-col gap-1 overflow-y-auto border-r border-charcoal p-3">
+    <aside
+      className={`flex w-60 shrink-0 flex-col gap-1 overflow-y-auto border-r border-charcoal p-3 ${className}`}
+    >
       <div className="flex items-center gap-2.5 px-2.5 pb-4 pt-2 font-medium">
         <BrandMark variant="tile" size={22} />
-        Vault
+        ZKVault
       </div>
 
       <NavItem
@@ -52,10 +64,10 @@ export function Sidebar({
         label="All items"
         count={items.length}
         active={category === "all" && !tag}
-        onClick={() => {
+        onClick={nav(() => {
           onCategory("all");
           onTag(null);
-        }}
+        })}
       />
       {TYPE_ORDER.map((t) => (
         <NavItem
@@ -64,10 +76,10 @@ export function Sidebar({
           label={pluralize(TYPE_LABEL[t])}
           count={countOf(t)}
           active={category === t && !tag}
-          onClick={() => {
+          onClick={nav(() => {
             onCategory(t);
             onTag(null);
-          }}
+          })}
         />
       ))}
       <NavItem
@@ -75,10 +87,10 @@ export function Sidebar({
         label="Favorites"
         count={favCount}
         active={category === "favorites" && !tag}
-        onClick={() => {
+        onClick={nav(() => {
           onCategory("favorites");
           onTag(null);
-        }}
+        })}
       />
 
       {tags.length > 0 && (
@@ -90,7 +102,7 @@ export function Sidebar({
           {tags.map((t) => (
             <button
               key={t}
-              onClick={() => onTag(tag === t ? null : t)}
+              onClick={nav(() => onTag(tag === t ? null : t))}
               className={`flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-sm transition ${
                 tag === t
                   ? "bg-azure/[0.08] text-snow"
@@ -106,7 +118,7 @@ export function Sidebar({
 
       <div className="mt-auto" />
       <button
-        onClick={onOpenSecurity}
+        onClick={nav(onOpenSecurity)}
         className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm text-silver transition hover:bg-ash hover:text-snow"
       >
         <ShieldCheck size={18} />
@@ -118,7 +130,7 @@ export function Sidebar({
         )}
       </button>
       <button
-        onClick={onOpenSettings}
+        onClick={nav(onOpenSettings)}
         className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm text-silver transition hover:bg-ash hover:text-snow"
       >
         <Gear size={18} />

@@ -122,7 +122,7 @@ export function LockScreen({
           </PillButton>
         )}
 
-        <div className="flex items-center justify-center gap-2 mt-4">
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
           <button
             type="button"
             className="text-sm text-azure-link hover:underline"

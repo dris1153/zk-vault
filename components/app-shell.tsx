@@ -30,6 +30,7 @@ export function AppShell() {
   const [addOpen, setAddOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [securityOpen, setSecurityOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false); // mobile drawer
   const [healthDeep, setHealthDeep] = useState(false); // latches once the panel is opened
   const searchRef = useRef<HTMLInputElement>(null);
 
@@ -37,6 +38,15 @@ export function AppShell() {
     breach: breachEnabled && securityOpen,
     weak: healthDeep,
   });
+
+  useEffect(() => {
+    if (!sidebarOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSidebarOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [sidebarOpen]);
 
   const filtered = useMemo(() => {
     let list = items;
@@ -79,8 +89,9 @@ export function AppShell() {
   const modalOpen = addOpen || editing !== null;
 
   return (
-    <div className="grid h-[100dvh] grid-cols-[240px_1fr]">
+    <div className="grid h-[100dvh] grid-cols-1 md:grid-cols-[240px_1fr]">
       <Sidebar
+        className="hidden md:flex"
         items={items}
         category={category}
         onCategory={setCategory}
@@ -94,6 +105,35 @@ export function AppShell() {
         issueCount={report?.totalIssues ?? 0}
       />
 
+      {/* Mobile sidebar drawer */}
+      <div
+        className={`fixed inset-0 z-40 bg-black/50 transition-opacity md:hidden ${
+          sidebarOpen ? "opacity-100" : "pointer-events-none opacity-0"
+        }`}
+        onClick={() => setSidebarOpen(false)}
+      />
+      <div
+        className={`fixed inset-y-0 left-0 z-50 transition-transform duration-200 md:hidden ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <Sidebar
+          className="h-full"
+          items={items}
+          category={category}
+          onCategory={setCategory}
+          tag={tag}
+          onTag={setTag}
+          onOpenSettings={() => setSettingsOpen(true)}
+          onOpenSecurity={() => {
+            setHealthDeep(true);
+            setSecurityOpen(true);
+          }}
+          issueCount={report?.totalIssues ?? 0}
+          onNavigate={() => setSidebarOpen(false)}
+        />
+      </div>
+
       <div className="flex min-w-0 flex-col">
         <TopBar
           ref={searchRef}
@@ -101,6 +141,7 @@ export function AppShell() {
           onQuery={setQuery}
           onAdd={() => setAddOpen(true)}
           onLock={lock}
+          onMenu={() => setSidebarOpen(true)}
         />
         <div className="flex-1 overflow-y-auto">
           <ItemGrid
