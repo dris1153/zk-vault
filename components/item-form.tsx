@@ -6,6 +6,7 @@ import type { VaultItemType } from "@/lib/supabase/types";
 import { FIELDS_BY_TYPE } from "@/lib/ui/item-fields";
 import { Field, TextInput, TextArea } from "./ui-kit";
 import { PlatformPicker } from "./platform-picker";
+import { TotpField } from "./totp-field";
 
 export type FormData = Record<string, unknown>;
 
@@ -36,6 +37,8 @@ export function ItemForm({
               <SecretInput value={str} onChange={(v) => set(f.name, v)} />
             ) : f.kind === "platform" ? (
               <PlatformPicker value={str} onChange={(v) => set(f.name, v)} />
+            ) : f.kind === "totp" ? (
+              <TotpField value={str} onChange={(v) => set(f.name, v)} />
             ) : f.kind === "tags" ? (
               <TagsInput
                 value={Array.isArray(value.tags) ? (value.tags as string[]) : []}

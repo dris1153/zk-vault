@@ -19,6 +19,7 @@ import { useClipboard } from "@/lib/ui/use-clipboard";
 import { useSettings } from "@/lib/vault/settings-store";
 import { IconButton } from "./ui-kit";
 import { PlatformIcon } from "./platform-icon";
+import { TotpDisplay } from "./totp-display";
 
 export function DetailDrawer({
   item,
@@ -93,19 +94,31 @@ export function DetailDrawer({
             <div className="flex-1 overflow-y-auto px-5 pb-5">
               {FIELDS_BY_TYPE[item.type]
                 .filter((f) => f.name !== "title" && f.name !== "tags")
-                .map((f) => (
-                  <Row
-                    key={f.name}
-                    field={f}
-                    value={item.data[f.name]}
-                    revealed={revealed.has(f.name)}
-                    onReveal={() => toggle(f.name)}
-                    onCopy={(v) => copy(f.name, v)}
-                    copied={copiedField === f.name}
-                    remaining={remaining}
-                    favicon={favicon}
-                  />
-                ))}
+                .map((f) =>
+                  f.kind === "totp" ? (
+                    <TotpDisplay
+                      key={f.name}
+                      secret={
+                        typeof item.data[f.name] === "string"
+                          ? (item.data[f.name] as string)
+                          : ""
+                      }
+                      onCopy={(code) => copy(f.name, code)}
+                    />
+                  ) : (
+                    <Row
+                      key={f.name}
+                      field={f}
+                      value={item.data[f.name]}
+                      revealed={revealed.has(f.name)}
+                      onReveal={() => toggle(f.name)}
+                      onCopy={(v) => copy(f.name, v)}
+                      copied={copiedField === f.name}
+                      remaining={remaining}
+                      favicon={favicon}
+                    />
+                  ),
+                )}
             </div>
 
             <div className="flex items-center justify-between border-t border-charcoal px-5 py-3.5 text-xs text-smoke">
