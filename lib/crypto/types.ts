@@ -1,12 +1,14 @@
 // Crypto domain types. All binary values are base64-encoded strings so they
 // can be stored as JSON in Supabase without binary columns.
 
+// KEK derivation params. NOTE: the auth secret is NOT derived from these - its
+// salt is email-derived and its cost is the fixed AUTH_KDF constant, so login
+// needs no DB read (avoids the read-config-before-auth circular dependency).
 export interface KdfParams {
   algo: "argon2id";
   memKiB: number; // Argon2 memory cost in KiB
   iterations: number; // Argon2 time cost
   parallelism: number; // Argon2 lanes
-  saltAuth: string; // base64 (16 bytes) - derives the Supabase Auth secret
   saltMaster: string; // base64 (16 bytes) - derives KEK that wraps the DEK
   saltRecovery: string; // base64 (16 bytes) - derives KEK from the recovery key
 }
@@ -20,6 +22,7 @@ export type WrappedKey = EncryptedBlob;
 
 /** Everything Supabase stores in the vault_config row (all non-secret/ciphertext). */
 export interface VaultConfigCrypto {
+  version: number; // envelope schema version, for future KDF/AEAD migrations
   kdfParams: KdfParams;
   wrappedDekMaster: WrappedKey;
   wrappedDekRecovery: WrappedKey;

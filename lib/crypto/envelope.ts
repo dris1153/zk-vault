@@ -5,6 +5,9 @@
 //   KEK_recovery (from the 24-word recovery key). Supabase stores both wrapped
 //   copies. Changing the master password only re-wraps the DEK - items are
 //   never re-encrypted.
+//
+// The Supabase Auth password (authSecret) is derived separately from
+// (master + email); see kdf.ts. It is NOT part of KdfParams.
 
 import { DEFAULT_KDF, deriveKEK, deriveAuthSecret } from "./kdf";
 import { encryptBytes, decryptBytes } from "./aes";
@@ -20,6 +23,7 @@ import type {
 
 const SALT_BYTES = 16;
 const DEK_BYTES = 32;
+export const ENVELOPE_VERSION = 1;
 
 function freshParams(tuning?: KdfTuning): KdfParams {
   return {
@@ -27,7 +31,6 @@ function freshParams(tuning?: KdfTuning): KdfParams {
     memKiB: tuning?.memKiB ?? DEFAULT_KDF.memKiB,
     iterations: tuning?.iterations ?? DEFAULT_KDF.iterations,
     parallelism: tuning?.parallelism ?? DEFAULT_KDF.parallelism,
-    saltAuth: bytesToBase64(randomBytes(SALT_BYTES)),
     saltMaster: bytesToBase64(randomBytes(SALT_BYTES)),
     saltRecovery: bytesToBase64(randomBytes(SALT_BYTES)),
   };
@@ -48,28 +51,36 @@ async function exportDek(dek: CryptoKey): Promise<Uint8Array> {
 /** First-run provisioning: generates salts, DEK, and recovery key. */
 export async function createVault(
   masterPassword: string,
+  email: string,
   tuning?: KdfTuning,
 ): Promise<CreatedVault> {
   const kdfParams = freshParams(tuning);
   const dekRaw = randomBytes(DEK_BYTES);
   const recoveryWords = generateRecoveryWords();
+  // Derive the recovery KEK from the SAME normalized phrase that unlock uses,
+  // so the recovery wrap is always unwrappable. Never feed raw words to the KDF.
+  const recoveryPhrase = normalizeRecoveryPhrase(recoveryWords);
 
   const kekMaster = await deriveKEK(masterPassword, kdfParams, "master");
-  const kekRecovery = await deriveKEK(
-    recoveryWords.join(" "),
-    kdfParams,
-    "recovery",
-  );
+  const kekRecovery = await deriveKEK(recoveryPhrase, kdfParams, "recovery");
 
   const [wrappedDekMaster, wrappedDekRecovery, authSecret] = await Promise.all([
     encryptBytes(dekRaw, kekMaster),
     encryptBytes(dekRaw, kekRecovery),
-    deriveAuthSecret(masterPassword, kdfParams),
+    deriveAuthSecret(masterPassword, email, tuning),
   ]);
 
+  const dek = await importDek(dekRaw);
+  dekRaw.fill(0); // best-effort scrub of raw key material from the heap
+
   return {
-    config: { kdfParams, wrappedDekMaster, wrappedDekRecovery },
-    dek: await importDek(dekRaw),
+    config: {
+      version: ENVELOPE_VERSION,
+      kdfParams,
+      wrappedDekMaster,
+      wrappedDekRecovery,
+    },
+    dek,
     recoveryWords,
     authSecret,
   };
@@ -82,7 +93,9 @@ export async function unlockWithMaster(
 ): Promise<CryptoKey> {
   const kek = await deriveKEK(masterPassword, cfg.kdfParams, "master");
   const dekRaw = await decryptBytes(cfg.wrappedDekMaster, kek);
-  return importDek(dekRaw);
+  const dek = await importDek(dekRaw);
+  dekRaw.fill(0);
+  return dek;
 }
 
 /** Unlock with the 24-word recovery key. Throws on invalid/incorrect words. */
@@ -93,36 +106,36 @@ export async function unlockWithRecovery(
   const phrase = normalizeRecoveryPhrase(words);
   const kek = await deriveKEK(phrase, cfg.kdfParams, "recovery");
   const dekRaw = await decryptBytes(cfg.wrappedDekRecovery, kek);
-  return importDek(dekRaw);
-}
-
-/** Re-derive the Supabase Auth password for an already-derived config. */
-export async function authSecretFor(
-  masterPassword: string,
-  cfg: VaultConfigCrypto,
-): Promise<string> {
-  return deriveAuthSecret(masterPassword, cfg.kdfParams);
+  const dek = await importDek(dekRaw);
+  dekRaw.fill(0);
+  return dek;
 }
 
 /**
- * Change the master password: rotate saltAuth + saltMaster and re-wrap the DEK.
- * Recovery key and all encrypted items remain untouched.
+ * Change the master password: rotate saltMaster and re-wrap the DEK; re-derive
+ * the auth secret. Recovery key and all encrypted items remain untouched.
+ *
+ * PERSISTENCE CONTRACT: the caller MUST persist both results
+ * (kdfParams, wrappedDekMaster) atomically together with the Supabase Auth
+ * password update (authSecret). A partial write bricks the vault.
  */
 export async function changeMaster(
   dek: CryptoKey,
   newPassword: string,
+  email: string,
   cfg: VaultConfigCrypto,
+  tuning?: KdfTuning,
 ): Promise<ChangeMasterResult> {
   const dekRaw = await exportDek(dek);
   const kdfParams: KdfParams = {
     ...cfg.kdfParams,
-    saltAuth: bytesToBase64(randomBytes(SALT_BYTES)),
     saltMaster: bytesToBase64(randomBytes(SALT_BYTES)),
   };
   const kek = await deriveKEK(newPassword, kdfParams, "master");
   const [wrappedDekMaster, authSecret] = await Promise.all([
     encryptBytes(dekRaw, kek),
-    deriveAuthSecret(newPassword, kdfParams),
+    deriveAuthSecret(newPassword, email, tuning),
   ]);
+  dekRaw.fill(0);
   return { kdfParams, wrappedDekMaster, authSecret };
 }

@@ -12,16 +12,16 @@ export type {
 
 export { encryptJSON, decryptJSON, encryptBytes, decryptBytes } from "./aes";
 export {
+  ENVELOPE_VERSION,
   createVault,
   unlockWithMaster,
   unlockWithRecovery,
   changeMaster,
-  authSecretFor,
 } from "./envelope";
 export {
   generateRecoveryWords,
   normalizeRecoveryPhrase,
   isValidRecoveryPhrase,
 } from "./recovery-key";
-export { DEFAULT_KDF, deriveAuthSecret } from "./kdf";
+export { DEFAULT_KDF, AUTH_KDF, deriveAuthSecret, authSalt } from "./kdf";
 export { bytesEqual } from "./encoding";
