@@ -8,6 +8,7 @@ export interface VaultSettings {
   lockOnHidden: boolean; // lock when the tab is hidden
   clipboardClearSeconds: number; // wipe clipboard after copy
   fetchFavicons: boolean; // OFF: custom-domain icons leak the domain to a third party
+  breachCheckEnabled: boolean; // OFF: HIBP check sends a 5-char hash prefix to a third party
 }
 
 export const DEFAULT_SETTINGS: VaultSettings = {
@@ -15,6 +16,7 @@ export const DEFAULT_SETTINGS: VaultSettings = {
   lockOnHidden: true,
   clipboardClearSeconds: 20,
   fetchFavicons: false,
+  breachCheckEnabled: false,
 };
 
 export function loadSettings(): VaultSettings {

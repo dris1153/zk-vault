@@ -27,7 +27,9 @@ const csp = [
   // loads when the user enables it (default off). Brand logos are bundled, not fetched.
   `img-src 'self' data: blob: https://icons.duckduckgo.com`,
   `font-src 'self'`,
-  `connect-src 'self' ${supabaseOrigin} ${supabaseWss}`.trim(),
+  // api.pwnedpasswords.com is for the OPT-IN breach check (Settings); it only
+  // loads when enabled (default off), and only a 5-char hash prefix is sent.
+  `connect-src 'self' ${supabaseOrigin} ${supabaseWss} https://api.pwnedpasswords.com`.trim(),
   `worker-src 'self' blob:`,
   `object-src 'none'`,
   `base-uri 'self'`,

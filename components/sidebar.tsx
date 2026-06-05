@@ -1,6 +1,12 @@
 "use client";
 
-import { SquaresFour, Star, Gear, Hash } from "@phosphor-icons/react/dist/ssr";
+import {
+  SquaresFour,
+  Star,
+  Gear,
+  Hash,
+  ShieldCheck,
+} from "@phosphor-icons/react/dist/ssr";
 import type { Icon } from "@phosphor-icons/react";
 import type { VaultItem } from "@/lib/vault/items";
 import type { VaultItemType } from "@/lib/supabase/types";
@@ -16,6 +22,8 @@ interface SidebarProps {
   tag: string | null;
   onTag: (t: string | null) => void;
   onOpenSettings: () => void;
+  onOpenSecurity: () => void;
+  issueCount: number;
 }
 
 export function Sidebar({
@@ -25,6 +33,8 @@ export function Sidebar({
   tag,
   onTag,
   onOpenSettings,
+  onOpenSecurity,
+  issueCount,
 }: SidebarProps) {
   const countOf = (t: VaultItemType) => items.filter((i) => i.type === t).length;
   const favCount = items.filter((i) => i.favorite).length;
@@ -95,6 +105,18 @@ export function Sidebar({
       )}
 
       <div className="mt-auto" />
+      <button
+        onClick={onOpenSecurity}
+        className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm text-silver transition hover:bg-ash hover:text-snow"
+      >
+        <ShieldCheck size={18} />
+        Kiểm tra bảo mật
+        {issueCount > 0 && (
+          <span className="ml-auto rounded-full bg-azure px-1.5 text-xs font-medium text-[#08233f]">
+            {issueCount}
+          </span>
+        )}
+      </button>
       <button
         onClick={onOpenSettings}
         className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm text-silver transition hover:bg-ash hover:text-snow"

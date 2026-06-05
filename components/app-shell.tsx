@@ -12,12 +12,15 @@ import { ItemGrid } from "./item-grid";
 import { DetailDrawer } from "./detail-drawer";
 import { AddEditModal } from "./add-edit-modal";
 import { SettingsDialog } from "./settings-dialog";
+import { SecurityCheckModal } from "./security-check-modal";
 import { useSettings } from "@/lib/vault/settings-store";
+import { usePasswordHealth } from "@/lib/vault/use-password-health";
 
 export function AppShell() {
   const { dek, lock } = useVault();
   const items = useItems((s) => s.items);
   const clearSeconds = useSettings((s) => s.settings.clipboardClearSeconds);
+  const breachEnabled = useSettings((s) => s.settings.breachCheckEnabled);
 
   const [category, setCategory] = useState<Category>("all");
   const [tag, setTag] = useState<string | null>(null);
@@ -26,7 +29,14 @@ export function AppShell() {
   const [editing, setEditing] = useState<VaultItem | null>(null);
   const [addOpen, setAddOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [securityOpen, setSecurityOpen] = useState(false);
+  const [healthDeep, setHealthDeep] = useState(false); // latches once the panel is opened
   const searchRef = useRef<HTMLInputElement>(null);
+
+  const { report, loading: healthLoading } = usePasswordHealth({
+    breach: breachEnabled && securityOpen,
+    weak: healthDeep,
+  });
 
   const filtered = useMemo(() => {
     let list = items;
@@ -77,6 +87,11 @@ export function AppShell() {
         tag={tag}
         onTag={setTag}
         onOpenSettings={() => setSettingsOpen(true)}
+        onOpenSecurity={() => {
+          setHealthDeep(true);
+          setSecurityOpen(true);
+        }}
+        issueCount={report?.totalIssues ?? 0}
       />
 
       <div className="flex min-w-0 flex-col">
@@ -117,6 +132,20 @@ export function AppShell() {
       <SettingsDialog
         open={settingsOpen}
         onClose={() => setSettingsOpen(false)}
+      />
+
+      <SecurityCheckModal
+        open={securityOpen}
+        onClose={() => setSecurityOpen(false)}
+        report={report}
+        loading={healthLoading}
+        onOpenItem={(id) => {
+          const it = items.find((i) => i.id === id);
+          if (it) {
+            setSelected(it);
+            setSecurityOpen(false);
+          }
+        }}
       />
     </div>
   );

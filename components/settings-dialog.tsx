@@ -135,6 +135,22 @@ function SecuritySettings() {
         </p>
       </div>
 
+      <div>
+        <label className="flex items-center justify-between text-sm text-silver">
+          Kiểm tra rò rỉ mật khẩu (HIBP)
+          <input
+            type="checkbox"
+            checked={settings.breachCheckEnabled}
+            onChange={(e) => update({ breachCheckEnabled: e.target.checked })}
+            className="h-4 w-4 accent-[var(--color-azure)]"
+          />
+        </label>
+        <p className="mt-1 text-xs text-smoke">
+          Khi bật, app gửi 5 ký tự đầu của hash mật khẩu tới HIBP để kiểm tra rò
+          rỉ (k-anonymity). Mặc định tắt để giữ zero-knowledge.
+        </p>
+      </div>
+
       <BiometricSetting />
     </div>
   );
