@@ -61,7 +61,9 @@ export function DetailDrawer({
         className={`fixed inset-0 z-40 bg-black/45 transition-opacity ${
           open ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
-        onClick={onClose}
+        onMouseDown={(e) => {
+          if (e.target === e.currentTarget) onClose();
+        }}
       />
       <aside
         className={`fixed right-0 top-0 z-40 flex h-full w-full flex-col border-l border-charcoal bg-obsidian transition-transform duration-200 sm:w-[420px] sm:max-w-[92vw] ${

@@ -100,11 +100,14 @@ export function Modal({
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-      onClick={onClose}
+      // Close only when the press STARTS on the backdrop (mousedown), so selecting
+      // text in an input and releasing outside does not dismiss the modal.
+      onMouseDown={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
     >
       <div
         className={`w-full ${width} max-h-[90dvh] overflow-y-auto rounded-2xl border border-charcoal bg-obsidian`}
-        onClick={(e) => e.stopPropagation()}
       >
         {children}
       </div>

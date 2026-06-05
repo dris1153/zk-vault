@@ -110,7 +110,9 @@ export function AppShell() {
         className={`fixed inset-0 z-40 bg-black/50 transition-opacity md:hidden ${
           sidebarOpen ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
-        onClick={() => setSidebarOpen(false)}
+        onMouseDown={(e) => {
+          if (e.target === e.currentTarget) setSidebarOpen(false);
+        }}
       />
       <div
         className={`fixed inset-y-0 left-0 z-50 shadow-2xl transition-transform duration-200 md:hidden ${
