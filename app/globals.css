@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+/* DESIGN.md tokens (Electric Azure) are wired in Phase 5 via @theme. */
+@theme {
+  --color-obsidian: #121212;
+  --color-azure: #3e9bff;
+  --color-snow: #fafafa;
+}
+
+html,
+body {
+  background: var(--color-obsidian);
+  color: var(--color-snow);
+}
