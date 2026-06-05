@@ -3,6 +3,7 @@
 // toggle; `seed_phrase` gets the numbered word grid in the drawer.
 
 import type { VaultItemType } from "@/lib/supabase/types";
+import { engineLabel } from "./db-engines";
 
 export type FieldKind =
   | "text"
@@ -10,7 +11,8 @@ export type FieldKind =
   | "textarea"
   | "tags"
   | "platform"
-  | "totp";
+  | "totp"
+  | "db_engine";
 
 export interface FieldDef {
   name: string;
@@ -65,6 +67,17 @@ export const FIELDS_BY_TYPE: Record<VaultItemType, FieldDef[]> = {
     notes,
     tags,
   ],
+  database: [
+    title,
+    { name: "engine", label: "Engine", kind: "db_engine" },
+    { name: "host", label: "Host", kind: "text" },
+    { name: "port", label: "Port", kind: "text" },
+    { name: "database", label: "Database", kind: "text" },
+    { name: "username", label: "Username", kind: "text" },
+    { name: "password", label: "Password", kind: "secret" },
+    notes,
+    tags,
+  ],
 };
 
 /** Secondary line shown on the card (masked secrets stay hidden). */
@@ -79,6 +92,10 @@ export function cardSubtitle(type: VaultItemType, data: Record<string, unknown>)
       return [pick("username"), pick("host")].filter(Boolean).join(" @ ");
     case "api_key":
       return pick("service");
+    case "database":
+      return [engineLabel(pick("engine")), pick("host")]
+        .filter(Boolean)
+        .join(" · ");
     case "secure_note":
       return "Secure note";
   }

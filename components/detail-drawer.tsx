@@ -15,6 +15,7 @@ import type { VaultItem } from "@/lib/vault/items";
 import { TYPE_ICON, TYPE_LABEL } from "@/lib/ui/icons";
 import { FIELDS_BY_TYPE, type FieldDef } from "@/lib/ui/item-fields";
 import { findPlatform } from "@/lib/ui/platforms";
+import { engineIcon, engineLabel } from "@/lib/ui/db-engines";
 import { useClipboard } from "@/lib/ui/use-clipboard";
 import { useSettings } from "@/lib/vault/settings-store";
 import { IconButton } from "./ui-kit";
@@ -200,6 +201,11 @@ function Row({
               />
               <span className="truncate">{findPlatform(text)?.name ?? text}</span>
             </span>
+          ) : field.kind === "db_engine" ? (
+            <span className="flex min-w-0 flex-1 items-center gap-2 text-sm">
+              <EngineIcon value={text} />
+              <span className="truncate">{engineLabel(text)}</span>
+            </span>
           ) : (
             <span
               className={`min-w-0 flex-1 break-all text-sm ${
@@ -241,6 +247,11 @@ function Row({
       )}
     </div>
   );
+}
+
+function EngineIcon({ value }: { value: string }) {
+  const Icon = engineIcon(value);
+  return <Icon size={18} />;
 }
 
 function SeedGrid({ phrase }: { phrase: string }) {

@@ -54,12 +54,25 @@ export const apiKeySchema = z.object({
   tags,
 });
 
+export const databaseSchema = z.object({
+  title,
+  engine: z.string().default(""),
+  host: z.string().default(""),
+  port: z.string().optional(),
+  database: z.string().optional(),
+  username: z.string().default(""),
+  password: z.string().default(""),
+  notes: z.string().optional(),
+  tags,
+});
+
 export const schemaByType: Record<VaultItemType, z.ZodTypeAny> = {
   login: loginSchema,
   wallet: walletSchema,
   ssh_key: sshKeySchema,
   secure_note: secureNoteSchema,
   api_key: apiKeySchema,
+  database: databaseSchema,
 };
 
 export type ItemData = Record<string, unknown>;

@@ -42,6 +42,7 @@ export function countByType(items: VaultItem[]): Record<VaultItemType, number> {
     ssh_key: 0,
     secure_note: 0,
     api_key: 0,
+    database: 0,
   };
   for (const i of items) base[i.type] += 1;
   return base;

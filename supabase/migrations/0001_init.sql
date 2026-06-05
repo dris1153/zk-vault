@@ -31,7 +31,7 @@ create table if not exists public.vault_items (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null default auth.uid () references auth.users (id) on delete cascade,
   type text not null check (
-    type in ('login', 'wallet', 'ssh_key', 'secure_note', 'api_key')
+    type in ('login', 'wallet', 'ssh_key', 'secure_note', 'api_key', 'database')
   ),
   favorite boolean not null default false,
   encrypted_data text not null,

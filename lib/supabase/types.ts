@@ -7,7 +7,8 @@ export type VaultItemType =
   | "wallet"
   | "ssh_key"
   | "secure_note"
-  | "api_key";
+  | "api_key"
+  | "database";
 
 export interface VaultConfigRow {
   user_id: string;
