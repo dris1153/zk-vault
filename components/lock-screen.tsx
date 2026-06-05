@@ -8,10 +8,12 @@ import {
   ArrowRight,
   BookOpen,
   Fingerprint,
+  User,
 } from "@phosphor-icons/react/dist/ssr";
 import { useVault } from "@/lib/vault/use-vault";
 import { useBiometric } from "@/lib/vault/use-biometric";
-import { getVaultEmail } from "@/lib/vault/identity";
+import { getVaultEmail, clearVaultEmail } from "@/lib/vault/identity";
+import { signOutVault } from "@/lib/supabase/auth";
 import { PillButton } from "./ui-kit";
 import { BrandMark } from "./brand-mark";
 
@@ -32,14 +34,18 @@ export function LockScreen({
   const [confirm, setConfirm] = useState("");
   const [show, setShow] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [ready, setReady] = useState(false); // remembered-email check done
 
   // Prefill the remembered email (after mount, to avoid an SSR hydration mismatch).
   useEffect(() => {
     const saved = getVaultEmail();
     if (saved) setEmail(saved);
+    setReady(true);
   }, []);
 
   const busy = status === "unlocking";
+  // Locked vault with a remembered email: show it as a label, not an input.
+  const emailKnown = mode === "unlock" && ready && email.trim().length > 0;
 
   async function biometric() {
     setError(null);
@@ -48,6 +54,17 @@ export function LockScreen({
     } catch {
       setError("Mở khóa bằng sinh trắc thất bại. Dùng master password.");
     }
+  }
+
+  async function signOut() {
+    setError(null);
+    clearVaultEmail();
+    try {
+      await signOutVault();
+    } catch {
+      // best-effort; locking already wiped the in-RAM key
+    }
+    setEmail("");
   }
 
   async function submit(e: React.FormEvent) {
@@ -88,15 +105,31 @@ export function LockScreen({
         </p>
 
         <form onSubmit={submit} className="mt-6 flex flex-col gap-3 text-left">
-          <input
-            type="email"
-            value={email}
-            autoFocus={mode === "create"}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email"
-            autoComplete="username"
-            className="w-full rounded-lg border border-slate bg-obsidian px-3 py-2.5 text-sm text-snow outline-none transition placeholder:text-smoke focus:border-azure"
-          />
+          {emailKnown ? (
+            <div className="flex items-center justify-between gap-2 rounded-lg border border-charcoal bg-ash/40 px-3 py-2.5">
+              <span className="flex min-w-0 items-center gap-2 text-sm text-silver">
+                <User size={17} className="shrink-0 text-smoke" />
+                <span className="truncate">{email}</span>
+              </span>
+              <button
+                type="button"
+                onClick={signOut}
+                className="shrink-0 text-xs text-azure-link hover:underline"
+              >
+                Đăng xuất
+              </button>
+            </div>
+          ) : (
+            <input
+              type="email"
+              value={email}
+              autoFocus={mode === "create"}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email"
+              autoComplete="username"
+              className="w-full rounded-lg border border-slate bg-obsidian px-3 py-2.5 text-sm text-snow outline-none transition placeholder:text-smoke focus:border-azure"
+            />
+          )}
           <PasswordInput
             value={pw}
             onChange={setPw}
