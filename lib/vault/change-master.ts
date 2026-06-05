@@ -17,6 +17,7 @@ import { VAULT_EMAIL } from "@/lib/supabase/client";
 import { currentUserId, updateAuthSecret, signInVault } from "@/lib/supabase/auth";
 import { getVaultConfig, updateMasterWrap } from "@/lib/supabase/vault-config";
 import { useSession } from "./session";
+import { clearBiometric } from "./webauthn";
 
 async function canSignIn(authSecret: string): Promise<boolean> {
   try {
@@ -52,11 +53,13 @@ export async function changeMasterPassword(
   // 2) Rotate the auth password.
   try {
     await updateAuthSecret(result.authSecret);
+    await clearBiometric(); // bundle's authSecret is now stale; re-enroll needed
     return; // wrap=new, auth=new -> consistent
   } catch {
     // The throw may be a real failure OR a lost response after success.
     // Probe the actual server state and converge.
     if (await canSignIn(result.authSecret)) {
+      await clearBiometric();
       return; // auth actually applied; wrap=new, auth=new -> consistent
     }
     if (await canSignIn(oldAuth)) {
@@ -69,7 +72,10 @@ export async function changeMasterPassword(
         "Could not update the login password. The change was reverted - your current master password still works.",
       );
     }
-    // Indeterminate: leave wrap=new (do NOT brick it further). Recovery key works.
+    // Indeterminate: auth MAY have rotated, so the biometric bundle could be
+    // stale - clear it (idempotent, never makes things worse).
+    await clearBiometric();
+    // Leave wrap=new (do NOT brick it further). Recovery key still works.
     throw new Error(
       "The master change was only partially applied. Try unlocking with your NEW master password. If that fails, restore from your encrypted backup using your recovery key. Do NOT discard your recovery key.",
     );

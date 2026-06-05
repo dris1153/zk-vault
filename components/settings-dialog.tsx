@@ -5,7 +5,8 @@ import Link from "next/link";
 import { X, BookOpen } from "@phosphor-icons/react/dist/ssr";
 import { useSettings } from "@/lib/vault/settings-store";
 import { useVault } from "@/lib/vault/use-vault";
-import { Modal, IconButton, Field } from "./ui-kit";
+import { useBiometric } from "@/lib/vault/use-biometric";
+import { Modal, IconButton, Field, PillButton, TextInput } from "./ui-kit";
 import { SettingsBackup } from "./settings-backup";
 import { SettingsAccount } from "./settings-account";
 
@@ -133,6 +134,78 @@ function SecuritySettings() {
           tảng có sẵn không bị ảnh hưởng. Mặc định tắt để giữ zero-knowledge.
         </p>
       </div>
+
+      <BiometricSetting />
+    </div>
+  );
+}
+
+function BiometricSetting() {
+  const { supported, enrolled, ready, enable, disable, refresh } =
+    useBiometric();
+  const [master, setMaster] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  if (!ready || !supported) return null;
+
+  async function doEnable() {
+    setError(null);
+    setBusy(true);
+    try {
+      await enable(master);
+      setMaster("");
+      await refresh();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function doDisable() {
+    setBusy(true);
+    try {
+      await disable();
+      await refresh();
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <div className="border-t border-charcoal pt-4">
+      <div className="mb-2 text-[11px] uppercase tracking-[0.12em] text-smoke">
+        Mở khóa bằng sinh trắc (thiết bị này)
+      </div>
+      {enrolled ? (
+        <div className="flex items-center justify-between">
+          <span className="text-sm text-silver">Đã bật trên thiết bị này.</span>
+          <PillButton variant="ghost" onClick={doDisable} disabled={busy}>
+            Tắt
+          </PillButton>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-2">
+          <p className="text-xs text-smoke">
+            Lưu một khóa gắn riêng thiết bị này (vân tay/Face/Windows Hello). Nhập
+            master để xác nhận.
+          </p>
+          <div className="flex gap-2">
+            <TextInput
+              mono
+              type="password"
+              value={master}
+              onChange={(e) => setMaster(e.target.value)}
+              placeholder="Master password"
+            />
+            <PillButton onClick={doEnable} disabled={busy || !master}>
+              Bật
+            </PillButton>
+          </div>
+        </div>
+      )}
+      {error && <p className="mt-2 text-sm text-danger">{error}</p>}
     </div>
   );
 }

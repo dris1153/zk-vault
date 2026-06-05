@@ -2,8 +2,15 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Eye, EyeSlash, ArrowRight, BookOpen } from "@phosphor-icons/react/dist/ssr";
+import {
+  Eye,
+  EyeSlash,
+  ArrowRight,
+  BookOpen,
+  Fingerprint,
+} from "@phosphor-icons/react/dist/ssr";
 import { useVault } from "@/lib/vault/use-vault";
+import { useBiometric } from "@/lib/vault/use-biometric";
 import { PillButton } from "./ui-kit";
 import { BrandMark } from "./brand-mark";
 
@@ -15,6 +22,7 @@ export function LockScreen({
   onProvisioned: (words: string[]) => void;
 }) {
   const { status, isProvisioned, unlock, createVault } = useVault();
+  const { enrolled, unlock: unlockBiometric } = useBiometric();
   const [mode, setMode] = useState<"unlock" | "create">(
     isProvisioned ? "unlock" : "create",
   );
@@ -24,6 +32,15 @@ export function LockScreen({
   const [error, setError] = useState<string | null>(null);
 
   const busy = status === "unlocking";
+
+  async function biometric() {
+    setError(null);
+    try {
+      await unlockBiometric();
+    } catch {
+      setError("Mở khóa bằng sinh trắc thất bại. Dùng master password.");
+    }
+  }
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -93,6 +110,17 @@ export function LockScreen({
             {!busy && <ArrowRight size={16} />}
           </PillButton>
         </form>
+
+        {mode === "unlock" && enrolled && (
+          <PillButton
+            variant="ghost"
+            onClick={biometric}
+            disabled={busy}
+            className="mt-3 w-full py-3"
+          >
+            <Fingerprint size={18} /> Mở bằng vân tay / Face
+          </PillButton>
+        )}
 
         <div className="flex items-center justify-center gap-2 mt-4">
           <button

@@ -24,4 +24,9 @@ export {
   isValidRecoveryPhrase,
 } from "./recovery-key";
 export { DEFAULT_KDF, AUTH_KDF, deriveAuthSecret, authSalt } from "./kdf";
-export { bytesEqual } from "./encoding";
+export {
+  bytesEqual,
+  bytesToBase64,
+  base64ToBytes,
+  randomBytes,
+} from "./encoding";
