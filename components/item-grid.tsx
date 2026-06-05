@@ -3,17 +3,23 @@
 import { MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
 import type { VaultItem } from "@/lib/vault/items";
 import { ItemCard } from "./item-card";
+import { ItemGridSkeleton } from "./item-card-skeleton";
 import { BrandMark } from "./brand-mark";
 
 export function ItemGrid({
   items,
   onSelect,
   searching,
+  loading,
 }: {
   items: VaultItem[];
   onSelect: (item: VaultItem) => void;
   searching: boolean;
+  loading: boolean;
 }) {
+  // Skeletons only on the first load (empty + loading); refreshes keep the list.
+  if (items.length === 0 && loading) return <ItemGridSkeleton />;
+
   if (items.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center px-4 py-24 text-center text-smoke">

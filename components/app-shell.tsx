@@ -19,6 +19,7 @@ import { usePasswordHealth } from "@/lib/vault/use-password-health";
 export function AppShell() {
   const { dek, lock } = useVault();
   const items = useItems((s) => s.items);
+  const itemsLoading = useItems((s) => s.loading);
   const clearSeconds = useSettings((s) => s.settings.clipboardClearSeconds);
   const breachEnabled = useSettings((s) => s.settings.breachCheckEnabled);
 
@@ -165,6 +166,7 @@ export function AppShell() {
             items={filtered}
             onSelect={setSelected}
             searching={query.trim().length > 0}
+            loading={itemsLoading}
           />
         </div>
       </div>

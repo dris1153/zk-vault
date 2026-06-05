@@ -7,7 +7,9 @@ import type { VaultItemType } from "@/lib/supabase/types";
 
 interface ItemsState {
   items: VaultItem[];
+  loading: boolean;
   setItems: (items: VaultItem[]) => void;
+  setLoading: (loading: boolean) => void;
   upsert: (item: VaultItem) => void;
   remove: (id: string) => void;
   clear: () => void;
@@ -15,19 +17,28 @@ interface ItemsState {
 
 export const useItems = create<ItemsState>((set) => ({
   items: [],
+  loading: false,
   setItems: (items) => set({ items }),
+  setLoading: (loading) => set({ loading }),
   upsert: (item) =>
     set((s) => {
       const rest = s.items.filter((i) => i.id !== item.id);
       return { items: [item, ...rest] };
     }),
   remove: (id) => set((s) => ({ items: s.items.filter((i) => i.id !== id) })),
-  clear: () => set({ items: [] }),
+  clear: () => set({ items: [], loading: false }),
 }));
 
 /** Decrypt and load all items into the store (called on unlock). */
 export async function loadItems(dek: CryptoKey): Promise<void> {
-  useItems.getState().setItems(await fetchItems(dek));
+  // Set loading synchronously (same tick as setUnlocked) so the grid shows
+  // skeletons instead of a flash of the empty state.
+  useItems.getState().setLoading(true);
+  try {
+    useItems.getState().setItems(await fetchItems(dek));
+  } finally {
+    useItems.getState().setLoading(false);
+  }
 }
 
 export function clearItems(): void {
