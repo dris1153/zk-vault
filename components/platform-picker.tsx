@@ -1,7 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { CaretDown, MagnifyingGlass, Globe } from "@phosphor-icons/react/dist/ssr";
+import {
+  CaretDown,
+  MagnifyingGlass,
+  Globe,
+} from "@phosphor-icons/react/dist/ssr";
 import {
   PLATFORMS,
   CATEGORY_ORDER,
@@ -94,7 +98,6 @@ export function PlatformPicker({
               className="absolute left-2.5 top-1/2 -translate-y-1/2 text-smoke"
             />
             <input
-              autoFocus
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Tìm nền tảng..."
