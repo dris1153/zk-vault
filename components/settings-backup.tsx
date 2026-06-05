@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { DownloadSimple, UploadSimple } from "@phosphor-icons/react/dist/ssr";
 import { exportVault, importVault } from "@/lib/vault/export";
-import { PillButton, TextInput, TextArea, Field } from "./ui-kit";
+import { PillButton, TextInput, TextArea, Field, Checkbox } from "./ui-kit";
 
 export function SettingsBackup({ dek }: { dek: CryptoKey }) {
   const fileRef = useRef<HTMLInputElement>(null);
@@ -75,13 +75,8 @@ export function SettingsBackup({ dek }: { dek: CryptoKey }) {
         className="text-sm text-silver file:mr-3 file:rounded-full file:border file:border-slate file:bg-transparent file:px-3 file:py-1.5 file:text-snow"
       />
 
-      <label className="flex items-center gap-2 text-sm text-silver">
-        <input
-          type="checkbox"
-          checked={useRecovery}
-          onChange={(e) => setUseRecovery(e.target.checked)}
-          className="h-4 w-4 accent-[var(--color-azure)]"
-        />
+      <label className="flex cursor-pointer items-center gap-2 text-sm text-silver">
+        <Checkbox checked={useRecovery} onChange={setUseRecovery} />
         Use recovery key instead of master password
       </label>
 

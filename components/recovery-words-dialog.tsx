@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Modal, PillButton } from "./ui-kit";
+import { Modal, PillButton, Checkbox } from "./ui-kit";
 
 export function RecoveryWordsDialog({
   words,
@@ -57,13 +57,8 @@ export function RecoveryWordsDialog({
           </span>
         </div>
 
-        <label className="mt-5 flex items-center gap-3 text-sm text-silver">
-          <input
-            type="checkbox"
-            checked={confirmed}
-            onChange={(e) => setConfirmed(e.target.checked)}
-            className="h-4 w-4 accent-[var(--color-azure)]"
-          />
+        <label className="mt-5 flex cursor-pointer items-center gap-3 text-sm text-silver">
+          <Checkbox checked={confirmed} onChange={setConfirmed} />
           I have stored my recovery key in a safe place.
         </label>
 

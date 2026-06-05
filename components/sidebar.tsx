@@ -11,6 +11,7 @@ import type { Icon } from "@phosphor-icons/react";
 import type { VaultItem } from "@/lib/vault/items";
 import type { VaultItemType } from "@/lib/supabase/types";
 import { TYPE_ICON, TYPE_LABEL, TYPE_ORDER } from "@/lib/ui/icons";
+import { CheckboxBox } from "./ui-kit";
 import { BrandMark } from "./brand-mark";
 
 export type Category = "all" | "favorites" | VaultItemType;
@@ -138,13 +139,7 @@ export function Sidebar({
                     : "text-silver hover:bg-ash hover:text-snow"
                 }`}
               >
-                <input
-                  type="checkbox"
-                  checked={on}
-                  readOnly
-                  tabIndex={-1}
-                  className="h-3.5 w-3.5 shrink-0 accent-[var(--color-azure)]"
-                />
+                <CheckboxBox checked={on} />
                 <Hash size={14} className="text-graphite" />
                 <span className="truncate">{t}</span>
               </button>

@@ -4,6 +4,7 @@
 // 8px inputs, hairline borders, flat (no shadow), azure focus.
 
 import { forwardRef } from "react";
+import { Check } from "@phosphor-icons/react/dist/ssr";
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: "azure" | "ghost" | "danger";
@@ -116,5 +117,85 @@ export function Modal({
         {children}
       </div>
     </div>
+  );
+}
+
+/** Presentational checkbox box (the styled square only). Use inside a control that
+ *  already handles the toggle (e.g. a clickable row/button). */
+export function CheckboxBox({
+  checked,
+  className = "",
+}: {
+  checked: boolean;
+  className?: string;
+}) {
+  return (
+    <span
+      className={`flex h-4.5 w-4.5 shrink-0 items-center justify-center rounded-[5px] border transition ${
+        checked
+          ? "border-azure bg-azure text-[#08233f]"
+          : "border-slate bg-obsidian text-transparent"
+      } ${className}`}
+    >
+      <Check size={13} weight="bold" />
+    </span>
+  );
+}
+
+/** Accessible custom checkbox: a hidden native input + a styled box. */
+export function Checkbox({
+  checked,
+  onChange,
+  disabled,
+  className = "",
+}: {
+  checked: boolean;
+  onChange: (v: boolean) => void;
+  disabled?: boolean;
+  className?: string;
+}) {
+  return (
+    <span className={`relative inline-flex h-4.5 w-4.5 shrink-0 ${className}`}>
+      <input
+        type="checkbox"
+        checked={checked}
+        disabled={disabled}
+        onChange={(e) => onChange(e.target.checked)}
+        className="peer absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0 disabled:cursor-not-allowed"
+      />
+      <span className="flex h-full w-full items-center justify-center rounded-[5px] border border-slate bg-obsidian text-transparent transition peer-hover:border-graphite peer-checked:border-azure peer-checked:bg-azure peer-checked:text-[#08233f] peer-focus-visible:ring-2 peer-focus-visible:ring-azure/50 peer-disabled:opacity-50">
+        <Check size={13} weight="bold" />
+      </span>
+    </span>
+  );
+}
+
+/** Toggle switch for on/off settings. */
+export function Switch({
+  checked,
+  onChange,
+  disabled,
+}: {
+  checked: boolean;
+  onChange: (v: boolean) => void;
+  disabled?: boolean;
+}) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      disabled={disabled}
+      onClick={() => onChange(!checked)}
+      className={`relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition disabled:opacity-50 ${
+        checked ? "bg-azure" : "bg-charcoal"
+      }`}
+    >
+      <span
+        className={`inline-block h-4 w-4 rounded-full bg-snow transition-transform ${
+          checked ? "translate-x-4.5" : "translate-x-0.5"
+        }`}
+      />
+    </button>
   );
 }

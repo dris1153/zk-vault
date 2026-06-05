@@ -6,7 +6,14 @@ import { X, BookOpen } from "@phosphor-icons/react/dist/ssr";
 import { useSettings } from "@/lib/vault/settings-store";
 import { useVault } from "@/lib/vault/use-vault";
 import { useBiometric } from "@/lib/vault/use-biometric";
-import { Modal, IconButton, Field, PillButton, TextInput } from "./ui-kit";
+import {
+  Modal,
+  IconButton,
+  Field,
+  PillButton,
+  TextInput,
+  Switch,
+} from "./ui-kit";
 import { SettingsBackup } from "./settings-backup";
 import { SettingsAccount } from "./settings-account";
 
@@ -93,15 +100,13 @@ function SecuritySettings() {
         </select>
       </Field>
 
-      <label className="flex items-center justify-between text-sm text-silver">
+      <div className="flex items-center justify-between text-sm text-silver">
         Lock when the tab is hidden
-        <input
-          type="checkbox"
+        <Switch
           checked={settings.lockOnHidden}
-          onChange={(e) => update({ lockOnHidden: e.target.checked })}
-          className="h-4 w-4 accent-[var(--color-azure)]"
+          onChange={(v) => update({ lockOnHidden: v })}
         />
-      </label>
+      </div>
 
       <Field label="Clear clipboard after copy">
         <select
@@ -120,15 +125,13 @@ function SecuritySettings() {
       </Field>
 
       <div>
-        <label className="flex items-center justify-between text-sm text-silver">
+        <div className="flex items-center justify-between text-sm text-silver">
           Hiện favicon cho domain tùy chỉnh
-          <input
-            type="checkbox"
+          <Switch
             checked={settings.fetchFavicons}
-            onChange={(e) => update({ fetchFavicons: e.target.checked })}
-            className="h-4 w-4 accent-[var(--color-azure)]"
+            onChange={(v) => update({ fetchFavicons: v })}
           />
-        </label>
+        </div>
         <p className="mt-1 text-xs text-smoke">
           Khi bật, app tải favicon từ bên thứ ba, làm lộ domain bạn lưu. Các nền
           tảng có sẵn không bị ảnh hưởng. Mặc định tắt để giữ zero-knowledge.
@@ -136,15 +139,13 @@ function SecuritySettings() {
       </div>
 
       <div>
-        <label className="flex items-center justify-between text-sm text-silver">
+        <div className="flex items-center justify-between text-sm text-silver">
           Kiểm tra rò rỉ mật khẩu (HIBP)
-          <input
-            type="checkbox"
+          <Switch
             checked={settings.breachCheckEnabled}
-            onChange={(e) => update({ breachCheckEnabled: e.target.checked })}
-            className="h-4 w-4 accent-[var(--color-azure)]"
+            onChange={(v) => update({ breachCheckEnabled: v })}
           />
-        </label>
+        </div>
         <p className="mt-1 text-xs text-smoke">
           Khi bật, app gửi 5 ký tự đầu của hash mật khẩu tới HIBP để kiểm tra rò
           rỉ (k-anonymity). Mặc định tắt để giữ zero-knowledge.
