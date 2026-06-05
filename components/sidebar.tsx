@@ -1,16 +1,11 @@
 "use client";
 
-import {
-  SquaresFour,
-  Star,
-  Gear,
-  Hash,
-  Vault,
-} from "@phosphor-icons/react/dist/ssr";
+import { SquaresFour, Star, Gear, Hash } from "@phosphor-icons/react/dist/ssr";
 import type { Icon } from "@phosphor-icons/react";
 import type { VaultItem } from "@/lib/vault/items";
 import type { VaultItemType } from "@/lib/supabase/types";
 import { TYPE_ICON, TYPE_LABEL, TYPE_ORDER } from "@/lib/ui/icons";
+import { BrandMark } from "./brand-mark";
 
 export type Category = "all" | "favorites" | VaultItemType;
 
@@ -38,9 +33,7 @@ export function Sidebar({
   return (
     <aside className="flex w-60 shrink-0 flex-col gap-1 overflow-y-auto border-r border-charcoal p-3">
       <div className="flex items-center gap-2.5 px-2.5 pb-4 pt-2 font-medium">
-        <span className="flex h-[22px] w-[22px] items-center justify-center rounded-[7px] bg-gradient-to-br from-azure to-azure-depth text-white">
-          <Vault size={13} />
-        </span>
+        <BrandMark variant="tile" size={22} />
         Vault
       </div>
 

@@ -1,8 +1,9 @@
 "use client";
 
-import { MagnifyingGlass, Vault } from "@phosphor-icons/react/dist/ssr";
+import { MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
 import type { VaultItem } from "@/lib/vault/items";
 import { ItemCard } from "./item-card";
+import { BrandMark } from "./brand-mark";
 
 export function ItemGrid({
   items,
@@ -23,7 +24,7 @@ export function ItemGrid({
           </>
         ) : (
           <>
-            <Vault size={40} className="mb-3.5 text-graphite" />
+            <BrandMark variant="flat" size={40} className="mb-3.5 text-graphite" />
             <p className="text-snow">Nothing here yet</p>
             <p className="mt-1 text-sm">
               Use the Add button to store your first credential.

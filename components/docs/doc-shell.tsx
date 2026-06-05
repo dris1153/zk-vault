@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Vault, ArrowLeft } from "@phosphor-icons/react/dist/ssr";
+import { ArrowLeft } from "@phosphor-icons/react/dist/ssr";
+import { BrandMark } from "@/components/brand-mark";
 
 export interface TocItem {
   id: string;
@@ -38,9 +39,7 @@ export function DocShell({
     <div className="min-h-[100dvh]">
       <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b border-charcoal bg-obsidian/90 px-5 backdrop-blur">
         <div className="flex items-center gap-2.5 font-medium">
-          <span className="flex h-[22px] w-[22px] items-center justify-center rounded-[7px] bg-gradient-to-br from-azure to-azure-depth text-white">
-            <Vault size={13} />
-          </span>
+          <BrandMark variant="tile" size={22} />
           Vault
           <span className="text-smoke">· Tài liệu</span>
         </div>

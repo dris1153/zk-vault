@@ -2,15 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import {
-  Eye,
-  EyeSlash,
-  Vault,
-  ArrowRight,
-  BookOpen,
-} from "@phosphor-icons/react/dist/ssr";
+import { Eye, EyeSlash, ArrowRight, BookOpen } from "@phosphor-icons/react/dist/ssr";
 import { useVault } from "@/lib/vault/use-vault";
 import { PillButton } from "./ui-kit";
+import { BrandMark } from "./brand-mark";
 
 const MIN_LEN = 8;
 
@@ -36,7 +31,9 @@ export function LockScreen({
     try {
       if (mode === "create") {
         if (pw.length < MIN_LEN)
-          return setError(`Master password must be at least ${MIN_LEN} characters.`);
+          return setError(
+            `Master password must be at least ${MIN_LEN} characters.`,
+          );
         if (pw !== confirm) return setError("Passwords do not match.");
         const words = await createVault(pw);
         onProvisioned(words);
@@ -51,8 +48,8 @@ export function LockScreen({
   return (
     <main className="flex min-h-[100dvh] items-center justify-center px-4">
       <div className="w-full max-w-sm text-center">
-        <div className="mx-auto mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-azure to-azure-depth text-white">
-          <Vault size={26} />
+        <div className="mb-6 flex justify-center">
+          <BrandMark variant="tile" size={48} />
         </div>
         <h1 className="text-2xl font-medium">
           {mode === "create" ? "Create your vault" : "Vault locked"}
@@ -83,7 +80,11 @@ export function LockScreen({
 
           {error && <p className="text-sm text-danger">{error}</p>}
 
-          <PillButton type="submit" disabled={busy} className="mt-1 w-full py-3">
+          <PillButton
+            type="submit"
+            disabled={busy}
+            className="mt-1 w-full py-3"
+          >
             {busy
               ? "Decrypting..."
               : mode === "create"
@@ -93,32 +94,32 @@ export function LockScreen({
           </PillButton>
         </form>
 
-        <button
-          type="button"
-          className="mt-4 text-sm text-azure-link hover:underline"
-          onClick={() => {
-            setError(null);
-            setMode((m) => (m === "create" ? "unlock" : "create"));
-          }}
-        >
-          {mode === "create"
-            ? "Already have a vault? Unlock"
-            : "First time here? Create a vault"}
-        </button>
+        <div className="flex items-center justify-center gap-2 mt-4">
+          <button
+            type="button"
+            className="text-sm text-azure-link hover:underline"
+            onClick={() => {
+              setError(null);
+              setMode((m) => (m === "create" ? "unlock" : "create"));
+            }}
+          >
+            {mode === "create"
+              ? "Already have a vault? Unlock"
+              : "First time here? Create a vault"}
+          </button>
+          <Link href="/docs">
+            <PillButton variant="ghost">
+              <BookOpen size={15} /> Tài liệu
+            </PillButton>
+          </Link>
+        </div>
 
         {mode === "unlock" && (
           <p className="mt-6 text-xs text-smoke">
-            Forgot your master password? Recovery uses your encrypted export file
-            (Settings &rarr; Export).
+            Forgot your master password? Recovery uses your encrypted export
+            file (Settings &rarr; Export).
           </p>
         )}
-
-        <Link
-          href="/docs"
-          className="mt-5 inline-flex items-center gap-1.5 text-sm text-silver transition hover:text-snow"
-        >
-          <BookOpen size={15} /> Tài liệu
-        </Link>
       </div>
     </main>
   );
@@ -165,7 +166,10 @@ function PasswordInput({
 
 function messageFor(err: unknown, mode: "unlock" | "create"): string {
   const msg = err instanceof Error ? err.message : String(err);
-  if (mode === "unlock" && /invalid login|decrypt|operation-specific/i.test(msg))
+  if (
+    mode === "unlock" &&
+    /invalid login|decrypt|operation-specific/i.test(msg)
+  )
     return "Incorrect master password.";
   if (/already registered/i.test(msg))
     return "A vault already exists for this account. Switch to Unlock.";
