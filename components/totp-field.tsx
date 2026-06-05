@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Eye, EyeSlash, QrCode } from "@phosphor-icons/react/dist/ssr";
 import { parseTotp, currentCode, formatCode } from "@/lib/ui/totp";
 import { decodeQrFromImage } from "@/lib/ui/qr-decode";
 import { TextInput } from "./ui-kit";
+import { QrScannerModal } from "./qr-scanner-modal";
 
 type ScanState = "idle" | "scanning" | "error";
 
@@ -17,8 +18,8 @@ export function TotpField({
 }) {
   const [show, setShow] = useState(false);
   const [scan, setScan] = useState<ScanState>("idle");
+  const [scannerOpen, setScannerOpen] = useState(false);
   const [, force] = useState(0);
-  const fileRef = useRef<HTMLInputElement>(null);
   const totp = parseTotp(value);
 
   useEffect(() => {
@@ -77,22 +78,19 @@ export function TotpField({
         </button>
       </div>
 
-      <input
-        ref={fileRef}
-        type="file"
-        accept="image/*"
-        className="hidden"
-        onChange={(e) => {
-          const f = e.target.files?.[0];
-          if (f) void handleImage(f);
-          e.target.value = "";
+      <QrScannerModal
+        open={scannerOpen}
+        onClose={() => setScannerOpen(false)}
+        onResult={(text) => {
+          set(text);
+          setScannerOpen(false);
         }}
       />
 
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
         <button
           type="button"
-          onClick={() => fileRef.current?.click()}
+          onClick={() => setScannerOpen(true)}
           className="flex shrink-0 items-center gap-1 text-xs text-azure-link hover:underline"
         >
           <QrCode size={14} /> Quét QR

@@ -51,8 +51,10 @@ const securityHeaders = [
   { key: "X-Frame-Options", value: "DENY" },
   { key: "Referrer-Policy", value: "no-referrer" },
   {
+    // camera=(self): allow the in-app live QR scanner (getUserMedia) same-origin.
+    // mic/geolocation stay disabled.
     key: "Permissions-Policy",
-    value: "camera=(), microphone=(), geolocation=(), interest-cohort=()",
+    value: "camera=(self), microphone=(), geolocation=(), interest-cohort=()",
   },
   {
     key: "Strict-Transport-Security",
