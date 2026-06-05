@@ -229,7 +229,10 @@ function Row({
       )}
 
       {copied && (
-        <div className="mt-1.5 flex items-center gap-1.5 text-xs text-azure">
+        <div
+          className="mt-1.5 flex items-center gap-1.5 text-xs text-azure"
+          title="Tự xóa clipboard khi hết giờ, hoặc ngay khi bạn quay lại tab nếu lúc đó đang ở app khác. Trình duyệt chỉ xóa được khi tab còn mở."
+        >
           <Timer size={13} /> copied, clears in 0:
           {String(remaining).padStart(2, "0")}
         </div>
