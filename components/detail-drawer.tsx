@@ -14,8 +14,11 @@ import {
 import type { VaultItem } from "@/lib/vault/items";
 import { TYPE_ICON, TYPE_LABEL } from "@/lib/ui/icons";
 import { FIELDS_BY_TYPE, type FieldDef } from "@/lib/ui/item-fields";
+import { findPlatform } from "@/lib/ui/platforms";
 import { useClipboard } from "@/lib/ui/use-clipboard";
+import { useSettings } from "@/lib/vault/settings-store";
 import { IconButton } from "./ui-kit";
+import { PlatformIcon } from "./platform-icon";
 
 export function DetailDrawer({
   item,
@@ -33,6 +36,7 @@ export function DetailDrawer({
   const [revealed, setRevealed] = useState<Set<string>>(new Set());
   const [confirming, setConfirming] = useState(false);
   const { copy, copiedField, remaining } = useClipboard(clearSeconds);
+  const favicon = useSettings((s) => s.settings.fetchFavicons);
 
   useEffect(() => {
     setRevealed(new Set());
@@ -99,6 +103,7 @@ export function DetailDrawer({
                     onCopy={(v) => copy(f.name, v)}
                     copied={copiedField === f.name}
                     remaining={remaining}
+                    favicon={favicon}
                   />
                 ))}
             </div>
@@ -144,6 +149,7 @@ function Row({
   onCopy,
   copied,
   remaining,
+  favicon = false,
 }: {
   field: FieldDef;
   value: unknown;
@@ -152,6 +158,7 @@ function Row({
   onCopy: (v: string) => void;
   copied: boolean;
   remaining: number;
+  favicon?: boolean;
 }) {
   const text = typeof value === "string" ? value : "";
   if (!text) return null;
@@ -168,13 +175,25 @@ function Row({
         <SeedGrid phrase={text} />
       ) : (
         <div className="flex items-center gap-2">
-          <span
-            className={`min-w-0 flex-1 break-all text-sm ${
-              isSecret ? "font-mono" : ""
-            }`}
-          >
-            {isSecret && !revealed ? "••••••••••••" : text}
-          </span>
+          {field.name === "url" ? (
+            <span className="flex min-w-0 flex-1 items-center gap-2 text-sm">
+              <PlatformIcon
+                platform={findPlatform(text)}
+                url={text}
+                size={18}
+                favicon={favicon}
+              />
+              <span className="truncate">{findPlatform(text)?.name ?? text}</span>
+            </span>
+          ) : (
+            <span
+              className={`min-w-0 flex-1 break-all text-sm ${
+                isSecret ? "font-mono" : ""
+              }`}
+            >
+              {isSecret && !revealed ? "••••••••••••" : text}
+            </span>
+          )}
           {isSecret && (
             <IconButton onClick={onReveal} aria-label="Reveal">
               {revealed ? <EyeSlash size={17} /> : <Eye size={17} />}

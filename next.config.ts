@@ -23,7 +23,9 @@ const csp = [
   `default-src 'self'`,
   `script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'${isDev ? " 'unsafe-eval'" : ""}`,
   `style-src 'self' 'unsafe-inline'`,
-  `img-src 'self' data: blob:`,
+  // icons.duckduckgo.com is for the OPT-IN favicon feature (Settings); it only
+  // loads when the user enables it (default off). Brand logos are bundled, not fetched.
+  `img-src 'self' data: blob: https://icons.duckduckgo.com`,
   `font-src 'self'`,
   `connect-src 'self' ${supabaseOrigin} ${supabaseWss}`.trim(),
   `worker-src 'self' blob:`,

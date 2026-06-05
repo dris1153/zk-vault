@@ -117,6 +117,22 @@ function SecuritySettings() {
           ))}
         </select>
       </Field>
+
+      <div>
+        <label className="flex items-center justify-between text-sm text-silver">
+          Hiện favicon cho domain tùy chỉnh
+          <input
+            type="checkbox"
+            checked={settings.fetchFavicons}
+            onChange={(e) => update({ fetchFavicons: e.target.checked })}
+            className="h-4 w-4 accent-[var(--color-azure)]"
+          />
+        </label>
+        <p className="mt-1 text-xs text-smoke">
+          Khi bật, app tải favicon từ bên thứ ba, làm lộ domain bạn lưu. Các nền
+          tảng có sẵn không bị ảnh hưởng. Mặc định tắt để giữ zero-knowledge.
+        </p>
+      </div>
     </div>
   );
 }

@@ -4,7 +4,7 @@
 
 import type { VaultItemType } from "@/lib/supabase/types";
 
-export type FieldKind = "text" | "secret" | "textarea" | "tags";
+export type FieldKind = "text" | "secret" | "textarea" | "tags" | "platform";
 
 export interface FieldDef {
   name: string;
@@ -21,7 +21,7 @@ export const FIELDS_BY_TYPE: Record<VaultItemType, FieldDef[]> = {
     title,
     { name: "username", label: "Username", kind: "text" },
     { name: "password", label: "Password", kind: "secret" },
-    { name: "url", label: "URL", kind: "text" },
+    { name: "url", label: "Platform / URL", kind: "platform" },
     notes,
     tags,
   ],

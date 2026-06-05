@@ -17,6 +17,9 @@ importers:
       '@supabase/supabase-js':
         specifier: ^2.107.0
         version: 2.107.0
+      developer-icons:
+        specifier: ^7.0.1
+        version: 7.0.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       fuse.js:
         specifier: ^7.4.1
         version: 7.4.1
@@ -985,6 +988,12 @@ packages:
   detect-libc@2.1.2:
     resolution: {integrity: sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ==}
     engines: {node: '>=8'}
+
+  developer-icons@7.0.1:
+    resolution: {integrity: sha512-QnC49krMtj41j4xeYTmYxRpjLPMgND+ew7UEIi45qTNJ6AT/d6eJtgO3RcMszQj4GSDlgJg90730QRGhhHXxTQ==}
+    peerDependencies:
+      react: ^18.2.0 || ^19.0.0
+      react-dom: ^18.2.0 || ^19.0.0
 
   enhanced-resolve@5.22.2:
     resolution: {integrity: sha512-0rxICaFZ7NQho/sHely2bvOPRP0Eu2B0NZ9zM54YvRvWMn7jfz3DmnOZDR9LlXDdDcqntAVc6Hfy4gr/tdH/Ag==}
@@ -2030,6 +2039,11 @@ snapshots:
   deep-eql@5.0.2: {}
 
   detect-libc@2.1.2: {}
+
+  developer-icons@7.0.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
+    dependencies:
+      react: 19.2.7
+      react-dom: 19.2.7(react@19.2.7)
 
   enhanced-resolve@5.22.2:
     dependencies:
