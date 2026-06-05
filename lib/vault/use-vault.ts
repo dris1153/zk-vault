@@ -1,0 +1,29 @@
+// Primary hook for vault UI. Exposes session status + lifecycle actions.
+
+"use client";
+
+import { useSession, type VaultStatus } from "./session";
+import { createVaultAndUnlock, unlock, lock } from "./actions";
+import { isProvisioned } from "./provisioned-flag";
+
+export interface UseVault {
+  status: VaultStatus;
+  dek: CryptoKey | null;
+  isProvisioned: boolean;
+  unlock: (masterPassword: string) => Promise<void>;
+  createVault: (masterPassword: string) => Promise<string[]>;
+  lock: () => void;
+}
+
+export function useVault(): UseVault {
+  const status = useSession((s) => s.status);
+  const dek = useSession((s) => s.dek);
+  return {
+    status,
+    dek,
+    isProvisioned: isProvisioned(),
+    unlock,
+    createVault: createVaultAndUnlock,
+    lock,
+  };
+}
