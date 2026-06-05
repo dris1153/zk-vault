@@ -1,9 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Eye, EyeSlash } from "@phosphor-icons/react/dist/ssr";
+import { useEffect, useRef, useState } from "react";
+import { Eye, EyeSlash, QrCode } from "@phosphor-icons/react/dist/ssr";
 import { parseTotp, currentCode, formatCode } from "@/lib/ui/totp";
+import { decodeQrFromImage } from "@/lib/ui/qr-decode";
 import { TextInput } from "./ui-kit";
+
+type ScanState = "idle" | "scanning" | "error";
 
 export function TotpField({
   value,
@@ -13,7 +16,9 @@ export function TotpField({
   onChange: (v: string) => void;
 }) {
   const [show, setShow] = useState(false);
+  const [scan, setScan] = useState<ScanState>("idle");
   const [, force] = useState(0);
+  const fileRef = useRef<HTMLInputElement>(null);
   const totp = parseTotp(value);
 
   useEffect(() => {
@@ -24,14 +29,41 @@ export function TotpField({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
+  const set = (v: string) => {
+    onChange(v);
+    setScan("idle");
+  };
+
+  async function handleImage(file: Blob) {
+    setScan("scanning");
+    try {
+      const text = await decodeQrFromImage(file);
+      if (text) set(text.trim());
+      else setScan("error");
+    } catch {
+      setScan("error");
+    }
+  }
+
+  const onPaste = (e: React.ClipboardEvent) => {
+    const img = Array.from(e.clipboardData.items).find((i) =>
+      i.type.startsWith("image/"),
+    );
+    const file = img?.getAsFile();
+    if (file) {
+      e.preventDefault();
+      void handleImage(file);
+    }
+  };
+
   return (
-    <div className="flex flex-col gap-1.5">
+    <div className="flex flex-col gap-1.5" onPaste={onPaste}>
       <div className="relative">
         <TextInput
           mono
           type={show ? "text" : "password"}
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => set(e.target.value)}
           placeholder="JBSW... hoặc otpauth://..."
           className="pr-10"
         />
@@ -45,12 +77,42 @@ export function TotpField({
         </button>
       </div>
 
-      {value.trim() &&
-        (totp ? (
-          <Preview totp={totp} />
-        ) : (
-          <span className="text-xs text-danger">Secret không hợp lệ</span>
-        ))}
+      <input
+        ref={fileRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={(e) => {
+          const f = e.target.files?.[0];
+          if (f) void handleImage(f);
+          e.target.value = "";
+        }}
+      />
+
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+        <button
+          type="button"
+          onClick={() => fileRef.current?.click()}
+          className="flex shrink-0 items-center gap-1 text-xs text-azure-link hover:underline"
+        >
+          <QrCode size={14} /> Quét QR
+        </button>
+        {scan === "scanning" && (
+          <span className="text-xs text-smoke">Đang quét...</span>
+        )}
+        {scan === "error" && (
+          <span className="text-xs text-danger">
+            Không tìm thấy mã QR hợp lệ
+          </span>
+        )}
+        {scan === "idle" &&
+          value.trim() &&
+          (totp ? (
+            <Preview totp={totp} />
+          ) : (
+            <span className="text-xs text-danger">Secret không hợp lệ</span>
+          ))}
+      </div>
     </div>
   );
 }
