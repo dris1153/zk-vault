@@ -1,8 +1,28 @@
+"use client";
+
+import { useState } from "react";
+import { useVault } from "@/lib/vault/use-vault";
+import { LockScreen } from "@/components/lock-screen";
+import { AppShell } from "@/components/app-shell";
+import { RecoveryWordsDialog } from "@/components/recovery-words-dialog";
+
 export default function Home() {
+  const { status } = useVault();
+  const [recoveryWords, setRecoveryWords] = useState<string[] | null>(null);
+
+  if (status !== "unlocked") {
+    return <LockScreen onProvisioned={setRecoveryWords} />;
+  }
+
   return (
-    <main style={{ padding: 48 }}>
-      <h1>Vault</h1>
-      <p>Zero-knowledge credential vault. UI lands in Phase 5.</p>
-    </main>
+    <>
+      <AppShell />
+      {recoveryWords && (
+        <RecoveryWordsDialog
+          words={recoveryWords}
+          onClose={() => setRecoveryWords(null)}
+        />
+      )}
+    </>
   );
 }

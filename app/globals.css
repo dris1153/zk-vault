@@ -1,14 +1,56 @@
 @import "tailwindcss";
 
-/* DESIGN.md tokens (Electric Azure) are wired in Phase 5 via @theme. */
+/* DESIGN.md tokens - Electric Azure on Obsidian (dark-only, terminal-native). */
 @theme {
-  --color-obsidian: #121212;
-  --color-azure: #3e9bff;
-  --color-snow: #fafafa;
+  --color-obsidian: #121212; /* page canvas */
+  --color-ash: #242424; /* elevated surface / hover */
+  --color-charcoal: #2e2e2e; /* hairline card borders */
+  --color-slate: #393939; /* input borders */
+  --color-graphite: #4d4d4d; /* icon outlines */
+  --color-smoke: #898989; /* captions / masked dots */
+  --color-silver: #b4b4b4; /* labels / nav */
+  --color-snow: #fafafa; /* primary text */
+  --color-azure: #3e9bff; /* accent / CTA / focus */
+  --color-azure-link: #2b8bff; /* links */
+  --color-azure-depth: #1f3a6b; /* pressed azure border */
+  --color-danger: #e5484d; /* destructive / errors only */
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, sans-serif;
+  --font-mono: var(--font-scp), ui-monospace, SFMono-Regular, Menlo, Consolas,
+    monospace;
+
+  --radius-card: 16px;
+  --radius-input: 8px;
 }
 
 html,
 body {
   background: var(--color-obsidian);
   color: var(--color-snow);
+}
+
+body {
+  font-family: var(--font-sans);
+  letter-spacing: -0.007em;
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-charcoal);
+  border-radius: 8px;
+  border: 2px solid var(--color-obsidian);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
 }
