@@ -126,7 +126,11 @@ export function LockScreen({
               autoFocus={mode === "create"}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email"
-              autoComplete="username"
+              autoComplete="off"
+              data-1p-ignore=""
+              data-lpignore="true"
+              data-bwignore=""
+              data-form-type="other"
               className="w-full rounded-lg border border-slate bg-obsidian px-3 py-2.5 text-sm text-snow outline-none transition placeholder:text-smoke focus:border-azure"
             />
           )}
@@ -228,6 +232,11 @@ function PasswordInput({
         autoFocus={autoFocus}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
+        autoComplete="new-password"
+        data-1p-ignore=""
+        data-lpignore="true"
+        data-bwignore=""
+        data-form-type="other"
         className="w-full rounded-lg border border-slate bg-obsidian px-3 py-2.5 pr-10 font-mono text-sm text-snow outline-none transition placeholder:font-sans placeholder:text-smoke focus:border-azure"
       />
       {onToggle && (
