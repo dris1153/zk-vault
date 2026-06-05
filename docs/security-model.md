@@ -68,7 +68,11 @@ insider, anon-key exposure - all yield only ciphertext.
 Out of scope (cannot be solved by this architecture):
 - **Compromised device** (keylogger/malware) captures the master password at entry.
 - **Web supply-chain**: a compromised host/dependency could serve malicious JS
-  that exfiltrates the DEK at runtime. Mitigated by CSP, pinned/minimal deps, and
-  self-hosting. A nonce-based CSP (removing `script-src 'unsafe-inline'`) and a
-  PWA/extension are tracked for v2.
+  that exfiltrates the DEK at runtime. Mitigated by CSP, pinned/minimal deps,
+  self-hosting, and the PWA service worker (precaches the build, so the code is
+  pinned locally rather than re-fetched each load). A nonce-based CSP (removing
+  `script-src 'unsafe-inline'`) was evaluated and intentionally NOT pursued: it
+  conflicts with static prerendering (nonces need per-request rendering) and the
+  residual is already mitigated for a self-hosted personal app by the above. The
+  `'unsafe-inline'` for `script-src` is an accepted residual.
 - **Lost master password AND lost recovery key/backup** = unrecoverable by design.

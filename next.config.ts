@@ -14,9 +14,12 @@ if (!supabaseUrl && !isDev) {
 const supabaseOrigin = supabaseUrl ? new URL(supabaseUrl).origin : "";
 const supabaseWss = supabaseOrigin.replace(/^https/, "wss");
 
-// NOTE: 'unsafe-inline' for script-src is a known residual (Next injects an
-// inline bootstrap). A nonce-based CSP via middleware (v2) would remove it and
-// is the highest-value hardening against injected-script DEK theft.
+// NOTE: 'unsafe-inline' for script-src is an ACCEPTED residual (Next injects an
+// inline bootstrap). A nonce-based CSP via middleware was evaluated and
+// intentionally NOT pursued: nonces require per-request rendering, which conflicts
+// with this app's static prerendering, and the residual is already mitigated for a
+// self-hosted personal vault by pinned/minimal deps + the PWA service worker
+// (precaches the build, pinning the code locally instead of re-fetching each load).
 // 'wasm-unsafe-eval' is REQUIRED: hash-wasm compiles the Argon2id WebAssembly
 // module at unlock/create time. It permits WASM compilation only, NOT general
 // JS eval(), so it does not weaken XSS protection.
