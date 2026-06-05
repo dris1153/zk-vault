@@ -113,7 +113,7 @@ export function AppShell() {
         onClick={() => setSidebarOpen(false)}
       />
       <div
-        className={`fixed inset-y-0 left-0 z-50 transition-transform duration-200 md:hidden ${
+        className={`fixed inset-y-0 left-0 z-50 shadow-2xl transition-transform duration-200 md:hidden ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >

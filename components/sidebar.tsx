@@ -52,7 +52,7 @@ export function Sidebar({
 
   return (
     <aside
-      className={`flex w-60 shrink-0 flex-col gap-1 overflow-y-auto border-r border-charcoal p-3 ${className}`}
+      className={`flex w-60 shrink-0 flex-col gap-1 overflow-y-auto border-r border-charcoal bg-obsidian p-3 ${className}`}
     >
       <div className="flex items-center gap-2.5 px-2.5 pb-4 pt-2 font-medium">
         <BrandMark variant="tile" size={22} />
