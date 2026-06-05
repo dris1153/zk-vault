@@ -43,14 +43,14 @@ Built with Next.js (App Router) + Supabase (Postgres + Auth + RLS) + Tailwind v4
 
 ## Scripts
 
-| Script | Purpose |
-|--------|---------|
-| `npm run dev` / `build` / `start` | Next.js dev / production build / serve |
-| `npm test` | Crypto unit tests (Vitest) |
-| `npm run typecheck` | `tsc --noEmit` |
-| `npm run guard` | Fail if any server-context file imports the crypto/vault layer |
-| `npm run verify:supabase` | Live engine smoke test (throwaway account) |
-| `npm run db:reset` | Drop + re-apply migrations (DEV ONLY - wipes vault data) |
+| Script                            | Purpose                                                        |
+| --------------------------------- | -------------------------------------------------------------- |
+| `npm run dev` / `build` / `start` | Next.js dev / production build / serve                         |
+| `npm test`                        | Crypto unit tests (Vitest)                                     |
+| `npm run typecheck`               | `tsc --noEmit`                                                 |
+| `npm run guard`                   | Fail if any server-context file imports the crypto/vault layer |
+| `npm run verify:supabase`         | Live engine smoke test (throwaway account)                     |
+| `npm run db:reset`                | Drop + re-apply migrations (DEV ONLY - wipes vault data)       |
 
 `npm run build` runs the guard first.
 
@@ -73,9 +73,3 @@ Implementation plan + history: `plans/260605-1204-zk-credential-vault/`.
 In-app user guide (Vietnamese, with diagrams): the **`/docs`** route - storage
 workflow, unlock flow, deployment A-Z, recovery, and FAQ. This README is the
 English dev reference; `/docs` is the canonical user-facing guide.
-
-## Status
-
-v1 complete: crypto, backend, session, CRUD, UI, hardening (export/import,
-change-master, CSP, CI guard). Deferred: **v1.5** WebAuthn/biometric unlock +
-TOTP generator; **v2** nonce-based CSP, offline password-health check, PWA.
