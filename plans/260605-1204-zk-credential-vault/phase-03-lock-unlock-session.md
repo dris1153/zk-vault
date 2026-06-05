@@ -1,7 +1,7 @@
 ---
 phase: 3
 title: "Lock / Unlock / Session"
-status: pending
+status: code-complete (live verification pending Supabase)
 priority: P1
 effort: "1-2d"
 dependencies: [1, 2]

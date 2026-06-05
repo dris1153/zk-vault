@@ -1,7 +1,7 @@
 ---
 phase: 6
 title: "Hardening"
-status: pending
+status: completed (code-reviewed; C1/H1/H2/M1 fixes applied)
 priority: P2
 effort: "2d"
 dependencies: [3, 4, 5]

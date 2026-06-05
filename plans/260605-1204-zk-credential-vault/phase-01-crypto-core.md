@@ -1,7 +1,7 @@
 ---
 phase: 1
 title: "Crypto Core"
-status: pending
+status: completed
 priority: P1
 effort: "2-3d"
 dependencies: []

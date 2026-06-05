@@ -1,7 +1,7 @@
 ---
 phase: 5
 title: "UI"
-status: pending
+status: completed (build + typecheck pass; pending your visual run)
 priority: P2
 effort: "3-4d"
 dependencies: [3, 4]

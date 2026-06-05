@@ -1,7 +1,7 @@
 ---
 phase: 4
 title: "Vault CRUD + Search"
-status: pending
+status: code-complete (live verification pending Supabase)
 priority: P1
 effort: "2d"
 dependencies: [1, 2, 3]

@@ -1,7 +1,7 @@
 ---
 phase: 2
 title: "Supabase Backend"
-status: pending
+status: code-complete (live verification pending user Supabase project)
 priority: P1
 effort: "1-2d"
 dependencies: [1]
