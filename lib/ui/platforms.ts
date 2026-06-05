@@ -36,6 +36,7 @@ export type PlatformCategory =
   | "messaging"
   | "google"
   | "finance"
+  | "game"
   | "other";
 
 type IconComp = ComponentType<{ size?: number; className?: string }>;
@@ -178,6 +179,13 @@ export const PLATFORMS: Platform[] = [
     icon: svg(Reddit),
   },
   {
+    id: "riot",
+    name: "Riot",
+    category: "game",
+    domains: ["riotgames.com"],
+    icon: svg(Reddit),
+  },
+  {
     id: "youtube",
     name: "YouTube",
     category: "social",
@@ -228,8 +236,9 @@ export const CATEGORY_LABELS: Record<PlatformCategory, string> = {
   dev: "Lập trình",
   social: "Mạng xã hội",
   messaging: "Nhắn tin",
-  google: "Google & công việc",
+  google: "Google",
   finance: "Tài chính",
+  game: "Trò chơi",
   other: "Khác",
 };
 
@@ -240,6 +249,7 @@ export const CATEGORY_ORDER: PlatformCategory[] = [
   "messaging",
   "google",
   "finance",
+  "game",
   "other",
 ];
 
