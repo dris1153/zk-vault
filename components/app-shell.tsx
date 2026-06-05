@@ -23,7 +23,8 @@ export function AppShell() {
   const breachEnabled = useSettings((s) => s.settings.breachCheckEnabled);
 
   const [category, setCategory] = useState<Category>("all");
-  const [tag, setTag] = useState<string | null>(null);
+  const [tags, setTags] = useState<string[]>([]);
+  const [tagMode, setTagMode] = useState<"any" | "all">("any");
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<VaultItem | null>(null);
   const [editing, setEditing] = useState<VaultItem | null>(null);
@@ -48,16 +49,24 @@ export function AppShell() {
     return () => document.removeEventListener("keydown", onKey);
   }, [sidebarOpen]);
 
+  const toggleTag = (t: string) =>
+    setTags((prev) =>
+      prev.includes(t) ? prev.filter((x) => x !== t) : [...prev, t],
+    );
+
   const filtered = useMemo(() => {
     let list = items;
     if (category === "favorites") list = list.filter((i) => i.favorite);
     else if (category !== "all") list = list.filter((i) => i.type === category);
-    if (tag)
-      list = list.filter(
-        (i) => Array.isArray(i.data.tags) && (i.data.tags as string[]).includes(tag),
-      );
+    if (tags.length)
+      list = list.filter((i) => {
+        const t = Array.isArray(i.data.tags) ? (i.data.tags as string[]) : [];
+        return tagMode === "all"
+          ? tags.every((x) => t.includes(x))
+          : tags.some((x) => t.includes(x));
+      });
     return searchItems(list, query);
-  }, [items, category, tag, query]);
+  }, [items, category, tags, tagMode, query]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -95,8 +104,11 @@ export function AppShell() {
         items={items}
         category={category}
         onCategory={setCategory}
-        tag={tag}
-        onTag={setTag}
+        tags={tags}
+        onToggleTag={toggleTag}
+        tagMode={tagMode}
+        onTagMode={setTagMode}
+        onClearTags={() => setTags([])}
         onOpenSettings={() => setSettingsOpen(true)}
         onOpenSecurity={() => {
           setHealthDeep(true);
@@ -124,8 +136,11 @@ export function AppShell() {
           items={items}
           category={category}
           onCategory={setCategory}
-          tag={tag}
-          onTag={setTag}
+          tags={tags}
+          onToggleTag={toggleTag}
+          tagMode={tagMode}
+          onTagMode={setTagMode}
+          onClearTags={() => setTags([])}
           onOpenSettings={() => setSettingsOpen(true)}
           onOpenSecurity={() => {
             setHealthDeep(true);

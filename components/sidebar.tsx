@@ -15,12 +15,17 @@ import { BrandMark } from "./brand-mark";
 
 export type Category = "all" | "favorites" | VaultItemType;
 
+export type TagMode = "any" | "all";
+
 interface SidebarProps {
   items: VaultItem[];
   category: Category;
   onCategory: (c: Category) => void;
-  tag: string | null;
-  onTag: (t: string | null) => void;
+  tags: string[];
+  onToggleTag: (t: string) => void;
+  tagMode: TagMode;
+  onTagMode: (m: TagMode) => void;
+  onClearTags: () => void;
   onOpenSettings: () => void;
   onOpenSecurity: () => void;
   issueCount: number;
@@ -32,8 +37,11 @@ export function Sidebar({
   items,
   category,
   onCategory,
-  tag,
-  onTag,
+  tags,
+  onToggleTag,
+  tagMode,
+  onTagMode,
+  onClearTags,
   onOpenSettings,
   onOpenSecurity,
   issueCount,
@@ -43,7 +51,7 @@ export function Sidebar({
   const countOf = (t: VaultItemType) =>
     items.filter((i) => i.type === t).length;
   const favCount = items.filter((i) => i.favorite).length;
-  const tags = uniqueTags(items);
+  const allTags = uniqueTags(items);
   // Wrap an action so mobile (drawer) usage closes after selecting.
   const nav = (fn: () => void) => () => {
     fn();
@@ -63,11 +71,8 @@ export function Sidebar({
         icon={SquaresFour}
         label="All items"
         count={items.length}
-        active={category === "all" && !tag}
-        onClick={nav(() => {
-          onCategory("all");
-          onTag(null);
-        })}
+        active={category === "all"}
+        onClick={nav(() => onCategory("all"))}
       />
       {TYPE_ORDER.map((t) => (
         <NavItem
@@ -75,44 +80,76 @@ export function Sidebar({
           icon={TYPE_ICON[t]}
           label={pluralize(TYPE_LABEL[t])}
           count={countOf(t)}
-          active={category === t && !tag}
-          onClick={nav(() => {
-            onCategory(t);
-            onTag(null);
-          })}
+          active={category === t}
+          onClick={nav(() => onCategory(t))}
         />
       ))}
       <NavItem
         icon={Star}
         label="Favorites"
         count={favCount}
-        active={category === "favorites" && !tag}
-        onClick={nav(() => {
-          onCategory("favorites");
-          onTag(null);
-        })}
+        active={category === "favorites"}
+        onClick={nav(() => onCategory("favorites"))}
       />
 
-      {tags.length > 0 && (
+      {allTags.length > 0 && (
         <>
           <div className="my-3 h-px bg-charcoal" />
-          <div className="px-2.5 py-1 text-[11px] uppercase tracking-[0.12em] text-smoke">
-            Tags
+          <div className="flex items-center justify-between px-2.5 py-1">
+            <span className="text-[11px] uppercase tracking-[0.12em] text-smoke">
+              Tags
+            </span>
+            <div className="flex items-center gap-1">
+              {tags.length > 0 && (
+                <button
+                  onClick={onClearTags}
+                  className="text-[11px] text-azure-link hover:underline"
+                >
+                  Xoá
+                </button>
+              )}
+              <div className="flex overflow-hidden rounded-md border border-charcoal text-[10px]">
+                <ModePill
+                  active={tagMode === "any"}
+                  onClick={() => onTagMode("any")}
+                  title="Hiện item có bất kỳ tag đã chọn"
+                >
+                  Bất kỳ
+                </ModePill>
+                <ModePill
+                  active={tagMode === "all"}
+                  onClick={() => onTagMode("all")}
+                  title="Hiện item có tất cả tag đã chọn"
+                >
+                  Tất cả
+                </ModePill>
+              </div>
+            </div>
           </div>
-          {tags.map((t) => (
-            <button
-              key={t}
-              onClick={nav(() => onTag(tag === t ? null : t))}
-              className={`flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-sm transition ${
-                tag === t
-                  ? "bg-azure/[0.08] text-snow"
-                  : "text-silver hover:bg-ash hover:text-snow"
-              }`}
-            >
-              <Hash size={14} className="text-graphite" />
-              {t}
-            </button>
-          ))}
+          {allTags.map((t) => {
+            const on = tags.includes(t);
+            return (
+              <button
+                key={t}
+                onClick={() => onToggleTag(t)}
+                className={`flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-sm transition ${
+                  on
+                    ? "bg-azure/[0.08] text-snow"
+                    : "text-silver hover:bg-ash hover:text-snow"
+                }`}
+              >
+                <input
+                  type="checkbox"
+                  checked={on}
+                  readOnly
+                  tabIndex={-1}
+                  className="h-3.5 w-3.5 shrink-0 accent-[var(--color-azure)]"
+                />
+                <Hash size={14} className="text-graphite" />
+                <span className="truncate">{t}</span>
+              </button>
+            );
+          })}
         </>
       )}
 
@@ -137,6 +174,31 @@ export function Sidebar({
         Settings
       </button>
     </aside>
+  );
+}
+
+function ModePill({
+  active,
+  onClick,
+  title,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      title={title}
+      className={`px-1.5 py-0.5 transition ${
+        active ? "bg-azure text-[#08233f]" : "text-smoke hover:text-snow"
+      }`}
+    >
+      {children}
+    </button>
   );
 }
 
