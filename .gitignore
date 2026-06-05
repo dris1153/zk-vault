@@ -29,3 +29,8 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+# serwist (PWA) generated service worker
+/public/sw.js
+/public/sw.js.map
+/public/swe-worker-*.js

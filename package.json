@@ -17,6 +17,8 @@
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",
     "@scure/bip39": "^1.5.4",
+    "@serwist/next": "^9.5.11",
+    "@serwist/window": "^9.5.11",
     "@supabase/supabase-js": "^2.107.0",
     "@zxcvbn-ts/core": "^3.0.4",
     "@zxcvbn-ts/language-common": "^3.0.4",
@@ -28,6 +30,7 @@
     "otpauth": "^9.5.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "serwist": "^9.5.11",
     "zod": "^3.25.76",
     "zustand": "^5.0.14"
   },
@@ -38,6 +41,7 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "pg": "^8.21.0",
+    "sharp": "^0.34.5",
     "tailwindcss": "^4.0.0",
     "tsx": "^4.22.4",
     "typescript": "^5.7.3",

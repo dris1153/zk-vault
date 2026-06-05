@@ -1,7 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Source_Code_Pro } from "next/font/google";
 import "./globals.css";
 import { VaultProvider } from "./providers/vault-provider";
+import { PwaUpdate } from "@/components/pwa-update";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -17,6 +18,11 @@ const scp = Source_Code_Pro({
 export const metadata: Metadata = {
   title: "Vault",
   description: "Personal zero-knowledge credential vault",
+  appleWebApp: { capable: true, title: "Vault", statusBarStyle: "black" },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#121212",
 };
 
 export default function RootLayout({
@@ -26,6 +32,7 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${scp.variable}`}>
       <body>
         <VaultProvider>{children}</VaultProvider>
+        <PwaUpdate />
       </body>
     </html>
   );

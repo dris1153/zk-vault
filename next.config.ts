@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import withSerwistInit from "@serwist/next";
 
 // Lock outbound connections to self + your Supabase project (REST + realtime).
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -31,6 +32,7 @@ const csp = [
   // loads when enabled (default off), and only a 5-char hash prefix is sent.
   `connect-src 'self' ${supabaseOrigin} ${supabaseWss} https://api.pwnedpasswords.com`.trim(),
   `worker-src 'self' blob:`,
+  `manifest-src 'self'`,
   `object-src 'none'`,
   `base-uri 'self'`,
   `form-action 'self'`,
@@ -62,4 +64,13 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+// PWA (Serwist). The SW is disabled in development; it only activates in a
+// production build. The headers()/CSP above are preserved through the wrap.
+const withSerwist = withSerwistInit({
+  swSrc: "app/sw.ts",
+  swDest: "public/sw.js",
+  disable: process.env.NODE_ENV === "development",
+  reloadOnOnline: true,
+});
+
+export default withSerwist(nextConfig);
