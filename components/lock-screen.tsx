@@ -30,6 +30,7 @@ export function LockScreen({
   // on a new device with an existing cloud vault. First-timers use the toggle.
   const [mode, setMode] = useState<"unlock" | "create">("unlock");
   const [email, setEmail] = useState("");
+  const [savedEmail, setSavedEmail] = useState<string | null>(null);
   const [pw, setPw] = useState("");
   const [confirm, setConfirm] = useState("");
   const [show, setShow] = useState(false);
@@ -39,13 +40,18 @@ export function LockScreen({
   // Prefill the remembered email (after mount, to avoid an SSR hydration mismatch).
   useEffect(() => {
     const saved = getVaultEmail();
-    if (saved) setEmail(saved);
+    if (saved) {
+      setEmail(saved);
+      setSavedEmail(saved);
+    }
     setReady(true);
   }, []);
 
   const busy = status === "unlocking";
-  // Locked vault with a remembered email: show it as a label, not an input.
-  const emailKnown = mode === "unlock" && ready && email.trim().length > 0;
+  // Show the email as a label only when there is a REMEMBERED email (read at
+  // mount), not while the user is typing a fresh one on first login.
+  const emailKnown =
+    mode === "unlock" && ready && !!savedEmail && savedEmail.trim().length > 0;
 
   async function biometric() {
     setError(null);
@@ -65,6 +71,7 @@ export function LockScreen({
       // best-effort; locking already wiped the in-RAM key
     }
     setEmail("");
+    setSavedEmail(null);
   }
 
   async function submit(e: React.FormEvent) {
