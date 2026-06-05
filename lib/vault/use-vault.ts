@@ -4,12 +4,10 @@
 
 import { useSession, type VaultStatus } from "./session";
 import { createVaultAndUnlock, unlock, lock } from "./actions";
-import { isProvisioned } from "./provisioned-flag";
 
 export interface UseVault {
   status: VaultStatus;
   dek: CryptoKey | null;
-  isProvisioned: boolean;
   unlock: (email: string, masterPassword: string) => Promise<void>;
   createVault: (email: string, masterPassword: string) => Promise<string[]>;
   lock: () => void;
@@ -21,7 +19,6 @@ export function useVault(): UseVault {
   return {
     status,
     dek,
-    isProvisioned: isProvisioned(),
     unlock,
     createVault: createVaultAndUnlock,
     lock,

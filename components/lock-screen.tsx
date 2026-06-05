@@ -22,11 +22,11 @@ export function LockScreen({
 }: {
   onProvisioned: (words: string[]) => void;
 }) {
-  const { status, isProvisioned, unlock, createVault } = useVault();
+  const { status, unlock, createVault } = useVault();
   const { enrolled, unlock: unlockBiometric } = useBiometric();
-  const [mode, setMode] = useState<"unlock" | "create">(
-    isProvisioned ? "unlock" : "create",
-  );
+  // Always default to "unlock" (deterministic - no SSR/hydration flip) and correct
+  // on a new device with an existing cloud vault. First-timers use the toggle.
+  const [mode, setMode] = useState<"unlock" | "create">("unlock");
   const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
   const [confirm, setConfirm] = useState("");
