@@ -25,5 +25,3 @@ export function supabase(): SupabaseClient {
   }
   return client;
 }
-
-export const VAULT_EMAIL = process.env.NEXT_PUBLIC_VAULT_EMAIL ?? "";

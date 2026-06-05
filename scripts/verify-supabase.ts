@@ -40,10 +40,13 @@ async function main() {
 
   // Supabase rejects fake domains (example.com etc). Build a throwaway address
   // on YOUR real domain via plus-addressing - distinct account, valid domain,
-  // does not touch your real vault email.
-  const vaultEmail = env.NEXT_PUBLIC_VAULT_EMAIL;
+  // does not touch your real vault email. The base address comes from a CLI arg
+  // or VAULT_VERIFY_EMAIL (script-only; the app no longer uses an email env var).
+  const vaultEmail = process.argv[2] || env.VAULT_VERIFY_EMAIL;
   if (!vaultEmail || !vaultEmail.includes("@"))
-    fail("Set NEXT_PUBLIC_VAULT_EMAIL to a real address you control.");
+    fail(
+      "Provide a real address you control: `npm run verify:supabase you@gmail.com` (or set VAULT_VERIFY_EMAIL).",
+    );
   const [local, domain] = vaultEmail.split("@");
   const email = `${local}+zkverify${crypto.randomUUID().slice(0, 8)}@${domain}`;
   const master = `verify-${crypto.randomUUID()}`;

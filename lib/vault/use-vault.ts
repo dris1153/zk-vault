@@ -10,8 +10,8 @@ export interface UseVault {
   status: VaultStatus;
   dek: CryptoKey | null;
   isProvisioned: boolean;
-  unlock: (masterPassword: string) => Promise<void>;
-  createVault: (masterPassword: string) => Promise<string[]>;
+  unlock: (email: string, masterPassword: string) => Promise<void>;
+  createVault: (email: string, masterPassword: string) => Promise<string[]>;
   lock: () => void;
 }
 

@@ -4,7 +4,7 @@
 
 import { randomBytes } from "@/lib/crypto";
 import type { EncryptedBlob } from "@/lib/crypto";
-import { VAULT_EMAIL } from "@/lib/supabase/client";
+import { getVaultEmail } from "./identity";
 
 export class BiometricUnsupportedError extends Error {}
 
@@ -130,7 +130,7 @@ export async function enrollCredential(): Promise<{
       rp: { id: location.hostname, name: "Vault" },
       user: {
         id: randomBytes(16),
-        name: VAULT_EMAIL || "vault",
+        name: getVaultEmail() ?? "vault",
         displayName: "Vault",
       },
       challenge: randomBytes(32),

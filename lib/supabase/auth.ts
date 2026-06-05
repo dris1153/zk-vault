@@ -1,11 +1,13 @@
 // Single-user auth. The "password" passed here is the derived authSecret
 // (base64 Argon2id output) - never the raw master password.
 
-import { supabase, VAULT_EMAIL } from "./client";
+import { supabase } from "./client";
+import { getVaultEmail } from "@/lib/vault/identity";
 
 function requireEmail(): string {
-  if (!VAULT_EMAIL) throw new Error("Missing NEXT_PUBLIC_VAULT_EMAIL");
-  return VAULT_EMAIL;
+  const email = getVaultEmail();
+  if (!email) throw new Error("Chưa có email vault. Nhập email để mở khóa.");
+  return email;
 }
 
 /** Create the single account (first run). Idempotent-ish: throws if it exists. */

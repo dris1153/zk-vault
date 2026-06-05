@@ -9,11 +9,12 @@ import { markProvisioned } from "./provisioned-flag";
 
 /** First run: create the vault, then unlock. Returns recovery words (show once). */
 export async function createVaultAndUnlock(
+  email: string,
   masterPassword: string,
 ): Promise<string[]> {
   useSession.getState().setUnlocking();
   try {
-    const { dek, recoveryWords } = await provisionVault(masterPassword);
+    const { dek, recoveryWords } = await provisionVault(email, masterPassword);
     markProvisioned();
     useSession.getState().setUnlocked(dek);
     await loadItems(dek);
@@ -25,10 +26,13 @@ export async function createVaultAndUnlock(
 }
 
 /** Returning user: authenticate (no DB read for the salt), then unwrap + load. */
-export async function unlock(masterPassword: string): Promise<void> {
+export async function unlock(
+  email: string,
+  masterPassword: string,
+): Promise<void> {
   useSession.getState().setUnlocking();
   try {
-    const cfg = await authenticate(masterPassword);
+    const cfg = await authenticate(email, masterPassword);
     const dek = await unlockWithMaster(masterPassword, cfg);
     useSession.getState().setUnlocked(dek);
     await loadItems(dek);

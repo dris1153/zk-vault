@@ -9,8 +9,9 @@ sees your master password, keys, or plaintext.
 3. Copy `.env.local.example` → `.env.local` and fill:
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-   - `NEXT_PUBLIC_VAULT_EMAIL` (a real address you control)
 
+> The vault email is NOT an env var - you enter it on the lock screen at first
+> signup/unlock (a real address you control), and the browser remembers it.
 > Never paste the `service_role` key anywhere in this app.
 
 ## 2. Disable email confirmation (single-user convenience)

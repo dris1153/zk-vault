@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   Eye,
@@ -11,6 +11,7 @@ import {
 } from "@phosphor-icons/react/dist/ssr";
 import { useVault } from "@/lib/vault/use-vault";
 import { useBiometric } from "@/lib/vault/use-biometric";
+import { getVaultEmail } from "@/lib/vault/identity";
 import { PillButton } from "./ui-kit";
 import { BrandMark } from "./brand-mark";
 
@@ -26,10 +27,17 @@ export function LockScreen({
   const [mode, setMode] = useState<"unlock" | "create">(
     isProvisioned ? "unlock" : "create",
   );
+  const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
   const [confirm, setConfirm] = useState("");
   const [show, setShow] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Prefill the remembered email (after mount, to avoid an SSR hydration mismatch).
+  useEffect(() => {
+    const saved = getVaultEmail();
+    if (saved) setEmail(saved);
+  }, []);
 
   const busy = status === "unlocking";
 
@@ -45,6 +53,8 @@ export function LockScreen({
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+    const mail = email.trim();
+    if (!/^\S+@\S+\.\S+$/.test(mail)) return setError("Nhập email hợp lệ.");
     try {
       if (mode === "create") {
         if (pw.length < MIN_LEN)
@@ -52,10 +62,10 @@ export function LockScreen({
             `Master password must be at least ${MIN_LEN} characters.`,
           );
         if (pw !== confirm) return setError("Passwords do not match.");
-        const words = await createVault(pw);
+        const words = await createVault(mail, pw);
         onProvisioned(words);
       } else {
-        await unlock(pw);
+        await unlock(mail, pw);
       }
     } catch (err) {
       setError(messageFor(err, mode));
@@ -78,13 +88,22 @@ export function LockScreen({
         </p>
 
         <form onSubmit={submit} className="mt-6 flex flex-col gap-3 text-left">
+          <input
+            type="email"
+            value={email}
+            autoFocus={mode === "create"}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email"
+            autoComplete="username"
+            className="w-full rounded-lg border border-slate bg-obsidian px-3 py-2.5 text-sm text-snow outline-none transition placeholder:text-smoke focus:border-azure"
+          />
           <PasswordInput
             value={pw}
             onChange={setPw}
             show={show}
             onToggle={() => setShow((s) => !s)}
             placeholder="Master password"
-            autoFocus
+            autoFocus={mode === "unlock"}
           />
           {mode === "create" && (
             <PasswordInput

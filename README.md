@@ -32,13 +32,13 @@ Built with Next.js (App Router) + Supabase (Postgres + Auth + RLS) + Tailwind v4
 
 1. **Supabase:** create a project, copy the URL + anon key.
 2. **Env:** `cp .env.local.example .env.local` and fill `NEXT_PUBLIC_SUPABASE_URL`,
-   `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_VAULT_EMAIL`. For `npm run db:reset`
-   also set `SUPABASE_DB_URL` (session-pooler connection string). See
-   `supabase/README.md`.
+   `NEXT_PUBLIC_SUPABASE_ANON_KEY`. For `npm run db:reset` also set `SUPABASE_DB_URL`
+   (session-pooler connection string). See `supabase/README.md`. The vault email is
+   entered on the lock screen at first signup/unlock, not via env.
 3. **Auth:** in Supabase, turn OFF "Confirm email".
 4. **Schema:** apply `supabase/migrations/0001_init.sql` (SQL Editor, or
    `npm run db:reset`).
-5. **Verify:** `npm run verify:supabase` (live end-to-end smoke test).
+5. **Verify:** `npm run verify:supabase you@gmail.com` (live end-to-end smoke test).
 6. **Run:** `npm run dev` -> http://localhost:3000 -> create your vault.
 
 ## Scripts

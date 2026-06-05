@@ -13,7 +13,7 @@ import {
   unlockWithMaster,
   deriveAuthSecret,
 } from "@/lib/crypto";
-import { VAULT_EMAIL } from "@/lib/supabase/client";
+import { getVaultEmail } from "./identity";
 import { currentUserId, updateAuthSecret, signInVault } from "@/lib/supabase/auth";
 import { getVaultConfig, updateMasterWrap } from "@/lib/supabase/vault-config";
 import { useSession } from "./session";
@@ -44,8 +44,10 @@ export async function changeMasterPassword(
   const userId = await currentUserId();
   if (!userId) throw new Error("Not signed in");
 
-  const oldAuth = await deriveAuthSecret(currentMaster, VAULT_EMAIL);
-  const result = await changeMaster(dek, newMaster, VAULT_EMAIL, cfg);
+  const email = getVaultEmail();
+  if (!email) throw new Error("No vault email in this session");
+  const oldAuth = await deriveAuthSecret(currentMaster, email);
+  const result = await changeMaster(dek, newMaster, email, cfg);
 
   // 1) Write the new wrap first (safe to fail: nothing else changed yet).
   await updateMasterWrap(userId, result);

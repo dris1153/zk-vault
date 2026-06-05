@@ -8,9 +8,9 @@ import {
   type KdfTuning,
   type VaultConfigCrypto,
 } from "@/lib/crypto";
-import { VAULT_EMAIL } from "./client";
 import { signUpVault, signInVault, currentUserId } from "./auth";
 import { getVaultConfig, insertVaultConfig } from "./vault-config";
+import { setVaultEmail } from "@/lib/vault/identity";
 
 export interface ProvisionResult {
   dek: CryptoKey;
@@ -28,10 +28,12 @@ export async function hasVaultConfig(): Promise<boolean> {
  * Returns the in-RAM DEK and the recovery words to show the user once.
  */
 export async function provisionVault(
+  email: string,
   masterPassword: string,
   tuning?: KdfTuning,
 ): Promise<ProvisionResult> {
-  const created = await createVault(masterPassword, VAULT_EMAIL, tuning);
+  setVaultEmail(email); // identity must be set before any sign-up/sign-in
+  const created = await createVault(masterPassword, email, tuning);
   await signUpVault(created.authSecret);
   // signUp may already create a session; signIn guarantees one (email-confirm off).
   await signInVault(created.authSecret);
@@ -51,10 +53,12 @@ export async function provisionVault(
  * sign in, then fetch the ciphertext config. Phase 3 unwraps the DEK from it.
  */
 export async function authenticate(
+  email: string,
   masterPassword: string,
   tuning?: KdfTuning,
 ): Promise<VaultConfigCrypto> {
-  const authSecret = await deriveAuthSecret(masterPassword, VAULT_EMAIL, tuning);
+  setVaultEmail(email); // identity must be set before sign-in
+  const authSecret = await deriveAuthSecret(masterPassword, email, tuning);
   await signInVault(authSecret);
   const cfg = await getVaultConfig();
   if (!cfg) throw new Error("Authenticated but no vault config found");

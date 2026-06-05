@@ -9,9 +9,9 @@ import {
   bytesToBase64,
   base64ToBytes,
 } from "@/lib/crypto";
-import { VAULT_EMAIL } from "@/lib/supabase/client";
 import { signInVault } from "@/lib/supabase/auth";
 import { getVaultConfig } from "@/lib/supabase/vault-config";
+import { getVaultEmail, setVaultEmail } from "./identity";
 import { useSession } from "./session";
 import { loadItems } from "./items-store";
 import {
@@ -27,6 +27,7 @@ import {
 interface Bundle {
   dek: string; // base64 raw DEK
   authSecret: string;
+  email: string; // vault email (auth salt + login id), so unlock is self-contained
 }
 
 function prfKey(prfOutput: ArrayBuffer): Promise<CryptoKey> {
@@ -47,13 +48,18 @@ export async function enableBiometric(masterPassword: string): Promise<void> {
   if (!cfg) throw new Error("No vault config found");
   await unlockWithMaster(masterPassword, cfg); // throws on a wrong master
 
-  const authSecret = await deriveAuthSecret(masterPassword, VAULT_EMAIL);
+  const email = getVaultEmail();
+  if (!email) throw new Error("No vault email in this session");
+  const authSecret = await deriveAuthSecret(masterPassword, email);
   const dekBytes = new Uint8Array(await crypto.subtle.exportKey("raw", dek));
   const dekRaw = bytesToBase64(dekBytes);
 
   const { credentialId, prfSalt, prfOutput } = await enrollCredential();
   const key = await prfKey(prfOutput);
-  const wrapped = await encryptJSON({ dek: dekRaw, authSecret } as Bundle, key);
+  const wrapped = await encryptJSON(
+    { dek: dekRaw, authSecret, email } as Bundle,
+    key,
+  );
   dekBytes.fill(0); // best-effort scrub
   new Uint8Array(prfOutput).fill(0);
 
@@ -86,10 +92,16 @@ export async function unlockWithBiometric(): Promise<void> {
     );
     const key = await prfKey(prfOutput);
     new Uint8Array(prfOutput).fill(0); // best-effort scrub
-    const { dek: dekRaw, authSecret } = await decryptJSON<Bundle>(
+    const { dek: dekRaw, authSecret, email } = await decryptJSON<Bundle>(
       rec.wrapped,
       key,
     );
+    if (!email) {
+      throw new Error(
+        "Biometric needs to be re-enabled (no email stored). Use your master password.",
+      );
+    }
+    setVaultEmail(email); // restore identity before sign-in (no localStorage dependency)
 
     const dekBytes = base64ToBytes(dekRaw);
     const dek = await crypto.subtle.importKey(

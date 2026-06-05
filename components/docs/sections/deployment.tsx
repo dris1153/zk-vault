@@ -43,17 +43,17 @@ export function Deployment() {
 
         <Step n={2} title="Điền .env.local">
           Sao chép <InlineCode>.env.local.example</InlineCode> thành{" "}
-          <InlineCode>.env.local</InlineCode> rồi điền 3 biến (biến tùy chọn cuối
+          <InlineCode>.env.local</InlineCode> rồi điền 2 biến (biến tùy chọn cuối
           chỉ cần cho lệnh <InlineCode>db:reset</InlineCode>):
           <CodeBlock>{`NEXT_PUBLIC_SUPABASE_URL=https://xxxx.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOi...
-NEXT_PUBLIC_VAULT_EMAIL=ban@gmail.com
 
 # tùy chọn - cho "npm run db:reset" (chứa mật khẩu DB, giữ bí mật)
 SUPABASE_DB_URL=postgresql://postgres.xxxx:MATKHAU@aws-0-region.pooler.supabase.com:5432/postgres`}</CodeBlock>
-          Cả 3 biến <InlineCode>NEXT_PUBLIC_*</InlineCode> đều công khai an toàn -
+          Hai biến <InlineCode>NEXT_PUBLIC_*</InlineCode> đều công khai an toàn -
           bí mật của bạn được bảo vệ bởi master password, không suy ra được từ
-          chúng.
+          chúng. <strong>Email vault không phải biến env</strong> - bạn nhập nó
+          trên màn hình khóa ở lần tạo/mở khóa đầu, app sẽ nhớ và điền sẵn sau đó.
         </Step>
 
         <Step n={3} title="Tắt xác nhận email">
@@ -71,8 +71,9 @@ SUPABASE_DB_URL=postgresql://postgres.xxxx:MATKHAU@aws-0-region.pooler.supabase.
         </Step>
 
         <Step n={5} title="Kiểm tra engine (live)">
-          Chạy smoke-test đầu cuối với tài khoản nháp (không đụng vault thật):
-          <CodeBlock>{`npm run verify:supabase`}</CodeBlock>
+          Chạy smoke-test đầu cuối với tài khoản nháp (không đụng vault thật);
+          truyền email thật bạn kiểm soát (dùng plus-addressing, không động vault):
+          <CodeBlock>{`npm run verify:supabase ban@gmail.com`}</CodeBlock>
           Phải qua đủ 8 PASS: provision, đăng nhập, RLS, mở khóa, recovery key,
           mã hóa CRUD.
         </Step>
@@ -85,11 +86,11 @@ npm run dev   # http://localhost:3000`}</CodeBlock>
 
         <Step n={7} title="Deploy lên Vercel">
           Đẩy code lên GitHub. Vào Vercel: <strong>Add New &rarr; Project</strong>{" "}
-          rồi import repo. Trong phần Environment Variables, thêm đúng 3 biến{" "}
+          rồi import repo. Trong phần Environment Variables, thêm 2 biến{" "}
           <InlineCode>NEXT_PUBLIC_SUPABASE_URL</InlineCode>,{" "}
-          <InlineCode>NEXT_PUBLIC_SUPABASE_ANON_KEY</InlineCode>,{" "}
-          <InlineCode>NEXT_PUBLIC_VAULT_EMAIL</InlineCode>. Vercel tự nhận Next.js
-          và build (<InlineCode>npm run build</InlineCode> đã chạy sẵn CI guard).
+          <InlineCode>NEXT_PUBLIC_SUPABASE_ANON_KEY</InlineCode>. Vercel tự nhận
+          Next.js và build (<InlineCode>npm run build</InlineCode> đã chạy sẵn CI
+          guard). Email vault bạn nhập khi mở app lần đầu.
         </Step>
       </Steps>
 
