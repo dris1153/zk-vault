@@ -2,8 +2,8 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Vault",
-    short_name: "Vault",
+    name: "ZKVault",
+    short_name: "ZKVault",
     description: "Personal zero-knowledge credential vault",
     start_url: "/",
     scope: "/",
