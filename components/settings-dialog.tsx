@@ -1,0 +1,112 @@
+"use client";
+
+import { useState } from "react";
+import { X } from "@phosphor-icons/react/dist/ssr";
+import { useSettings } from "@/lib/vault/settings-store";
+import { useVault } from "@/lib/vault/use-vault";
+import { Modal, IconButton, Field } from "./ui-kit";
+import { SettingsBackup } from "./settings-backup";
+import { SettingsAccount } from "./settings-account";
+
+type Tab = "security" | "backup" | "account";
+
+const LOCK_OPTIONS = [
+  { label: "1 minute", ms: 60_000 },
+  { label: "5 minutes", ms: 5 * 60_000 },
+  { label: "15 minutes", ms: 15 * 60_000 },
+  { label: "30 minutes", ms: 30 * 60_000 },
+];
+const CLIP_OPTIONS = [10, 20, 30];
+const selectCls =
+  "w-full rounded-lg border border-slate bg-obsidian px-3 py-2.5 text-sm text-snow outline-none focus:border-azure";
+
+export function SettingsDialog({
+  open,
+  onClose,
+}: {
+  open: boolean;
+  onClose: () => void;
+}) {
+  const { dek } = useVault();
+  const [tab, setTab] = useState<Tab>("security");
+
+  return (
+    <Modal open={open} onClose={onClose}>
+      <div className="flex items-center justify-between border-b border-charcoal p-5">
+        <h2 className="text-base font-medium">Settings</h2>
+        <IconButton onClick={onClose} aria-label="Close">
+          <X size={18} />
+        </IconButton>
+      </div>
+
+      <div className="flex gap-1 border-b border-charcoal px-3">
+        {(["security", "backup", "account"] as Tab[]).map((t) => (
+          <button
+            key={t}
+            onClick={() => setTab(t)}
+            className={`border-b-2 px-3 py-2.5 text-sm capitalize transition ${
+              tab === t
+                ? "border-azure text-snow"
+                : "border-transparent text-silver hover:text-snow"
+            }`}
+          >
+            {t}
+          </button>
+        ))}
+      </div>
+
+      <div className="p-5">
+        {tab === "security" && <SecuritySettings />}
+        {tab === "backup" && dek && <SettingsBackup dek={dek} />}
+        {tab === "account" && <SettingsAccount />}
+      </div>
+    </Modal>
+  );
+}
+
+function SecuritySettings() {
+  const { settings, update } = useSettings();
+  return (
+    <div className="flex flex-col gap-5">
+      <Field label="Auto-lock after">
+        <select
+          className={selectCls}
+          value={settings.autoLockMs}
+          onChange={(e) => update({ autoLockMs: Number(e.target.value) })}
+        >
+          {LOCK_OPTIONS.map((o) => (
+            <option key={o.ms} value={o.ms}>
+              {o.label}
+            </option>
+          ))}
+        </select>
+      </Field>
+
+      <label className="flex items-center justify-between text-sm text-silver">
+        Lock when the tab is hidden
+        <input
+          type="checkbox"
+          checked={settings.lockOnHidden}
+          onChange={(e) => update({ lockOnHidden: e.target.checked })}
+          className="h-4 w-4 accent-[var(--color-azure)]"
+        />
+      </label>
+
+      <Field label="Clear clipboard after copy">
+        <select
+          className={selectCls}
+          value={settings.clipboardClearSeconds}
+          onChange={(e) =>
+            update({ clipboardClearSeconds: Number(e.target.value) })
+          }
+        >
+          {CLIP_OPTIONS.map((s) => (
+            <option key={s} value={s}>
+              {s} seconds
+            </option>
+          ))}
+        </select>
+      </Field>
+    </div>
+  );
+}
