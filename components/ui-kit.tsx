@@ -58,7 +58,11 @@ export function Field({ label, children, hint }: FieldProps) {
 
 export const TextInput = forwardRef<
   HTMLInputElement,
-  React.InputHTMLAttributes<HTMLInputElement> & { mono?: boolean }
+  React.InputHTMLAttributes<HTMLInputElement> & {
+    mono?: boolean;
+    // allow password-manager ignore attributes (data-1p-ignore, data-lpignore, ...)
+    [key: `data-${string}`]: string | undefined;
+  }
 >(function TextInput({ className = "", mono, ...props }, ref) {
   return (
     <input
