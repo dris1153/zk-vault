@@ -183,7 +183,7 @@ export const PLATFORMS: Platform[] = [
     name: "Riot",
     category: "game",
     domains: ["riotgames.com"],
-    icon: svg(Reddit),
+    icon: png("riot"),
   },
   {
     id: "youtube",
