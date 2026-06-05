@@ -64,10 +64,19 @@ export const TextInput = forwardRef<
     // allow password-manager ignore attributes (data-1p-ignore, data-lpignore, ...)
     [key: `data-${string}`]: string | undefined;
   }
->(function TextInput({ className = "", mono, ...props }, ref) {
+>(function TextInput({ className = "", mono, type, autoComplete, ...props }, ref) {
+  // A vault wants NO browser/password-manager autofill on any field. Default to
+  // off (new-password for password fields) + ignore attrs; callers can override.
+  const noFill = autoComplete ?? (type === "password" ? "new-password" : "off");
   return (
     <input
       ref={ref}
+      type={type}
+      autoComplete={noFill}
+      data-1p-ignore=""
+      data-lpignore="true"
+      data-bwignore=""
+      data-form-type="other"
       className={`w-full rounded-lg border border-slate bg-obsidian px-3 py-2.5 text-sm text-snow outline-none transition placeholder:text-smoke focus:border-azure ${
         mono ? "font-mono tracking-normal" : ""
       } ${className}`}
@@ -78,11 +87,17 @@ export const TextInput = forwardRef<
 
 export function TextArea({
   className = "",
+  autoComplete = "off",
   ...props
 }: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
   return (
     <textarea
       rows={3}
+      autoComplete={autoComplete}
+      data-1p-ignore=""
+      data-lpignore="true"
+      data-bwignore=""
+      data-form-type="other"
       className={`w-full resize-y rounded-lg border border-slate bg-obsidian px-3 py-2.5 text-sm text-snow outline-none transition placeholder:text-smoke focus:border-azure ${className}`}
       {...props}
     />

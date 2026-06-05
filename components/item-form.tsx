@@ -11,15 +11,6 @@ import { EngineSelect } from "./engine-select";
 
 export type FormData = Record<string, unknown>;
 
-// Stop browser + password-manager autofill in the item dialog: these fields are
-// for typing NEW credentials to store, not a login form. Spread onto each input.
-const IGNORE_AUTOFILL = {
-  "data-1p-ignore": "",
-  "data-lpignore": "true",
-  "data-bwignore": "",
-  "data-form-type": "other",
-} as const;
-
 export function ItemForm({
   type,
   value,
@@ -41,7 +32,6 @@ export function ItemForm({
               <TextArea
                 value={str}
                 onChange={(e) => set(f.name, e.target.value)}
-                autoComplete="off"
                 className={f.name === "public_key" ? "font-mono" : ""}
               />
             ) : f.kind === "secret" ? (
@@ -61,8 +51,6 @@ export function ItemForm({
               <TextInput
                 value={str}
                 onChange={(e) => set(f.name, e.target.value)}
-                autoComplete="off"
-                {...IGNORE_AUTOFILL}
               />
             )}
           </Field>
@@ -87,8 +75,6 @@ function SecretInput({
         type={show ? "text" : "password"}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        autoComplete="new-password"
-        {...IGNORE_AUTOFILL}
         className="pr-10"
       />
       <button
@@ -115,8 +101,6 @@ function TagsInput({
     <TextInput
       value={raw}
       placeholder="comma, separated, tags"
-      autoComplete="off"
-      {...IGNORE_AUTOFILL}
       onChange={(e) => {
         setRaw(e.target.value);
         onChange(

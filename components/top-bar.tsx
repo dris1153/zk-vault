@@ -39,6 +39,11 @@ export const TopBar = forwardRef<
           value={query}
           onChange={(e) => onQuery(e.target.value)}
           placeholder="Search vault..."
+          autoComplete="off"
+          data-1p-ignore=""
+          data-lpignore="true"
+          data-bwignore=""
+          data-form-type="other"
           className="w-full rounded-full border border-transparent bg-ash py-2 pl-9 pr-3 text-sm text-snow outline-none transition placeholder:text-smoke focus:border-azure focus:bg-obsidian sm:pr-16"
         />
         <span className="pointer-events-none absolute right-3 top-1/2 hidden -translate-y-1/2 rounded border border-slate px-1.5 py-px text-[11px] text-smoke sm:block">

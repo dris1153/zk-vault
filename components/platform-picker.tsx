@@ -101,6 +101,11 @@ export function PlatformPicker({
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Tìm nền tảng..."
+              autoComplete="off"
+              data-1p-ignore=""
+              data-lpignore="true"
+              data-bwignore=""
+              data-form-type="other"
               className="w-full rounded-md border border-slate bg-obsidian py-2 pl-8 pr-2 text-sm text-snow outline-none placeholder:text-smoke focus:border-azure"
             />
           </div>
