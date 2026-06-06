@@ -2,7 +2,12 @@
 // (RLS scopes everything to auth.uid()).
 
 import { supabase } from "./client";
-import type { VaultConfigCrypto, ChangeMasterResult } from "@/lib/crypto";
+import type {
+  VaultConfigCrypto,
+  ChangeMasterResult,
+  RotateRecoveryResult,
+  KdfParams,
+} from "@/lib/crypto";
 import type { VaultConfigRow } from "./types";
 
 const TABLE = "vault_config";
@@ -53,6 +58,40 @@ export async function updateMasterWrap(
     .update({
       kdf_params: change.kdfParams,
       wrapped_dek_master: change.wrappedDekMaster,
+    })
+    .eq("user_id", userId);
+  if (error) throw error;
+}
+
+/**
+ * Persist the recovery-key rotation from rotateRecovery(). Rotation only OWNS
+ * `saltRecovery` + `wrapped_dek_recovery`, so we re-read the live kdf_params and
+ * merge just `saltRecovery` into it - never writing back a (possibly stale)
+ * saltMaster that a concurrent change-master may have rotated. This keeps
+ * saltMaster in sync with wrapped_dek_master and avoids a master-unlock brick.
+ */
+export async function updateRecoveryWrap(
+  userId: string,
+  change: Pick<RotateRecoveryResult, "kdfParams" | "wrappedDekRecovery">,
+): Promise<void> {
+  const { data, error: readErr } = await supabase()
+    .from(TABLE)
+    .select("kdf_params")
+    .eq("user_id", userId)
+    .single();
+  if (readErr) throw readErr;
+
+  const live = (data as { kdf_params: KdfParams }).kdf_params;
+  const merged: KdfParams = {
+    ...live,
+    saltRecovery: change.kdfParams.saltRecovery,
+  };
+
+  const { error } = await supabase()
+    .from(TABLE)
+    .update({
+      kdf_params: merged,
+      wrapped_dek_recovery: change.wrappedDekRecovery,
     })
     .eq("user_id", userId);
   if (error) throw error;

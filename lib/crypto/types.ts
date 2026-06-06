@@ -45,3 +45,9 @@ export interface ChangeMasterResult {
   wrappedDekMaster: WrappedKey; // DEK re-wrapped under the new master KEK
   authSecret: string; // new Supabase Auth password
 }
+
+export interface RotateRecoveryResult {
+  kdfParams: KdfParams; // new saltRecovery (saltMaster untouched)
+  wrappedDekRecovery: WrappedKey; // DEK re-wrapped under the new recovery KEK
+  recoveryWords: string[]; // the new 24 words, shown to the user once
+}
