@@ -27,6 +27,10 @@ export default function HowToPage() {
         <li>
           Mật khẩu/secret hiện dạng dấu chấm; bấm con mắt để xem, bấm copy để chép.
         </li>
+        <li>
+          Ở ô mật khẩu, bấm nút <strong>tạo lại</strong> để sinh mật khẩu mạnh ngẫu
+          nhiên; thanh đo độ mạnh hiện ngay khi gõ.
+        </li>
       </Bullets>
 
       <Callout title="Tự xóa clipboard">
@@ -128,8 +132,10 @@ export default function HowToPage() {
           <strong>Kiểm tra rò rỉ HIBP</strong> (tùy chọn).
         </li>
         <li>
-          <strong>Đổi master password</strong> (Account) và{" "}
-          <strong>Backup</strong>: Export/Import file <InlineCode>.vault</InlineCode>.
+          <strong>Đổi master password</strong> + <strong>Tạo lại recovery key</strong>{" "}
+          (Account) và <strong>Backup</strong>: Export/Import{" "}
+          <InlineCode>.vault</InlineCode>; tab Backup nhắc khi bản sao lưu quá cũ
+          (&gt;30 ngày).
         </li>
       </Bullets>
 

@@ -11,7 +11,7 @@
 
 import { DEFAULT_KDF, deriveKEK, deriveAuthSecret } from "./kdf";
 import { encryptBytes, decryptBytes } from "./aes";
-import { ab, bytesToBase64, randomBytes } from "./encoding";
+import { ab, bytesToBase64, randomBytes, bytesEqual } from "./encoding";
 import { generateRecoveryWords, normalizeRecoveryPhrase } from "./recovery-key";
 import type {
   KdfParams,
@@ -19,6 +19,7 @@ import type {
   VaultConfigCrypto,
   CreatedVault,
   ChangeMasterResult,
+  RotateRecoveryResult,
 } from "./types";
 
 const SALT_BYTES = 16;
@@ -138,4 +139,40 @@ export async function changeMaster(
   ]);
   dekRaw.fill(0);
   return { kdfParams, wrappedDekMaster, authSecret };
+}
+
+/**
+ * Rotate the recovery key: generate fresh 24 words, rotate saltRecovery, and
+ * re-wrap the DEK under the new recovery KEK. The master wrap, the DEK itself,
+ * the auth secret, and all encrypted items are untouched.
+ *
+ * Only ONE field group changes server-side (kdfParams + wrappedDekRecovery), so
+ * the caller's single update is atomic - there is no partial-brick window, and a
+ * failed write simply leaves the OLD recovery key valid. saltMaster is preserved
+ * so master unlock keeps working.
+ */
+export async function rotateRecovery(
+  dek: CryptoKey,
+  cfg: VaultConfigCrypto,
+): Promise<RotateRecoveryResult> {
+  const dekRaw = await exportDek(dek);
+  const recoveryWords = generateRecoveryWords();
+  // Same normalized phrase that unlock uses, so the new wrap is unwrappable.
+  const recoveryPhrase = normalizeRecoveryPhrase(recoveryWords);
+  const kdfParams: KdfParams = {
+    ...cfg.kdfParams,
+    saltRecovery: bytesToBase64(randomBytes(SALT_BYTES)),
+  };
+  const kek = await deriveKEK(recoveryPhrase, kdfParams, "recovery");
+  const wrappedDekRecovery = await encryptBytes(dekRaw, kek);
+
+  // Self-check: unwrap the fresh wrap and confirm it reproduces the DEK before
+  // we ever hand it back to be persisted (guards against a silent brick).
+  const check = await decryptBytes(wrappedDekRecovery, kek);
+  const ok = bytesEqual(check, dekRaw);
+  check.fill(0);
+  dekRaw.fill(0);
+  if (!ok) throw new Error("Recovery rotation self-check failed");
+
+  return { kdfParams, wrappedDekRecovery, recoveryWords };
 }

@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { Eye, EyeSlash } from "@phosphor-icons/react/dist/ssr";
+import { useEffect, useState } from "react";
+import { Eye, EyeSlash, ArrowsClockwise } from "@phosphor-icons/react/dist/ssr";
 import type { VaultItemType } from "@/lib/supabase/types";
 import { FIELDS_BY_TYPE } from "@/lib/ui/item-fields";
+import { generatePassword } from "@/lib/ui/password-gen";
+import { scorePassword } from "@/lib/vault/password-health";
 import { Field, TextInput, TextArea } from "./ui-kit";
 import { PlatformPicker } from "./platform-picker";
 import { TotpField } from "./totp-field";
@@ -35,7 +37,11 @@ export function ItemForm({
                 className={f.name === "public_key" ? "font-mono" : ""}
               />
             ) : f.kind === "secret" ? (
-              <SecretInput value={str} onChange={(v) => set(f.name, v)} />
+              <SecretInput
+                value={str}
+                onChange={(v) => set(f.name, v)}
+                withTools={f.name === "password" || f.name === "passphrase"}
+              />
             ) : f.kind === "platform" ? (
               <PlatformPicker value={str} onChange={(v) => set(f.name, v)} />
             ) : f.kind === "totp" ? (
@@ -60,31 +66,88 @@ export function ItemForm({
   );
 }
 
+const STRENGTH = [
+  { label: "Rất yếu", color: "bg-danger", w: "w-1/5" },
+  { label: "Yếu", color: "bg-danger", w: "w-2/5" },
+  { label: "Trung bình", color: "bg-amber-500", w: "w-3/5" },
+  { label: "Khá", color: "bg-azure", w: "w-4/5" },
+  { label: "Mạnh", color: "bg-emerald-500", w: "w-full" },
+];
+
 function SecretInput({
   value,
   onChange,
+  withTools,
 }: {
   value: string;
   onChange: (v: string) => void;
+  withTools?: boolean;
 }) {
   const [show, setShow] = useState(false);
+  const [score, setScore] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (!withTools || !value) {
+      setScore(null);
+      return;
+    }
+    let cancelled = false;
+    const t = setTimeout(() => {
+      scorePassword(value).then((s) => {
+        if (!cancelled) setScore(s);
+      });
+    }, 200);
+    return () => {
+      cancelled = true;
+      clearTimeout(t);
+    };
+  }, [value, withTools]);
+
   return (
-    <div className="relative">
-      <TextInput
-        mono
-        type={show ? "text" : "password"}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="pr-10"
-      />
-      <button
-        type="button"
-        onClick={() => setShow((s) => !s)}
-        className="absolute right-2 top-1/2 -translate-y-1/2 text-silver hover:text-snow"
-        aria-label={show ? "Hide" : "Show"}
-      >
-        {show ? <EyeSlash size={18} /> : <Eye size={18} />}
-      </button>
+    <div>
+      <div className="relative">
+        <TextInput
+          mono
+          type={show ? "text" : "password"}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className={withTools ? "pr-16" : "pr-10"}
+        />
+        {withTools && (
+          <button
+            type="button"
+            onClick={() => {
+              onChange(generatePassword());
+              setShow(true);
+            }}
+            className="absolute right-9 top-1/2 -translate-y-1/2 text-silver transition hover:text-azure"
+            aria-label="Tạo mật khẩu mạnh"
+            title="Tạo mật khẩu mạnh"
+          >
+            <ArrowsClockwise size={18} />
+          </button>
+        )}
+        <button
+          type="button"
+          onClick={() => setShow((s) => !s)}
+          className="absolute right-2 top-1/2 -translate-y-1/2 text-silver hover:text-snow"
+          aria-label={show ? "Hide" : "Show"}
+        >
+          {show ? <EyeSlash size={18} /> : <Eye size={18} />}
+        </button>
+      </div>
+      {withTools && score !== null && (
+        <div className="mt-1.5 flex items-center gap-2">
+          <div className="h-1 flex-1 overflow-hidden rounded-full bg-charcoal">
+            <div
+              className={`h-full rounded-full transition-all ${STRENGTH[score].color} ${STRENGTH[score].w}`}
+            />
+          </div>
+          <span className="w-20 text-right text-xs text-smoke">
+            {STRENGTH[score].label}
+          </span>
+        </div>
+      )}
     </div>
   );
 }

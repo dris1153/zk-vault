@@ -6,8 +6,16 @@ import { useItems } from "@/lib/vault/items-store";
 import { removeItem } from "@/lib/vault/item-actions";
 import { searchItems } from "@/lib/vault/search";
 import type { VaultItem } from "@/lib/vault/items";
+import type { VaultItemType } from "@/lib/supabase/types";
+import {
+  FACET_BY_TYPE,
+  sortItems,
+  hasTotp,
+  type SortKey,
+} from "@/lib/ui/item-filters";
 import { Sidebar, type Category } from "./sidebar";
 import { TopBar } from "./top-bar";
+import { FilterBar } from "./filter-bar";
 import { ItemGrid } from "./item-grid";
 import { DetailDrawer } from "./detail-drawer";
 import { AddEditModal } from "./add-edit-modal";
@@ -26,6 +34,10 @@ export function AppShell() {
   const [category, setCategory] = useState<Category>("all");
   const [tags, setTags] = useState<string[]>([]);
   const [tagMode, setTagMode] = useState<"any" | "all">("any");
+  const [facet, setFacet] = useState("");
+  const [sort, setSort] = useState<SortKey>("updated");
+  const [favOnly, setFavOnly] = useState(false);
+  const [twoFAOnly, setTwoFAOnly] = useState(false);
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<VaultItem | null>(null);
   const [editing, setEditing] = useState<VaultItem | null>(null);
@@ -55,10 +67,18 @@ export function AppShell() {
       prev.includes(t) ? prev.filter((x) => x !== t) : [...prev, t],
     );
 
+  // Reset the per-type facet when the category changes (different field per type).
+  useEffect(() => setFacet(""), [category]);
+
+  // Items in the current category only - the facet options derive from this.
+  const categoryItems = useMemo(() => {
+    if (category === "favorites") return items.filter((i) => i.favorite);
+    if (category === "all") return items;
+    return items.filter((i) => i.type === category);
+  }, [items, category]);
+
   const filtered = useMemo(() => {
-    let list = items;
-    if (category === "favorites") list = list.filter((i) => i.favorite);
-    else if (category !== "all") list = list.filter((i) => i.type === category);
+    let list = categoryItems;
     if (tags.length)
       list = list.filter((i) => {
         const t = Array.isArray(i.data.tags) ? (i.data.tags as string[]) : [];
@@ -66,8 +86,15 @@ export function AppShell() {
           ? tags.every((x) => t.includes(x))
           : tags.some((x) => t.includes(x));
       });
-    return searchItems(list, query);
-  }, [items, category, tags, tagMode, query]);
+    if (favOnly) list = list.filter((i) => i.favorite);
+    if (twoFAOnly) list = list.filter(hasTotp);
+    const f =
+      category !== "all" && category !== "favorites"
+        ? FACET_BY_TYPE[category as VaultItemType]
+        : undefined;
+    if (f && facet) list = list.filter((i) => f.value(i) === facet);
+    return sortItems(searchItems(list, query), sort);
+  }, [categoryItems, category, tags, tagMode, favOnly, twoFAOnly, facet, sort, query]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -99,7 +126,7 @@ export function AppShell() {
   const modalOpen = addOpen || editing !== null;
 
   return (
-    <div className="grid h-[100dvh] grid-cols-1 md:grid-cols-[240px_1fr]">
+    <div className="grid h-dvh grid-cols-1 md:grid-cols-[240px_1fr]">
       <Sidebar
         className="hidden md:flex"
         items={items}
@@ -160,6 +187,18 @@ export function AppShell() {
           onAdd={() => setAddOpen(true)}
           onLock={lock}
           onMenu={() => setSidebarOpen(true)}
+        />
+        <FilterBar
+          category={category}
+          items={categoryItems}
+          facet={facet}
+          onFacet={setFacet}
+          sort={sort}
+          onSort={setSort}
+          favOnly={favOnly}
+          onFavOnly={setFavOnly}
+          twoFAOnly={twoFAOnly}
+          onTwoFAOnly={setTwoFAOnly}
         />
         <div className="flex-1 overflow-y-auto">
           <ItemGrid

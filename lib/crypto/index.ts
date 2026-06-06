@@ -8,6 +8,7 @@ export type {
   VaultConfigCrypto,
   CreatedVault,
   ChangeMasterResult,
+  RotateRecoveryResult,
 } from "./types";
 
 export { encryptJSON, decryptJSON, encryptBytes, decryptBytes } from "./aes";
@@ -17,6 +18,7 @@ export {
   unlockWithMaster,
   unlockWithRecovery,
   changeMaster,
+  rotateRecovery,
 } from "./envelope";
 export {
   generateRecoveryWords,

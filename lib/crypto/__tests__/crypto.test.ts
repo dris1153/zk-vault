@@ -4,6 +4,7 @@ import {
   unlockWithMaster,
   unlockWithRecovery,
   changeMaster,
+  rotateRecovery,
   deriveAuthSecret,
   authSalt,
   encryptJSON,
@@ -142,6 +143,47 @@ describe("change master", () => {
     // Recovery key still works after master change.
     const viaRecovery = await unlockWithRecovery(created.recoveryWords, updated);
     expect(bytesEqual(await rawKey(dek), await rawKey(viaRecovery))).toBe(true);
+  });
+});
+
+describe("rotate recovery key", () => {
+  it("new words unlock the same DEK; old words fail; master is unaffected", async () => {
+    const created = await createVault(MASTER, EMAIL, FAST);
+    const dek = created.dek;
+    const blob = await encryptJSON({ note: "stable" }, dek);
+
+    const result = await rotateRecovery(dek, created.config);
+
+    // Fresh words; only saltRecovery rotates (saltMaster preserved).
+    expect(result.recoveryWords).toHaveLength(24);
+    expect(result.recoveryWords).not.toEqual(created.recoveryWords);
+    expect(result.kdfParams.saltMaster).toEqual(
+      created.config.kdfParams.saltMaster,
+    );
+    expect(result.kdfParams.saltRecovery).not.toEqual(
+      created.config.kdfParams.saltRecovery,
+    );
+
+    const updated: VaultConfigCrypto = {
+      version: created.config.version,
+      kdfParams: result.kdfParams,
+      wrappedDekMaster: created.config.wrappedDekMaster, // untouched
+      wrappedDekRecovery: result.wrappedDekRecovery,
+    };
+
+    // New recovery words unlock the SAME DEK and decrypt the old item.
+    const viaNew = await unlockWithRecovery(result.recoveryWords, updated);
+    expect(bytesEqual(await rawKey(dek), await rawKey(viaNew))).toBe(true);
+    expect(await decryptJSON(blob, viaNew)).toEqual({ note: "stable" });
+
+    // Old recovery words no longer unlock.
+    await expect(
+      unlockWithRecovery(created.recoveryWords, updated),
+    ).rejects.toThrow();
+
+    // Master password still unlocks the same DEK.
+    const viaMaster = await unlockWithMaster(MASTER, updated);
+    expect(bytesEqual(await rawKey(dek), await rawKey(viaMaster))).toBe(true);
   });
 });
 

@@ -43,6 +43,14 @@ export default function RecoveryPage() {
         nhưng đăng ký sinh trắc trên thiết bị sẽ bị xóa (bật lại nếu muốn).
       </P>
 
+      <H3>Tạo lại recovery key</H3>
+      <P>
+        Lỡ mất giấy ghi 24 từ? Khi đang mở khóa, vào{" "}
+        <InlineCode>Settings &rarr; Account &rarr; Tạo lại recovery key</InlineCode>{" "}
+        để sinh bộ 24 từ mới. Recovery key cũ <strong>ngừng hiệu lực ngay</strong>;
+        master password không đổi. Lưu kỹ 24 từ mới (chỉ hiện một lần).
+      </P>
+
       <Callout tone="warn" title="Mất cả master lẫn recovery key = mất vĩnh viễn">
         Không có cửa hậu. Hãy in 24 từ recovery ra giấy và cất riêng với file backup.
         Đây là đánh đổi cố ý của zero-knowledge.

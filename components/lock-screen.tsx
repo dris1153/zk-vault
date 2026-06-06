@@ -97,7 +97,7 @@ export function LockScreen({
   }
 
   return (
-    <main className="flex min-h-[100dvh] items-center justify-center px-4">
+    <main className="flex min-h-dvh items-center justify-center px-4">
       <div className="w-full max-w-sm text-center">
         <div className="mb-6 flex justify-center">
           <BrandMark variant="tile" size={48} />
