@@ -14,6 +14,7 @@ import {
   TextInput,
   Switch,
 } from "./ui-kit";
+import { Select } from "./select";
 import { SettingsBackup } from "./settings-backup";
 import { SettingsAccount } from "./settings-account";
 
@@ -26,8 +27,6 @@ const LOCK_OPTIONS = [
   { label: "30 minutes", ms: 30 * 60_000 },
 ];
 const CLIP_OPTIONS = [10, 20, 30];
-const selectCls =
-  "w-full rounded-lg border border-slate bg-obsidian px-3 py-2.5 text-sm text-snow outline-none focus:border-azure";
 
 export function SettingsDialog({
   open,
@@ -87,17 +86,11 @@ function SecuritySettings() {
   return (
     <div className="flex flex-col gap-5">
       <Field label="Auto-lock after">
-        <select
-          className={selectCls}
+        <Select
           value={settings.autoLockMs}
-          onChange={(e) => update({ autoLockMs: Number(e.target.value) })}
-        >
-          {LOCK_OPTIONS.map((o) => (
-            <option key={o.ms} value={o.ms}>
-              {o.label}
-            </option>
-          ))}
-        </select>
+          onChange={(v) => update({ autoLockMs: v })}
+          options={LOCK_OPTIONS.map((o) => ({ value: o.ms, label: o.label }))}
+        />
       </Field>
 
       <div className="flex items-center justify-between text-sm text-silver">
@@ -109,19 +102,14 @@ function SecuritySettings() {
       </div>
 
       <Field label="Clear clipboard after copy">
-        <select
-          className={selectCls}
+        <Select
           value={settings.clipboardClearSeconds}
-          onChange={(e) =>
-            update({ clipboardClearSeconds: Number(e.target.value) })
-          }
-        >
-          {CLIP_OPTIONS.map((s) => (
-            <option key={s} value={s}>
-              {s} seconds
-            </option>
-          ))}
-        </select>
+          onChange={(v) => update({ clipboardClearSeconds: v })}
+          options={CLIP_OPTIONS.map((s) => ({
+            value: s,
+            label: `${s} seconds`,
+          }))}
+        />
       </Field>
 
       <div>
