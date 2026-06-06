@@ -71,7 +71,7 @@ export function Select<T extends string | number>({
       {open && (
         <div
           role="listbox"
-          className="absolute left-0 right-0 -bottom-2 flex flex-col gap-1 translate-y-full max-h-72 overflow-y-auto rounded-lg border border-charcoal bg-ash p-1.5"
+          className="absolute z-10 left-0 right-0 -bottom-2 flex flex-col gap-1 translate-y-full max-h-72 overflow-y-auto rounded-lg border border-charcoal bg-ash p-1.5"
         >
           {options.map((o) => {
             const active = o.value === value;
