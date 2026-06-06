@@ -2,7 +2,29 @@
 
 All notable changes to ZKVault. Format based on [Keep a Changelog](https://keepachangelog.com/), versioning per [Semantic Versioning](https://semver.org/).
 
-Release anchors are git tags (`vX.Y.Z`). To see what changed since a release: `git log v0.2.0..HEAD --oneline`.
+Release anchors are git tags (`vX.Y.Z`). To see what changed since a release: `git log v0.3.0..HEAD --oneline`.
+
+## [0.3.0] - 2026-06-06
+
+OAuth logins, an API-key service picker, and a unified brand-logo system.
+
+### Added
+- **Login OAuth / Credential mode** - a method toggle on Login items. OAuth mode adds a provider picker (with logos: Google, GitHub, Apple, Microsoft, Facebook, X, Discord, GitLab, LinkedIn, Slack) and an account field, and hides the password / 2FA fields.
+- **API Key service picker** - the Service field is now a searchable picker grouped by category (AI, Cloud, Dev, Payments, Comms, Software) with brand logos.
+- **Brand logos in the filter bar** - the platform / engine / service facet dropdowns now show logos.
+- **License + security policy** - MIT `LICENSE.md`, a `SECURITY.md` (private vulnerability reporting), and this `CHANGELOG.md`.
+
+### Changed
+- **Unified brand logos** - all local logos live under `public/brand/` behind shared `svg/png/webp` helpers and a single `BrandIcon` renderer, reused by the platform, engine, and service registries.
+- Switched the package manager to **pnpm** (lockfile `pnpm-lock.yaml`, pinned via `packageManager`).
+
+### Fixed
+- A filter toggle left on in one category (e.g. "Có 2FA") no longer empties another category where that toggle is hidden.
+- Select dropdown z-index (the listbox could render behind other elements).
+- A wrong brand name.
+
+### Security
+- Bumped vitest to 4.x to clear a critical advisory (GHSA-5xrq-8626-4rwp; a dev-only tool, not shipped).
 
 ## [0.2.0] - 2026-06-06
 
