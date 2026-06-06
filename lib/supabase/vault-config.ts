@@ -48,15 +48,35 @@ export async function insertVaultConfig(
 /**
  * Persist the master-wrap rotation from changeMaster(). Call updateAuthSecret()
  * in the same flow - both must succeed together (see crypto changeMaster doc).
+ *
+ * Change-master only OWNS `saltMaster` + `wrapped_dek_master`, so we re-read the
+ * live kdf_params and merge just `saltMaster` - never writing back a (possibly
+ * stale) saltRecovery that a concurrent rotate-recovery may have rotated. This
+ * keeps saltRecovery in sync with wrapped_dek_recovery (symmetric to
+ * updateRecoveryWrap). The revert path passes the OLD saltMaster, so it still
+ * correctly rolls saltMaster back.
  */
 export async function updateMasterWrap(
   userId: string,
   change: Pick<ChangeMasterResult, "kdfParams" | "wrappedDekMaster">,
 ): Promise<void> {
+  const { data, error: readErr } = await supabase()
+    .from(TABLE)
+    .select("kdf_params")
+    .eq("user_id", userId)
+    .single();
+  if (readErr) throw readErr;
+
+  const live = (data as { kdf_params: KdfParams }).kdf_params;
+  const merged: KdfParams = {
+    ...live,
+    saltMaster: change.kdfParams.saltMaster,
+  };
+
   const { error } = await supabase()
     .from(TABLE)
     .update({
-      kdf_params: change.kdfParams,
+      kdf_params: merged,
       wrapped_dek_master: change.wrappedDekMaster,
     })
     .eq("user_id", userId);
