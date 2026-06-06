@@ -87,7 +87,7 @@ export const SERVICES: Service[] = [
     icon: png("elevenlabs"),
   },
   { id: "cohere", name: "Cohere", category: "ai", icon: png("cohere") },
-  { id: "soniox", name: "Soniox", category: "ai", icon: png("soniox") },
+  { id: "soniox", name: "Soniox", category: "ai", icon: webp("soniox") },
   // Cloud
   { id: "aws", name: "AWS", category: "cloud", icon: svg(AWS) },
   { id: "azure", name: "Azure", category: "cloud", icon: svg(Azure) },
@@ -125,8 +125,8 @@ export const SERVICES: Service[] = [
   // Payments
   { id: "stripe", name: "Stripe", category: "payments", icon: png("stripe") },
   { id: "paypal", name: "PayPal", category: "payments", icon: png("paypal") },
-  { id: "polar", name: "Polar", category: "payments", icon: png("polar") },
-  { id: "paddle", name: "Paddle", category: "payments", icon: png("paddle") },
+  { id: "polar", name: "Polar", category: "payments", icon: webp("polar") },
+  { id: "paddle", name: "Paddle", category: "payments", icon: webp("paddle") },
   // Comms
   { id: "twilio", name: "Twilio", category: "comms", icon: png("twilio") },
   {
@@ -135,7 +135,12 @@ export const SERVICES: Service[] = [
     category: "comms",
     icon: png("sendgrid"),
   },
-  { id: "resend", name: "Resend", category: "comms", icon: svg(ReSend) },
+  {
+    id: "resend",
+    name: "Resend",
+    category: "comms",
+    icon: png("resend-white"),
+  },
   { id: "mailgun", name: "Mailgun", category: "comms", icon: png("mailgun") },
   // Software / license
   {
@@ -154,7 +159,7 @@ export const SERVICES: Service[] = [
     id: "jetbrains",
     name: "JetBrains",
     category: "software",
-    icon: png("jetbrains"),
+    icon: webp("jetbrains"),
   },
   { id: "adobe", name: "Adobe", category: "software", icon: png("adobe") },
 ];
