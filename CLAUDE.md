@@ -18,8 +18,9 @@ Notes:
 
 ## Conventions
 
+- **Package manager: pnpm** (NOT npm or yarn). Use `pnpm install`, `pnpm <script>`, `pnpm dlx`, `pnpm add`. The lockfile is `pnpm-lock.yaml`; there is no `package-lock.json`. The version is pinned via `packageManager` in `package.json` (corepack).
 - Conventional commits, no AI references in messages.
 - Never commit secrets / `.env.local` (gitignored).
-- Before commit/push: `npx tsc --noEmit`, `npm run guard`, `npm test`, `npm run build` must pass. No em-dashes in app/UI/docs copy (use hyphens).
-- Crypto/vault layer is client-only (enforced by `npm run guard`); never import it into a server context.
+- Before commit/push: `pnpm typecheck`, `pnpm guard`, `pnpm test`, `pnpm build` must pass. No em-dashes in app/UI/docs copy (use hyphens).
+- Crypto/vault layer is client-only (enforced by `pnpm guard`); never import it into a server context.
 - **Markdown:** do NOT hard-wrap text inside a paragraph or list item - write each paragraph/bullet as one continuous line and let the editor soft-wrap. Blank lines separate paragraphs as usual. (Applies to all `.md`: CHANGELOG, journals, docs, plans.)

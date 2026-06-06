@@ -3,6 +3,7 @@
   "version": "0.2.0",
   "private": true,
   "license": "MIT",
+  "packageManager": "pnpm@11.5.1",
   "scripts": {
     "dev": "next dev",
     "guard": "node scripts/check-no-plaintext-server.mjs",
