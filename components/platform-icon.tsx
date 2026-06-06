@@ -63,8 +63,8 @@ function FaviconIcon({ host, size }: { host: string; size: number }) {
 }
 
 // Deterministic, network-free placeholder: first letter + a color hashed from
-// the domain/name.
-function Monogram({ label, size }: { label: string; size: number }) {
+// the domain/name. Shared with EngineIcon.
+export function Monogram({ label, size }: { label: string; size: number }) {
   const ch = (label.replace(/[^a-z0-9]/gi, "")[0] || "?").toUpperCase();
   let h = 0;
   for (let i = 0; i < label.length; i++) h = (h * 31 + label.charCodeAt(i)) | 0;
