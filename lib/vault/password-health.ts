@@ -95,6 +95,13 @@ function loadZxcvbn(): Promise<Zxcvbn> {
   return zxcvbnReady;
 }
 
+/** Strength score 0-4 for a single password (reuses the lazy zxcvbn loader). */
+export async function scorePassword(password: string): Promise<number> {
+  if (!password) return 0;
+  const zxcvbn = await loadZxcvbn();
+  return zxcvbn(password).score;
+}
+
 async function findWeak(rows: Row[]): Promise<HealthEntry[]> {
   const zxcvbn = await loadZxcvbn();
   const scoreCache = new Map<string, number>();
