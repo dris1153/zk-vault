@@ -34,7 +34,6 @@ export type PlatformCategory =
   | "dev"
   | "social"
   | "messaging"
-  | "google"
   | "finance"
   | "game"
   | "other";
@@ -196,21 +195,14 @@ export const PLATFORMS: Platform[] = [
   {
     id: "google",
     name: "Google",
-    category: "google",
+    category: "popular",
     domains: ["google.com", "accounts.google.com"],
     icon: svg(Google),
   },
   {
-    id: "gmail",
-    name: "Gmail",
-    category: "google",
-    domains: ["mail.google.com", "gmail.com"],
-    icon: svg(Gmail),
-  },
-  {
     id: "microsoft",
     name: "Microsoft",
-    category: "google",
+    category: "popular",
     domains: ["microsoft.com", "live.com", "outlook.com"],
     icon: svg(Microsoft),
   },
@@ -236,7 +228,6 @@ export const CATEGORY_LABELS: Record<PlatformCategory, string> = {
   dev: "Lập trình",
   social: "Mạng xã hội",
   messaging: "Nhắn tin",
-  google: "Google",
   finance: "Tài chính",
   game: "Trò chơi",
   other: "Khác",
@@ -247,7 +238,6 @@ export const CATEGORY_ORDER: PlatformCategory[] = [
   "dev",
   "social",
   "messaging",
-  "google",
   "finance",
   "game",
   "other",

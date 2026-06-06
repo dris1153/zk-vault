@@ -99,7 +99,7 @@ export function AppShell() {
   const modalOpen = addOpen || editing !== null;
 
   return (
-    <div className="grid h-[100dvh] grid-cols-1 md:grid-cols-[240px_1fr]">
+    <div className="grid h-dvh grid-cols-1 md:grid-cols-[240px_1fr]">
       <Sidebar
         className="hidden md:flex"
         items={items}
