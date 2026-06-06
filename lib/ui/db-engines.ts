@@ -18,10 +18,18 @@ type IconComp = ComponentType<{ size?: number; className?: string }>;
 
 export type EngineIconRef =
   | { kind: "svg"; Comp: IconComp }
-  | { kind: "png"; src: string };
+  | { kind: "png"; src: string }
+  | { kind: "webp"; src: string };
 
 const svg = (Comp: IconComp): EngineIconRef => ({ kind: "svg", Comp });
-const png = (id: string): EngineIconRef => ({ kind: "png", src: `/engine/${id}.png` });
+const png = (id: string): EngineIconRef => ({
+  kind: "png",
+  src: `/engine/${id}.png`,
+});
+const webp = (id: string): EngineIconRef => ({
+  kind: "webp",
+  src: `/engine/${id}.webp`,
+});
 
 export interface DbEngine {
   value: string;
@@ -37,7 +45,7 @@ export const DB_ENGINES: DbEngine[] = [
   { value: "mongodb", label: "MongoDB", icon: svg(MongoDB) },
   { value: "redis", label: "Redis", icon: svg(Redis) },
   { value: "mssql", label: "SQL Server", icon: svg(MicrosoftSQLServer) },
-  { value: "sqlite", label: "SQLite", icon: png("sqlite") }, // PNG at /engine/sqlite.png
+  { value: "sqlite", label: "SQLite", icon: webp("sqlite") }, // PNG at /engine/sqlite.png
   { value: "other", label: "Other", icon: svg(Database) },
 ];
 
