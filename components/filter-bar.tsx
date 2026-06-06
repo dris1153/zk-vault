@@ -10,8 +10,25 @@ import {
   SORT_OPTIONS,
   type SortKey,
 } from "@/lib/ui/item-filters";
+import { PLATFORMS } from "@/lib/ui/platforms";
+import { engineIcon } from "@/lib/ui/db-engines";
 import { Select } from "./select";
+import { PlatformIcon } from "./platform-icon";
 import type { Category } from "./sidebar";
+
+// A bundled logo for a facet value (no favicon fetch): platform logo for Login,
+// engine logo for Database; a network-free monogram for unknown domains.
+function facetIcon(category: Category, value: string): ReactNode {
+  if (category === "login") {
+    const p = PLATFORMS.find((x) => x.name === value) ?? null;
+    return <PlatformIcon platform={p} url={value} favicon={false} size={16} />;
+  }
+  if (category === "database") {
+    const Icon = engineIcon(value);
+    return <Icon size={16} />;
+  }
+  return undefined;
+}
 
 export function FilterBar({
   category,
@@ -45,7 +62,7 @@ export function FilterBar({
   return (
     <div className="flex flex-wrap items-center gap-2 px-6 pt-5">
       {typeFacet && options.length > 0 && (
-        <div className="w-[180px]">
+        <div className="w-45">
           <Select
             value={facet}
             onChange={onFacet}
@@ -54,13 +71,14 @@ export function FilterBar({
               ...options.map((o) => ({
                 value: o,
                 label: typeFacet.optionLabel(o),
+                icon: facetIcon(category, o),
               })),
             ]}
           />
         </div>
       )}
 
-      <div className="w-[150px]">
+      <div className="w-37.5">
         <Select value={sort} onChange={onSort} options={SORT_OPTIONS} />
       </div>
 
@@ -74,7 +92,7 @@ export function FilterBar({
         </Toggle>
       )}
 
-      {category === "login" && (
+      {(category === "login" || category === "all") && (
         <Toggle
           active={twoFAOnly}
           onClick={() => onTwoFAOnly(!twoFAOnly)}
