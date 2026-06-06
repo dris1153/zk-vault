@@ -8,6 +8,7 @@ import { findPlatform } from "@/lib/ui/platforms";
 import { useSettings } from "@/lib/vault/settings-store";
 import { PlatformIcon } from "./platform-icon";
 import { EngineIcon } from "./engine-icon";
+import { ServiceIcon } from "./service-icon";
 
 export function ItemCard({
   item,
@@ -28,7 +29,10 @@ export function ItemCard({
   // Database items: use the chosen engine's logo.
   const engine =
     item.type === "database" ? ((item.data.engine as string) ?? "") : "";
-  const brandSquare = showBrand || engine !== "";
+  // API key items: use the chosen service's logo.
+  const service =
+    item.type === "api_key" ? ((item.data.service as string) ?? "") : "";
+  const brandSquare = showBrand || engine !== "" || service !== "";
 
   return (
     <button
@@ -50,6 +54,8 @@ export function ItemCard({
             />
           ) : engine ? (
             <EngineIcon engine={engine} size={18} />
+          ) : service ? (
+            <ServiceIcon service={service} size={18} />
           ) : (
             <Icon size={18} />
           )}

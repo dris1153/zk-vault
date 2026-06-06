@@ -14,6 +14,7 @@ import { PLATFORMS } from "@/lib/ui/platforms";
 import { Select } from "./select";
 import { PlatformIcon } from "./platform-icon";
 import { EngineIcon } from "./engine-icon";
+import { ServiceIcon } from "./service-icon";
 import type { Category } from "./sidebar";
 
 // Single source of truth for which categories show (and therefore apply) each
@@ -31,6 +32,9 @@ function facetIcon(category: Category, value: string): ReactNode {
   }
   if (category === "database") {
     return <EngineIcon engine={value} size={16} />;
+  }
+  if (category === "api_key") {
+    return <ServiceIcon service={value} size={16} />;
   }
   return undefined;
 }

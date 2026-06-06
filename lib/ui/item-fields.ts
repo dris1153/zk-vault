@@ -12,7 +12,8 @@ export type FieldKind =
   | "tags"
   | "platform"
   | "totp"
-  | "db_engine";
+  | "db_engine"
+  | "service";
 
 export interface FieldDef {
   name: string;
@@ -61,7 +62,7 @@ export const FIELDS_BY_TYPE: Record<VaultItemType, FieldDef[]> = {
   ],
   api_key: [
     title,
-    { name: "service", label: "Service", kind: "text" },
+    { name: "service", label: "Service", kind: "service" },
     { name: "key", label: "Key", kind: "secret" },
     { name: "secret", label: "Secret", kind: "secret" },
     notes,
