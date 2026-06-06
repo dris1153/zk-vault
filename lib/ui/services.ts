@@ -47,9 +47,7 @@ export interface Service {
 
 export const SERVICES: Service[] = [
   // AI
-  { id: "openai", name: "OpenAI", category: "ai", icon: svg(OpenAI) },
-  { id: "chatgpt", name: "ChatGPT", category: "ai", icon: svg(ChatGPT) },
-  { id: "claude", name: "Claude", category: "ai", icon: svg(ClaudeAI) },
+  { id: "openai", name: "OpenAI", category: "ai", icon: svg(ChatGPT) },
   { id: "anthropic", name: "Anthropic", category: "ai", icon: svg(Anthropic) },
   { id: "gemini", name: "Gemini", category: "ai", icon: png("gemini") },
   { id: "deepseek", name: "DeepSeek", category: "ai", icon: svg(DeepSeek) },
