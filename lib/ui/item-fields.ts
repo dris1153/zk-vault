@@ -4,6 +4,7 @@
 
 import type { VaultItemType } from "@/lib/supabase/types";
 import { engineLabel } from "./db-engines";
+import { oauthProviderLabel } from "./oauth-providers";
 
 export type FieldKind =
   | "text"
@@ -13,13 +14,19 @@ export type FieldKind =
   | "platform"
   | "totp"
   | "db_engine"
-  | "service";
+  | "service"
+  | "auth_method"
+  | "oauth_provider";
 
 export interface FieldDef {
   name: string;
   label: string;
   kind: FieldKind;
+  // When set, the field shows in the form + drawer only if this returns true.
+  visibleWhen?: (data: Record<string, unknown>) => boolean;
 }
+
+const isOAuth = (d: Record<string, unknown>) => d.auth_method === "oauth";
 
 const title: FieldDef = { name: "title", label: "Title", kind: "text" };
 const notes: FieldDef = { name: "notes", label: "Notes", kind: "textarea" };
@@ -28,10 +35,25 @@ const tags: FieldDef = { name: "tags", label: "Tags", kind: "tags" };
 export const FIELDS_BY_TYPE: Record<VaultItemType, FieldDef[]> = {
   login: [
     title,
-    { name: "username", label: "Username", kind: "text" },
-    { name: "password", label: "Password", kind: "secret" },
+    { name: "auth_method", label: "Phương thức", kind: "auth_method" },
     { name: "url", label: "Platform / URL", kind: "platform" },
-    { name: "totp_secret", label: "Mã 2FA (secret hoặc otpauth://)", kind: "totp" },
+    // Credential mode
+    { name: "username", label: "Username", kind: "text", visibleWhen: (d) => !isOAuth(d) },
+    { name: "password", label: "Password", kind: "secret", visibleWhen: (d) => !isOAuth(d) },
+    {
+      name: "totp_secret",
+      label: "Mã 2FA (secret hoặc otpauth://)",
+      kind: "totp",
+      visibleWhen: (d) => !isOAuth(d),
+    },
+    // OAuth mode
+    { name: "oauth_provider", label: "Đăng nhập qua", kind: "oauth_provider", visibleWhen: isOAuth },
+    {
+      name: "oauth_account",
+      label: "Tài khoản (email/username)",
+      kind: "text",
+      visibleWhen: isOAuth,
+    },
     notes,
     tags,
   ],
@@ -86,7 +108,9 @@ export function cardSubtitle(type: VaultItemType, data: Record<string, unknown>)
   const pick = (k: string) => (typeof data[k] === "string" ? (data[k] as string) : "");
   switch (type) {
     case "login":
-      return pick("username") || pick("url");
+      return data.auth_method === "oauth"
+        ? pick("oauth_account") || oauthProviderLabel(pick("oauth_provider"))
+        : pick("username") || pick("url");
     case "wallet":
       return [pick("network"), pick("address")].filter(Boolean).join(" · ");
     case "ssh_key":

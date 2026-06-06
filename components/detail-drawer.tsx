@@ -17,7 +17,9 @@ import { TYPE_ICON, TYPE_LABEL } from "@/lib/ui/icons";
 import { FIELDS_BY_TYPE, type FieldDef } from "@/lib/ui/item-fields";
 import { findPlatform } from "@/lib/ui/platforms";
 import { engineLabel } from "@/lib/ui/db-engines";
+import { findOAuthProvider, oauthProviderLabel } from "@/lib/ui/oauth-providers";
 import { EngineIcon } from "./engine-icon";
+import { BrandIcon } from "./brand-icon";
 import { useClipboard } from "@/lib/ui/use-clipboard";
 import { useSettings } from "@/lib/vault/settings-store";
 import { IconButton } from "./ui-kit";
@@ -99,7 +101,13 @@ export function DetailDrawer({
 
             <div className="flex-1 overflow-y-auto px-5 pb-5">
               {FIELDS_BY_TYPE[item.type]
-                .filter((f) => f.name !== "title" && f.name !== "tags")
+                .filter(
+                  (f) =>
+                    f.name !== "title" &&
+                    f.name !== "tags" &&
+                    f.kind !== "auth_method" &&
+                    (!f.visibleWhen || f.visibleWhen(item.data)),
+                )
                 .map((f) =>
                   f.kind === "totp" ? (
                     <TotpDisplay
@@ -213,6 +221,17 @@ function Row({
             <span className="flex min-w-0 flex-1 items-center gap-2 text-sm">
               <EngineIcon engine={text} />
               <span className="truncate">{engineLabel(text)}</span>
+            </span>
+          ) : field.kind === "oauth_provider" ? (
+            <span className="flex min-w-0 flex-1 items-center gap-2 text-sm">
+              {findOAuthProvider(text) && (
+                <BrandIcon
+                  iconRef={findOAuthProvider(text)!.icon}
+                  label={text}
+                  size={18}
+                />
+              )}
+              <span className="truncate">{oauthProviderLabel(text)}</span>
             </span>
           ) : (
             <span

@@ -9,10 +9,13 @@ const title = z.string().min(1, "Title is required");
 
 export const loginSchema = z.object({
   title,
+  auth_method: z.string().optional(), // "credential" (default) | "oauth"
   username: z.string().default(""),
   password: z.string().default(""),
   url: z.string().optional(),
   totp_secret: z.string().optional(), // wired in v1.5
+  oauth_provider: z.string().optional(), // OAuth mode: provider id
+  oauth_account: z.string().optional(), // OAuth mode: account email/username
   notes: z.string().optional(),
   tags,
 });

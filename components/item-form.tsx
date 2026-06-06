@@ -6,11 +6,14 @@ import type { VaultItemType } from "@/lib/supabase/types";
 import { FIELDS_BY_TYPE } from "@/lib/ui/item-fields";
 import { generatePassword } from "@/lib/ui/password-gen";
 import { scorePassword } from "@/lib/vault/password-health";
+import { OAUTH_PROVIDERS } from "@/lib/ui/oauth-providers";
 import { Field, TextInput, TextArea } from "./ui-kit";
 import { PlatformPicker } from "./platform-picker";
 import { TotpField } from "./totp-field";
 import { EngineSelect } from "./engine-select";
 import { ServicePicker } from "./service-picker";
+import { Select } from "./select";
+import { BrandIcon } from "./brand-icon";
 
 export type FormData = Record<string, unknown>;
 
@@ -27,11 +30,28 @@ export function ItemForm({
 
   return (
     <div className="flex flex-col gap-4">
-      {FIELDS_BY_TYPE[type].map((f) => {
+      {FIELDS_BY_TYPE[type]
+        .filter((f) => !f.visibleWhen || f.visibleWhen(value))
+        .map((f) => {
         const str = typeof value[f.name] === "string" ? (value[f.name] as string) : "";
         return (
           <Field key={f.name} label={f.label}>
-            {f.kind === "textarea" ? (
+            {f.kind === "auth_method" ? (
+              <AuthMethodToggle
+                value={value.auth_method === "oauth" ? "oauth" : "credential"}
+                onChange={(v) => set("auth_method", v)}
+              />
+            ) : f.kind === "oauth_provider" ? (
+              <Select
+                value={str}
+                onChange={(v) => set(f.name, v)}
+                options={OAUTH_PROVIDERS.map((p) => ({
+                  value: p.id,
+                  label: p.name,
+                  icon: <BrandIcon iconRef={p.icon} label={p.name} size={16} />,
+                }))}
+              />
+            ) : f.kind === "textarea" ? (
               <TextArea
                 value={str}
                 onChange={(e) => set(f.name, e.target.value)}
@@ -65,6 +85,37 @@ export function ItemForm({
           </Field>
         );
       })}
+    </div>
+  );
+}
+
+function AuthMethodToggle({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (v: "credential" | "oauth") => void;
+}) {
+  const opts: { v: "credential" | "oauth"; label: string }[] = [
+    { v: "credential", label: "Mật khẩu" },
+    { v: "oauth", label: "OAuth" },
+  ];
+  return (
+    <div className="flex overflow-hidden rounded-lg border border-slate">
+      {opts.map((o) => (
+        <button
+          key={o.v}
+          type="button"
+          onClick={() => onChange(o.v)}
+          className={`flex-1 px-3 py-2 text-sm transition ${
+            value === o.v
+              ? "bg-azure font-medium text-[#08233f]"
+              : "text-silver hover:bg-ash hover:text-snow"
+          }`}
+        >
+          {o.label}
+        </button>
+      ))}
     </div>
   );
 }
