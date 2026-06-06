@@ -49,7 +49,14 @@ export interface Service {
 }
 
 const svg = (Comp: IconComp): BrandIconRef => ({ kind: "svg", Comp });
-const png = (id: string): BrandIconRef => ({ kind: "png", src: `/service/${id}.png` });
+const png = (id: string): BrandIconRef => ({
+  kind: "png",
+  src: `/service/${id}.png`,
+});
+const webp = (id: string): BrandIconRef => ({
+  kind: "png",
+  src: `/service/${id}.webp`,
+});
 
 export const SERVICES: Service[] = [
   // AI
@@ -60,21 +67,51 @@ export const SERVICES: Service[] = [
   { id: "gemini", name: "Gemini", category: "ai", icon: png("gemini") },
   { id: "deepseek", name: "DeepSeek", category: "ai", icon: svg(DeepSeek) },
   { id: "mistral", name: "Mistral", category: "ai", icon: png("mistral") },
-  { id: "perplexity", name: "Perplexity", category: "ai", icon: png("perplexity") },
+  {
+    id: "perplexity",
+    name: "Perplexity",
+    category: "ai",
+    icon: webp("perplexity"),
+  },
   { id: "grok", name: "Grok", category: "ai", icon: png("grok") },
-  { id: "huggingface", name: "Hugging Face", category: "ai", icon: svg(HuggingFace) },
-  { id: "elevenlabs", name: "ElevenLabs", category: "ai", icon: png("elevenlabs") },
+  {
+    id: "huggingface",
+    name: "Hugging Face",
+    category: "ai",
+    icon: svg(HuggingFace),
+  },
+  {
+    id: "elevenlabs",
+    name: "ElevenLabs",
+    category: "ai",
+    icon: png("elevenlabs"),
+  },
   { id: "cohere", name: "Cohere", category: "ai", icon: png("cohere") },
   { id: "soniox", name: "Soniox", category: "ai", icon: png("soniox") },
   // Cloud
   { id: "aws", name: "AWS", category: "cloud", icon: svg(AWS) },
   { id: "azure", name: "Azure", category: "cloud", icon: svg(Azure) },
-  { id: "gcp", name: "Google Cloud", category: "cloud", icon: svg(GoogleCloud) },
-  { id: "cloudflare", name: "Cloudflare", category: "cloud", icon: svg(Cloudflare) },
+  {
+    id: "gcp",
+    name: "Google Cloud",
+    category: "cloud",
+    icon: svg(GoogleCloud),
+  },
+  {
+    id: "cloudflare",
+    name: "Cloudflare",
+    category: "cloud",
+    icon: svg(Cloudflare),
+  },
   { id: "vercel", name: "Vercel", category: "cloud", icon: svg(VercelLight) },
   { id: "netlify", name: "Netlify", category: "cloud", icon: svg(Netlify) },
   { id: "supabase", name: "Supabase", category: "cloud", icon: svg(Supabase) },
-  { id: "digitalocean", name: "DigitalOcean", category: "cloud", icon: svg(DigitalOcean) },
+  {
+    id: "digitalocean",
+    name: "DigitalOcean",
+    category: "cloud",
+    icon: svg(DigitalOcean),
+  },
   { id: "railway", name: "Railway", category: "cloud", icon: svg(Railway) },
   // Dev
   { id: "github", name: "GitHub", category: "dev", icon: svg(GitHubLight) },
@@ -92,13 +129,33 @@ export const SERVICES: Service[] = [
   { id: "paddle", name: "Paddle", category: "payments", icon: png("paddle") },
   // Comms
   { id: "twilio", name: "Twilio", category: "comms", icon: png("twilio") },
-  { id: "sendgrid", name: "SendGrid", category: "comms", icon: png("sendgrid") },
+  {
+    id: "sendgrid",
+    name: "SendGrid",
+    category: "comms",
+    icon: png("sendgrid"),
+  },
   { id: "resend", name: "Resend", category: "comms", icon: svg(ReSend) },
   { id: "mailgun", name: "Mailgun", category: "comms", icon: png("mailgun") },
   // Software / license
-  { id: "windows-11-pro", name: "Windows 11 Pro", category: "software", icon: png("windows-11-pro") },
-  { id: "microsoft-365", name: "Microsoft 365", category: "software", icon: svg(Microsoft) },
-  { id: "jetbrains", name: "JetBrains", category: "software", icon: png("jetbrains") },
+  {
+    id: "windows-11-pro",
+    name: "Windows 11 Pro",
+    category: "software",
+    icon: webp("windows-11-pro"),
+  },
+  {
+    id: "microsoft-365",
+    name: "Microsoft 365",
+    category: "software",
+    icon: svg(Microsoft),
+  },
+  {
+    id: "jetbrains",
+    name: "JetBrains",
+    category: "software",
+    icon: png("jetbrains"),
+  },
   { id: "adobe", name: "Adobe", category: "software", icon: png("adobe") },
 ];
 
