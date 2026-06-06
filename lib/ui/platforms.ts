@@ -5,7 +5,7 @@
 // Icons are bundled via the `developer-icons` package (no CDN). Brands not in
 // that package use a local PNG at /brand/<id>.png (placeholder until replaced).
 
-import type { ComponentType } from "react";
+import { svg, png, webp, type BrandIconRef } from "./brand";
 import {
   GitHubLight,
   GitLab,
@@ -38,29 +38,13 @@ export type PlatformCategory =
   | "game"
   | "other";
 
-type IconComp = ComponentType<{ size?: number; className?: string }>;
-export type PlatformIconRef =
-  | { kind: "svg"; Comp: IconComp }
-  | { kind: "png"; src: string }
-  | { kind: "webp"; src: string };
-
 export interface Platform {
   id: string;
   name: string;
   category: PlatformCategory;
   domains: string[]; // a platform can match several domains
-  icon: PlatformIconRef;
+  icon: BrandIconRef;
 }
-
-const svg = (Comp: IconComp): PlatformIconRef => ({ kind: "svg", Comp });
-const png = (id: string): PlatformIconRef => ({
-  kind: "png",
-  src: `/brand/${id}.png`,
-});
-const webp = (id: string): PlatformIconRef => ({
-  kind: "webp",
-  src: `/brand/${id}.webp`,
-});
 
 export const PLATFORMS: Platform[] = [
   {

@@ -4,13 +4,11 @@
 // with a network-free monogram fallback. Used by engine + service icons (the
 // platform icon keeps its own favicon variant).
 
-import { useState, type ComponentType } from "react";
+import { useState } from "react";
+import type { BrandIconRef } from "@/lib/ui/brand";
 import { Monogram } from "./platform-icon";
 
-export type BrandIconRef =
-  | { kind: "svg"; Comp: ComponentType<{ size?: number; className?: string }> }
-  | { kind: "png"; src: string }
-  | { kind: "webp"; src: string };
+export type { BrandIconRef };
 
 export function BrandIcon({
   iconRef,

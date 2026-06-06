@@ -1,8 +1,7 @@
 // API-key service registry: value + label + logo, grouped by category. Logos use
 // the bundled developer-icons package; services not in it use a local PNG/WEBP at
-// /service/<id>.(png|webp), with a monogram fallback (see ServiceIcon).
+// /brand/<id>.(png|webp) (shared with platforms/engines), monogram fallback.
 
-import type { ComponentType } from "react";
 import {
   OpenAI,
   ChatGPT,
@@ -29,9 +28,7 @@ import {
   ReSend,
   Microsoft,
 } from "developer-icons";
-import type { BrandIconRef } from "@/components/brand-icon";
-
-type IconComp = ComponentType<{ size?: number; className?: string }>;
+import { svg, png, webp, type BrandIconRef } from "./brand";
 
 export type ServiceCategory =
   | "ai"
@@ -47,16 +44,6 @@ export interface Service {
   category: ServiceCategory;
   icon: BrandIconRef;
 }
-
-const svg = (Comp: IconComp): BrandIconRef => ({ kind: "svg", Comp });
-const png = (id: string): BrandIconRef => ({
-  kind: "png",
-  src: `/service/${id}.png`,
-});
-const webp = (id: string): BrandIconRef => ({
-  kind: "png",
-  src: `/service/${id}.webp`,
-});
 
 export const SERVICES: Service[] = [
   // AI

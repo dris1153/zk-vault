@@ -1,8 +1,7 @@
 // Database engine registry: value + label + logo. Logos come from the bundled
-// `developer-icons` package; engines not in that package use a local PNG at
-// /engine/<id>.png (mirrors the platform registry). Render with <EngineIcon>.
+// `developer-icons` package; engines not in that package use a local PNG/WEBP at
+// /brand/<id>.(png|webp) (shared with platforms/services). Render with <EngineIcon>.
 
-import type { ComponentType } from "react";
 import {
   Supabase,
   PostgreSQL,
@@ -13,28 +12,12 @@ import {
   MicrosoftSQLServer,
 } from "developer-icons";
 import { Database } from "@phosphor-icons/react/dist/ssr";
-
-type IconComp = ComponentType<{ size?: number; className?: string }>;
-
-export type EngineIconRef =
-  | { kind: "svg"; Comp: IconComp }
-  | { kind: "png"; src: string }
-  | { kind: "webp"; src: string };
-
-const svg = (Comp: IconComp): EngineIconRef => ({ kind: "svg", Comp });
-const png = (id: string): EngineIconRef => ({
-  kind: "png",
-  src: `/engine/${id}.png`,
-});
-const webp = (id: string): EngineIconRef => ({
-  kind: "webp",
-  src: `/engine/${id}.webp`,
-});
+import { svg, webp, type BrandIconRef } from "./brand";
 
 export interface DbEngine {
   value: string;
   label: string;
-  icon: EngineIconRef;
+  icon: BrandIconRef;
 }
 
 export const DB_ENGINES: DbEngine[] = [
@@ -45,14 +28,14 @@ export const DB_ENGINES: DbEngine[] = [
   { value: "mongodb", label: "MongoDB", icon: svg(MongoDB) },
   { value: "redis", label: "Redis", icon: svg(Redis) },
   { value: "mssql", label: "SQL Server", icon: svg(MicrosoftSQLServer) },
-  { value: "sqlite", label: "SQLite", icon: webp("sqlite") }, // PNG at /engine/sqlite.png
+  { value: "sqlite", label: "SQLite", icon: webp("sqlite") }, // /brand/sqlite.webp
   { value: "other", label: "Other", icon: svg(Database) },
 ];
 
 const BY_VALUE = new Map(DB_ENGINES.map((e) => [e.value, e]));
 
 /** The icon ref for an engine (Phosphor Database fallback for unknown values). */
-export function engineIconRef(value: string): EngineIconRef {
+export function engineIconRef(value: string): BrandIconRef {
   return BY_VALUE.get(value)?.icon ?? svg(Database);
 }
 
