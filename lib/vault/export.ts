@@ -25,6 +25,7 @@ import {
 import { getVaultConfig } from "@/lib/supabase/vault-config";
 import type { VaultItemRow, VaultItemType } from "@/lib/supabase/types";
 import { loadItems } from "./items-store";
+import { useSettings } from "./settings-store";
 
 const FORMAT = "zk-vault";
 
@@ -83,6 +84,9 @@ export async function exportVault(): Promise<void> {
   } finally {
     URL.revokeObjectURL(url);
   }
+
+  // Record the backup time so the UI can nudge when it goes stale.
+  useSettings.getState().update({ lastExportAt: new Date().toISOString() });
 }
 
 function parseBundle(text: string): VaultExport {

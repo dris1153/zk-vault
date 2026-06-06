@@ -1,11 +1,25 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { DownloadSimple, UploadSimple } from "@phosphor-icons/react/dist/ssr";
+import { useMemo, useRef, useState } from "react";
+import {
+  DownloadSimple,
+  UploadSimple,
+  Warning,
+} from "@phosphor-icons/react/dist/ssr";
 import { exportVault, importVault } from "@/lib/vault/export";
+import { useSettings } from "@/lib/vault/settings-store";
 import { PillButton, TextInput, TextArea, Field, Checkbox } from "./ui-kit";
 
 export function SettingsBackup({ dek }: { dek: CryptoKey }) {
+  const lastExportAt = useSettings((s) => s.settings.lastExportAt);
+  const backup = useMemo(() => {
+    if (!lastExportAt) return { label: "Chưa sao lưu lần nào", stale: true };
+    const days = Math.floor(
+      (Date.now() - new Date(lastExportAt).getTime()) / 86_400_000,
+    );
+    const when = days <= 0 ? "hôm nay" : `${days} ngày trước`;
+    return { label: `Sao lưu gần nhất: ${when}`, stale: days > 30 };
+  }, [lastExportAt]);
   const fileRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [useRecovery, setUseRecovery] = useState(false);
@@ -59,6 +73,16 @@ export function SettingsBackup({ dek }: { dek: CryptoKey }) {
         <PillButton variant="ghost" onClick={doExport}>
           <DownloadSimple size={16} /> Export
         </PillButton>
+      </div>
+
+      <div
+        className={`flex items-center gap-1.5 text-xs ${
+          backup.stale ? "text-amber-500" : "text-smoke"
+        }`}
+      >
+        {backup.stale && <Warning size={13} weight="fill" />}
+        {backup.label}
+        {backup.stale && " - nên export một bản mới."}
       </div>
 
       <div className="h-px bg-charcoal" />

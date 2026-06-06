@@ -9,6 +9,7 @@ export interface VaultSettings {
   clipboardClearSeconds: number; // wipe clipboard after copy
   fetchFavicons: boolean; // OFF: custom-domain icons leak the domain to a third party
   breachCheckEnabled: boolean; // OFF: HIBP check sends a 5-char hash prefix to a third party
+  lastExportAt?: string; // ISO timestamp of the last successful .vault export
 }
 
 export const DEFAULT_SETTINGS: VaultSettings = {
