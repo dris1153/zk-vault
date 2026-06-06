@@ -11,9 +11,9 @@ import {
   type SortKey,
 } from "@/lib/ui/item-filters";
 import { PLATFORMS } from "@/lib/ui/platforms";
-import { engineIcon } from "@/lib/ui/db-engines";
 import { Select } from "./select";
 import { PlatformIcon } from "./platform-icon";
+import { EngineIcon } from "./engine-icon";
 import type { Category } from "./sidebar";
 
 // A bundled logo for a facet value (no favicon fetch): platform logo for Login,
@@ -24,8 +24,7 @@ function facetIcon(category: Category, value: string): ReactNode {
     return <PlatformIcon platform={p} url={value} favicon={false} size={16} />;
   }
   if (category === "database") {
-    const Icon = engineIcon(value);
-    return <Icon size={16} />;
+    return <EngineIcon engine={value} size={16} />;
   }
   return undefined;
 }

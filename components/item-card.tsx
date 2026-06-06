@@ -4,10 +4,10 @@ import { Star } from "@phosphor-icons/react/dist/ssr";
 import type { VaultItem } from "@/lib/vault/items";
 import { TYPE_ICON } from "@/lib/ui/icons";
 import { cardSubtitle } from "@/lib/ui/item-fields";
-import { engineIcon } from "@/lib/ui/db-engines";
 import { findPlatform } from "@/lib/ui/platforms";
 import { useSettings } from "@/lib/vault/settings-store";
 import { PlatformIcon } from "./platform-icon";
+import { EngineIcon } from "./engine-icon";
 
 export function ItemCard({
   item,
@@ -25,11 +25,10 @@ export function ItemCard({
   const platform = url ? findPlatform(url) : null;
   const showBrand = item.type === "login" && (platform !== null || url !== "");
 
-  // Database items: use the chosen engine's logo (fallback handled by engineIcon).
+  // Database items: use the chosen engine's logo.
   const engine =
     item.type === "database" ? ((item.data.engine as string) ?? "") : "";
-  const EngineLogo = engine ? engineIcon(engine) : null;
-  const brandSquare = showBrand || EngineLogo !== null;
+  const brandSquare = showBrand || engine !== "";
 
   return (
     <button
@@ -49,8 +48,8 @@ export function ItemCard({
               size={18}
               favicon={favicon}
             />
-          ) : EngineLogo ? (
-            <EngineLogo size={18} />
+          ) : engine ? (
+            <EngineIcon engine={engine} size={18} />
           ) : (
             <Icon size={18} />
           )}

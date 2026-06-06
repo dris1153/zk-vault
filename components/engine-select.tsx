@@ -6,7 +6,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { CaretDown, Database } from "@phosphor-icons/react/dist/ssr";
-import { DB_ENGINES, engineIcon, engineLabel } from "@/lib/ui/db-engines";
+import { DB_ENGINES, engineLabel } from "@/lib/ui/db-engines";
+import { EngineIcon } from "./engine-icon";
 
 export function EngineSelect({
   value,
@@ -17,7 +18,6 @@ export function EngineSelect({
 }) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
-  const Selected = engineIcon(value);
 
   useEffect(() => {
     if (!open) return;
@@ -49,7 +49,7 @@ export function EngineSelect({
       >
         {value ? (
           <>
-            <Selected size={18} />
+            <EngineIcon engine={value} size={18} />
             <span className="truncate">{engineLabel(value)}</span>
           </>
         ) : (
@@ -64,7 +64,6 @@ export function EngineSelect({
       {open && (
         <div className="max-h-72 overflow-y-auto rounded-lg border border-charcoal bg-ash p-1.5">
           {DB_ENGINES.map((e) => {
-            const Icon = e.Icon;
             const active = e.value === value;
             return (
               <button
@@ -77,7 +76,7 @@ export function EngineSelect({
                     : "text-snow hover:bg-obsidian"
                 }`}
               >
-                <Icon size={18} />
+                <EngineIcon engine={e.value} size={18} />
                 <span className="truncate">{e.label}</span>
               </button>
             );
