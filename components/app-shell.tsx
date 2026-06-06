@@ -15,7 +15,7 @@ import {
 } from "@/lib/ui/item-filters";
 import { Sidebar, type Category } from "./sidebar";
 import { TopBar } from "./top-bar";
-import { FilterBar } from "./filter-bar";
+import { FilterBar, showsFavFilter, shows2FAFilter } from "./filter-bar";
 import { ItemGrid } from "./item-grid";
 import { DetailDrawer } from "./detail-drawer";
 import { AddEditModal } from "./add-edit-modal";
@@ -86,8 +86,10 @@ export function AppShell() {
           ? tags.every((x) => t.includes(x))
           : tags.some((x) => t.includes(x));
       });
-    if (favOnly) list = list.filter((i) => i.favorite);
-    if (twoFAOnly) list = list.filter(hasTotp);
+    // Apply a toggle ONLY where its control is shown (see shows*Filter), so a
+    // filter left on in one category never silently empties another.
+    if (favOnly && showsFavFilter(category)) list = list.filter((i) => i.favorite);
+    if (twoFAOnly && shows2FAFilter(category)) list = list.filter(hasTotp);
     const f =
       category !== "all" && category !== "favorites"
         ? FACET_BY_TYPE[category as VaultItemType]

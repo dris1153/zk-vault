@@ -16,6 +16,12 @@ import { PlatformIcon } from "./platform-icon";
 import { EngineIcon } from "./engine-icon";
 import type { Category } from "./sidebar";
 
+// Single source of truth for which categories show (and therefore apply) each
+// filter-bar toggle - so the render gate and the apply logic can never drift
+// (a hidden-but-still-applied filter is what caused the empty-result bug).
+export const showsFavFilter = (c: Category) => c !== "favorites";
+export const shows2FAFilter = (c: Category) => c === "all" || c === "login";
+
 // A bundled logo for a facet value (no favicon fetch): platform logo for Login,
 // engine logo for Database; a network-free monogram for unknown domains.
 function facetIcon(category: Category, value: string): ReactNode {
@@ -81,7 +87,7 @@ export function FilterBar({
         <Select value={sort} onChange={onSort} options={SORT_OPTIONS} />
       </div>
 
-      {category !== "favorites" && (
+      {showsFavFilter(category) && (
         <Toggle
           active={favOnly}
           onClick={() => onFavOnly(!favOnly)}
@@ -91,7 +97,7 @@ export function FilterBar({
         </Toggle>
       )}
 
-      {(category === "login" || category === "all") && (
+      {shows2FAFilter(category) && (
         <Toggle
           active={twoFAOnly}
           onClick={() => onTwoFAOnly(!twoFAOnly)}
