@@ -1,4 +1,4 @@
-// Per-type filter facets + sort for the main-screen filter bar. Pure logic.
+// Per-type filter facets + sort for the Vault filter controls. Pure logic.
 // Facet VALUES are derived from the items present (like tags), so the dropdown
 // only ever offers values that actually exist.
 
@@ -6,6 +6,8 @@ import type { VaultItem } from "@/lib/vault/items";
 import type { VaultItemType } from "@/lib/supabase/types";
 import { findPlatform, domainOf } from "./platforms";
 import { engineLabel } from "./db-engines";
+
+export type Category = "all" | "favorites" | VaultItemType;
 
 const str = (v: unknown): string => (typeof v === "string" ? v : "");
 const identity = (v: string) => v;
@@ -37,7 +39,7 @@ export const FACET_BY_TYPE: Partial<Record<VaultItemType, Facet>> = {
     optionLabel: identity,
   },
   api_key: {
-    label: "Service",
+    label: "Dịch vụ",
     value: (i) => str(i.data.service) || null,
     optionLabel: identity,
   },
@@ -84,7 +86,15 @@ export function sortItems(items: VaultItem[], key: SortKey): VaultItem[] {
   return copy;
 }
 
-/** Login item that carries a TOTP secret (for the has-2FA toggle). */
+// Single source of truth for which categories show (and therefore apply) each
+// filter-bar toggle - so the render gate and the apply logic can never drift.
+export const showsFavFilter = (c: Category) => c !== "favorites";
+export const shows2FAFilter = (c: Category) => c === "all" || c === "login";
+
+/** Login or authenticator item that carries a TOTP secret. */
 export function hasTotp(item: VaultItem): boolean {
-  return item.type === "login" && str(item.data.totp_secret).trim().length > 0;
+  return (
+    (item.type === "login" || item.type === "authenticator") &&
+    str(item.data.totp_secret).trim().length > 0
+  );
 }

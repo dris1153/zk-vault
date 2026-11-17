@@ -1,38 +1,53 @@
 @import "tailwindcss";
 
-/* DESIGN.md tokens - Electric Azure on Obsidian (dark-only, terminal-native). */
+/* DESIGN.md tokens - Campsite (sunlit editorial workspace: Parchment + Midnight Ink + Campfire Orange). */
 @theme {
-  --color-obsidian: #121212; /* page canvas */
-  --color-ash: #242424; /* elevated surface / hover */
-  --color-charcoal: #2e2e2e; /* hairline card borders */
-  --color-slate: #393939; /* input borders */
-  --color-graphite: #4d4d4d; /* icon outlines */
-  --color-smoke: #898989; /* captions / masked dots */
-  --color-silver: #b4b4b4; /* labels / nav */
-  --color-snow: #fafafa; /* primary text */
-  --color-azure: #3e9bff; /* accent / CTA / focus */
-  --color-azure-link: #2b8bff; /* links */
-  --color-azure-depth: #1f3a6b; /* pressed azure border */
-  --color-danger: #e5484d; /* destructive / errors only */
+  --color-canvas: #fffdf9; /* Parchment page background */
+  --color-surface: #ffffff; /* Paper White cards, modals, elevated panels */
+  --color-inset: #f5f5f5; /* Fog Gray inputs, hover states, active nav pills */
+  --color-line: #f0f0f0; /* Linen dividers, ghost borders */
+  --color-ink: #171717; /* Midnight Ink primary text, headings, filled CTAs */
+  --color-ink-2: #525252; /* Graphite tertiary text, muted icons */
+  --color-muted: #737373; /* Slate secondary text, metadata (WCAG AA) */
+  --color-faint: #a3a3a3; /* Ash Gray placeholder & disabled ONLY */
+  --color-accent: #ff6b1a; /* Campfire Orange brand mark & rationed punctuation */
+  --color-accent-wash: #fef3c7; /* Sunlit Cream tag fill & warm callouts */
+  --color-accent-ink: #451a03; /* Ember Brown text on warm fills */
+  --color-danger: #c81e1e; /* Red destructive / errors / expiring TOTP (WCAG AA) */
+  --color-success: #22c55e; /* Forest Pulse supporting green accent */
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
     "Segoe UI", Roboto, sans-serif;
-  --font-mono: var(--font-scp), ui-monospace, SFMono-Regular, Menlo, Consolas,
-    monospace;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-  --radius-card: 16px;
+  --radius-card: 12px;
   --radius-input: 8px;
+
+  --shadow-card: rgba(0, 0, 0, 0.05) 0px 3px 6px -3px,
+    rgba(0, 0, 0, 0.05) 0px 2px 4px -2px,
+    rgba(0, 0, 0, 0.05) 0px 1px 2px -1px,
+    rgba(0, 0, 0, 0.05) 0px 1px 1px -1px,
+    rgba(0, 0, 0, 0.05) 0px 1px 0px -1px;
+  --shadow-button: rgba(0, 0, 0, 0.08) 0px 1px 1px -1px,
+    rgba(0, 0, 0, 0.08) 0px 2px 2px -1px,
+    rgba(0, 0, 0, 0.06) 0px 0px 0px 1px,
+    rgb(255, 255, 255) 0px 1px 0px 0px inset,
+    rgb(255, 255, 255) 0px 1px 2px 1px inset,
+    rgba(0, 0, 0, 0.06) 0px 1px 2px 0px inset;
+  --shadow-row: rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
 }
 
 html,
 body {
-  background: var(--color-obsidian);
-  color: var(--color-snow);
+  background: var(--color-canvas);
+  color: var(--color-ink);
 }
 
 body {
   font-family: var(--font-sans);
-  letter-spacing: -0.007em;
+  font-size: 15px;
+  line-height: 1.5;
+  font-feature-settings: "ss01" on, "cv11" on;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -48,6 +63,10 @@ body {
   button:disabled {
     cursor: not-allowed;
   }
+  :focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 2px;
+  }
 }
 
 ::-webkit-scrollbar {
@@ -55,9 +74,9 @@ body {
   height: 10px;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-charcoal);
+  background: var(--color-line);
   border-radius: 8px;
-  border: 2px solid var(--color-obsidian);
+  border: 2px solid var(--color-canvas);
 }
 
 @media (prefers-reduced-motion: reduce) {

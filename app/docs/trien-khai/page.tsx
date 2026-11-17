@@ -67,10 +67,11 @@ SUPABASE_DB_URL=postgresql://postgres.xxxx:MATKHAU@aws-0-region.pooler.supabase.
 
         <Step n={4} title="Tạo schema + migration">
           Mở <InlineCode>SQL Editor</InlineCode>, dán lần lượt{" "}
-          <InlineCode>supabase/migrations/0001_init.sql</InlineCode> (bảng + RLS) rồi{" "}
-          <InlineCode>0002_add_database_type.sql</InlineCode> (cho loại mục
-          database). Hoặc nếu đã đặt <InlineCode>SUPABASE_DB_URL</InlineCode>:
-          <CodeBlock>{`npm run db:reset`}</CodeBlock>
+          <InlineCode>supabase/migrations/0001_init.sql</InlineCode>,{" "}
+          <InlineCode>0002_add_database_type.sql</InlineCode>, và{" "}
+          <InlineCode>0003_add_authenticator_type.sql</InlineCode>. Hoặc nếu đã đặt{" "}
+          <InlineCode>SUPABASE_DB_URL</InlineCode>:
+          <CodeBlock>{`pnpm run db:reset`}</CodeBlock>
           (db:reset áp dụng tất cả migration; chỉ dùng khi vault còn trống vì nó xóa
           sạch dữ liệu cũ.)
         </Step>
@@ -78,14 +79,14 @@ SUPABASE_DB_URL=postgresql://postgres.xxxx:MATKHAU@aws-0-region.pooler.supabase.
         <Step n={5} title="Kiểm tra engine (live)">
           Chạy smoke-test đầu cuối với tài khoản nháp (không đụng vault thật); truyền
           email thật bạn kiểm soát (plus-addressing):
-          <CodeBlock>{`npm run verify:supabase ban@gmail.com`}</CodeBlock>
+          <CodeBlock>{`pnpm run verify:supabase ban@gmail.com`}</CodeBlock>
           Phải qua đủ 8 PASS: provision, đăng nhập, RLS, mở khóa, recovery key, mã
           hóa CRUD.
         </Step>
 
         <Step n={6} title="Chạy local">
-          <CodeBlock>{`npm install
-npm run dev   # http://localhost:3000`}</CodeBlock>
+          <CodeBlock>{`pnpm install
+pnpm dev   # http://localhost:3000`}</CodeBlock>
           Mở trình duyệt, nhập email + tạo vault, lưu kỹ 24 từ recovery.
         </Step>
 

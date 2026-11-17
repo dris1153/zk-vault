@@ -3,11 +3,11 @@
 
 import {
   Google,
-  GitHubLight,
-  AppleLight,
+  GitHubDark,
+  AppleDark,
   Microsoft,
   Facebook,
-  XLight,
+  XDark,
   Discord,
   GitLab,
   LinkedIn,
@@ -23,11 +23,11 @@ export interface OAuthProvider {
 
 export const OAUTH_PROVIDERS: OAuthProvider[] = [
   { id: "google", name: "Google", icon: svg(Google) },
-  { id: "github", name: "GitHub", icon: svg(GitHubLight) },
-  { id: "apple", name: "Apple", icon: svg(AppleLight) },
+  { id: "github", name: "GitHub", icon: svg(GitHubDark) },
+  { id: "apple", name: "Apple", icon: svg(AppleDark) },
   { id: "microsoft", name: "Microsoft", icon: svg(Microsoft) },
   { id: "facebook", name: "Facebook", icon: svg(Facebook) },
-  { id: "x", name: "X (Twitter)", icon: svg(XLight) },
+  { id: "x", name: "X (Twitter)", icon: svg(XDark) },
   { id: "discord", name: "Discord", icon: svg(Discord) },
   { id: "gitlab", name: "GitLab", icon: svg(GitLab) },
   { id: "linkedin", name: "LinkedIn", icon: svg(LinkedIn) },

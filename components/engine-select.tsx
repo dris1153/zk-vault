@@ -25,13 +25,17 @@ export function EngineSelect({
       if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
     };
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") {
+        e.stopPropagation();
+        e.preventDefault();
+        setOpen(false);
+      }
     };
     document.addEventListener("pointerdown", onPointer);
-    document.addEventListener("keydown", onKey);
+    document.addEventListener("keydown", onKey, true);
     return () => {
       document.removeEventListener("pointerdown", onPointer);
-      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("keydown", onKey, true);
     };
   }, [open]);
 
@@ -45,7 +49,7 @@ export function EngineSelect({
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="flex w-full items-center gap-2.5 rounded-lg border border-slate bg-obsidian px-3 py-2.5 text-left text-sm text-snow transition focus:border-azure"
+        className="flex w-full items-center gap-2.5 rounded-lg border border-transparent bg-inset px-3 py-2.5 text-left text-sm text-ink transition hover:bg-line/70 focus:border-line focus:bg-surface"
       >
         {value ? (
           <>
@@ -54,15 +58,15 @@ export function EngineSelect({
           </>
         ) : (
           <>
-            <Database size={18} className="text-smoke" />
-            <span className="text-smoke">Chọn engine</span>
+            <Database size={18} className="text-ink-2" />
+            <span className="text-ink-2">Chọn engine</span>
           </>
         )}
-        <CaretDown size={15} className="ml-auto shrink-0 text-smoke" />
+        <CaretDown size={15} className="ml-auto shrink-0 text-ink-2" />
       </button>
 
       {open && (
-        <div className="max-h-72 overflow-y-auto rounded-lg border border-charcoal bg-ash p-1.5">
+        <div className="max-h-72 overflow-y-auto rounded-xl border border-line bg-surface p-1.5 shadow-card">
           {DB_ENGINES.map((e) => {
             const active = e.value === value;
             return (
@@ -70,10 +74,10 @@ export function EngineSelect({
                 key={e.value}
                 type="button"
                 onClick={() => pick(e.value)}
-                className={`flex w-full items-center gap-2.5 rounded-md px-2 py-1.5 text-left text-sm transition ${
+                className={`flex w-full items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-left text-sm transition ${
                   active
-                    ? "bg-azure/[0.08] text-snow"
-                    : "text-snow hover:bg-obsidian"
+                    ? "bg-inset font-medium text-ink"
+                    : "text-ink hover:bg-inset/70"
                 }`}
               >
                 <EngineIcon engine={e.value} size={18} />

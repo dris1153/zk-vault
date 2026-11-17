@@ -50,12 +50,10 @@ export default function DocsOverview() {
           server chỉ giữ ciphertext.
         </li>
         <li>
-          <strong>6 loại mục:</strong> Login, Wallet, SSH Key, Secure Note, API Key,
-          và Database (kèm engine picker có logo).
+          <strong>7 loại mục:</strong> Đăng nhập (Login), Mã 2FA (Authenticator), Ví crypto, SSH Key, Database (kèm engine picker có logo), Ghi chú bảo mật, và API Key.
         </li>
         <li>
-          <strong>2FA ngay trong vault:</strong> tạo mã TOTP, thêm bằng dán secret
-          hoặc <strong>quét QR bằng camera</strong>.
+          <strong>Màn hình Mã 2FA tức thì:</strong> mở vault là thấy ngay danh sách mã TOTP kiểu Google Authenticator, chạm để copy, báo trước mã sắp đổi ở 5 giây cuối, hỗ trợ import hàng loạt từ Google Authenticator.
         </li>
         <li>
           <strong>Mở khóa sinh trắc:</strong> vân tay / Face / Windows Hello (tùy
@@ -84,16 +82,16 @@ export default function DocsOverview() {
           <Link
             key={c.href}
             href={c.href}
-            className="group flex flex-col rounded-2xl border border-charcoal bg-obsidian p-4 transition hover:border-slate hover:bg-ash"
+            className="group flex flex-col rounded-xl bg-surface p-4 shadow-card transition hover:bg-inset/40"
           >
-            <div className="mb-1 flex items-center gap-1.5 font-medium text-snow">
+            <div className="mb-1 flex items-center gap-1.5 font-semibold text-ink">
               {c.title}
               <ArrowRight
                 size={15}
-                className="text-smoke transition group-hover:translate-x-0.5 group-hover:text-azure"
+                className="text-muted transition group-hover:translate-x-0.5 group-hover:text-ink"
               />
             </div>
-            <div className="text-[13px] leading-relaxed text-silver">
+            <div className="text-[13px] leading-relaxed text-muted">
               {c.desc}
             </div>
           </Link>

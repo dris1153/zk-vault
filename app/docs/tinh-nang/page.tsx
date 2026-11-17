@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import {
   DocSection,
   H3,
-  P,
   InlineCode,
   Callout,
   Bullets,
@@ -13,138 +12,107 @@ export const metadata: Metadata = { title: "Hướng dẫn dùng · ZKVault" };
 export default function HowToPage() {
   return (
     <DocSection id="huong-dan" title="Hướng dẫn dùng">
-      <H3>Thêm, sửa, xóa mục</H3>
+      <H3>Màn hình Mã 2FA (mặc định)</H3>
       <Bullets>
         <li>
-          Bấm <InlineCode>+ Add</InlineCode> ở thanh trên, chọn 1 trong 6 loại
-          (Login, Wallet, SSH Key, Secure Note, API Key, Database), điền các trường
-          rồi <InlineCode>Save</InlineCode>.
+          Mở khóa vault là vào thẳng tab <strong>Mã 2FA</strong>, hiển thị cả mục{" "}
+          <InlineCode>Mã 2FA</InlineCode> độc lập lẫn các mục Đăng nhập có{" "}
+          <InlineCode>totp_secret</InlineCode>.
         </li>
         <li>
-          Bấm vào một mục để mở bảng chi tiết bên phải: xem, <strong>sửa</strong>,{" "}
-          <strong>xóa</strong>, hoặc copy từng trường.
+          <strong>Chạm cả hàng</strong> để copy mã 6 số vào clipboard kèm thanh
+          đếm ngược tự xóa.
         </li>
         <li>
-          Mật khẩu/secret hiện dạng dấu chấm; bấm con mắt để xem, bấm copy để chép.
+          Khi còn &le; 5 giây trước khi đổi mã, vòng đếm và chữ chuyển đỏ kèm dòng{" "}
+          <strong>Tiếp theo: xxx xxx</strong> để bạn kịp chuẩn bị.
         </li>
         <li>
-          Ở ô mật khẩu, bấm nút <strong>tạo lại</strong> để sinh mật khẩu mạnh ngẫu
-          nhiên; thanh đo độ mạnh hiện ngay khi gõ.
+          Bấm nút <strong>Ghim</strong> trong menu <InlineCode>⋯</InlineCode> để
+          đưa các tài khoản hay dùng lên đầu danh sách.
+        </li>
+        <li>
+          Có thể bật <strong>Ẩn mã 2FA nơi công cộng</strong> trong{" "}
+          <InlineCode>Cài đặt &rarr; Bảo mật</InlineCode>: mã sẽ được làm mờ, chạm
+          lần 1 để xem, chạm lần 2 để copy.
+        </li>
+        <li>
+          Trên máy tính, gõ phím bất kỳ để tìm ngay, dùng{" "}
+          <InlineCode>&uarr;</InlineCode>/<InlineCode>&darr;</InlineCode> chọn
+          hàng, <InlineCode>Enter</InlineCode> để copy và{" "}
+          <InlineCode>Esc</InlineCode> để xóa tìm kiếm.
+        </li>
+      </Bullets>
+
+      <H3>Import từ Google Authenticator</H3>
+      <Bullets>
+        <li>
+          Trong Google Authenticator, chọn{" "}
+          <InlineCode>Transfer accounts &rarr; Export accounts</InlineCode> để hiện
+          mã QR.
+        </li>
+        <li>
+          Tại ZKVault, bấm <InlineCode>Import GA</InlineCode> (hoặc vào{" "}
+          <InlineCode>Cài đặt &rarr; Sao lưu &rarr; Import 2FA</InlineCode>), quét
+          lần lượt các mã QR (hỗ trợ xuất nhiều QR) hoặc chọn ảnh QR.
+        </li>
+        <li>
+          App tự phát hiện tài khoản trùng secret và bỏ qua các mã HOTP/MD5 không
+          hỗ trợ trước khi lưu hàng loạt về vault.
+        </li>
+      </Bullets>
+
+      <H3>Tab Vault: danh sách &amp; xem chi tiết</H3>
+      <Bullets>
+        <li>
+          Chuyển sang tab <strong>Vault</strong> ở thanh bên (desktop) hoặc thanh
+          dưới cùng (mobile) để quản lý cả 7 loại mục: Đăng nhập, Mã 2FA, Ví
+          crypto, SSH Key, Database, Ghi chú, API Key.
+        </li>
+        <li>
+          Trên máy tính, rê chuột vào mỗi hàng để bấm copy nhanh{" "}
+          <strong>tài khoản</strong>, <strong>mật khẩu/key</strong> hoặc{" "}
+          <strong>mã 2FA</strong> mà không cần mở bảng chi tiết. Phím tắt khi
+          đang chọn một mục: <InlineCode>c</InlineCode> (copy bí mật chính),{" "}
+          <InlineCode>u</InlineCode> (copy tài khoản), <InlineCode>t</InlineCode>{" "}
+          (copy mã 2FA).
+        </li>
+        <li>
+          Dùng thanh chip theo loại ở trên và nút <InlineCode>Lọc</InlineCode> để
+          lọc theo nền tảng/engine/service, tag (Bất kỳ / Tất cả), Yêu thích, Có
+          2FA và thứ tự sắp xếp.
         </li>
       </Bullets>
 
       <Callout title="Tự xóa clipboard">
-        Sau khi copy, clipboard tự xóa sau 10-30 giây (chỉnh trong Settings) kèm đếm
-        ngược. Nếu lúc đó bạn đang ở app khác, nó sẽ xóa ngay khi bạn quay lại tab.
+        Sau khi copy, clipboard tự xóa sau 10-30 giây (chỉnh trong Cài đặt) kèm
+        đếm ngược. Nếu lúc đó bạn đang ở app khác, nó sẽ xóa ngay khi bạn quay
+        lại tab.
       </Callout>
 
-      <H3>Login + nền tảng</H3>
-      <P>
-        Ở mục Login, trường nền tảng cho chọn từ danh sách có sẵn (logo + tên) hoặc
-        bấm <InlineCode>URL tùy chỉnh</InlineCode> để tự nhập. Logo nền tảng hiện trên
-        thẻ và bảng chi tiết.
-      </P>
-
-      <H3>Mã 2FA / TOTP</H3>
+      <H3>Mở khóa sinh trắc &amp; tự khóa</H3>
       <Bullets>
         <li>
-          Ở mục Login, dán <strong>secret base32</strong> hoặc link{" "}
-          <InlineCode>otpauth://</InlineCode> vào ô <strong>Mã 2FA</strong>.
+          Bật trong <InlineCode>Cài đặt &rarr; Bảo mật</InlineCode>. Khi đã đăng
+          ký sinh trắc, màn hình khóa sẽ tự gợi ý prompt vân tay / Face / Windows
+          Hello ngay khi mở app (hoặc bấm nút sinh trắc nếu trình duyệt yêu cầu
+          thao tác chạm).
         </li>
         <li>
-          Hoặc bấm <InlineCode>Quét QR</InlineCode> để mở camera quét trực tiếp, hoặc
-          chọn ảnh QR.
-        </li>
-        <li>
-          App hiện mã 6 số kèm đếm ngược; bấm copy để dán khi đăng nhập.
-        </li>
-      </Bullets>
-
-      <H3>Mục Database</H3>
-      <P>
-        Chọn loại Database, chọn <strong>engine</strong> (Supabase, PostgreSQL, MySQL,
-        MariaDB, MongoDB, Redis, SQL Server, SQLite) từ dropdown có logo, rồi điền
-        host, port, database, username, password.
-      </P>
-
-      <H3>Mở khóa sinh trắc</H3>
-      <Bullets>
-        <li>
-          Mở <InlineCode>Settings &rarr; Bảo mật</InlineCode>, bật{" "}
-          <strong>Mở khóa bằng vân tay</strong>, nhập master một lần để xác nhận.
-        </li>
-        <li>
-          Sau đó ở màn khóa sẽ có nút <strong>Mở bằng vân tay / Face</strong>.
-        </li>
-        <li>
-          Đổi master sẽ phải bật lại; master password <strong>luôn là dự phòng</strong>
-          . Trình duyệt không hỗ trợ thì tùy chọn này tự ẩn.
+          <strong>Khóa khi ẩn tab:</strong> mặc định chờ <strong>1 phút</strong>{" "}
+          sau khi bạn chuyển sang app khác để kịp dán mã 2FA (có thể chỉnh thành
+          Ngay lập tức, 30 giây, 5 phút hoặc Tắt).
         </li>
       </Bullets>
 
       <H3>Kiểm tra bảo mật (mật khẩu)</H3>
       <Bullets>
         <li>
-          Bấm <InlineCode>Kiểm tra bảo mật</InlineCode> ở thanh bên (số trên badge =
-          số mục cần chú ý).
-        </li>
-        <li>
-          Bảng liệt kê mật khẩu <strong>trùng lặp</strong>, <strong>yếu</strong>,{" "}
-          <strong>cũ</strong>; bấm một mục để mở sửa.
-        </li>
-        <li>
-          Bật <strong>Kiểm tra rò rỉ (HIBP)</strong> trong Settings (mặc định tắt) để
-          dò mật khẩu đã lộ.
+          Bấm <InlineCode>Kiểm tra bảo mật</InlineCode> để quét mật khẩu{" "}
+          <strong>trùng lặp</strong>, <strong>yếu</strong>, <strong>cũ</strong>,
+          và tùy chọn đối chiếu dữ liệu rò rỉ HIBP (mặc định tắt).
         </li>
       </Bullets>
-
-      <H3>Tags + lọc</H3>
-      <Bullets>
-        <li>
-          Gắn tag khi tạo/sửa mục (ô <strong>Tags</strong>, ngăn cách bằng dấu phẩy).
-        </li>
-        <li>
-          Ở thanh bên, tick nhiều tag để lọc; dùng công tắc{" "}
-          <strong>Bất kỳ / Tất cả</strong> để chọn cách ghép.
-        </li>
-        <li>
-          Bộ lọc loại và tag <strong>độc lập</strong> (cả hai cùng highlight); bấm{" "}
-          <InlineCode>Xoá</InlineCode> để bỏ hết tag.
-        </li>
-      </Bullets>
-
-      <H3>Tìm kiếm</H3>
-      <P>
-        Bấm <InlineCode>Ctrl/Cmd + K</InlineCode> để nhảy vào ô tìm kiếm. Tìm fuzzy
-        ngay trong máy, không gửi gì cho máy chủ.
-      </P>
-
-      <H3>Settings</H3>
-      <Bullets>
-        <li>
-          <strong>Tự khóa</strong> sau thời gian rảnh, và/hoặc khi chuyển/ẩn tab.
-        </li>
-        <li>
-          <strong>Thời gian xóa clipboard</strong> sau khi copy.
-        </li>
-        <li>
-          <strong>Favicon</strong> (tùy chọn, mặc định tắt) và{" "}
-          <strong>Kiểm tra rò rỉ HIBP</strong> (tùy chọn).
-        </li>
-        <li>
-          <strong>Đổi master password</strong> + <strong>Tạo lại recovery key</strong>{" "}
-          (Account) và <strong>Backup</strong>: Export/Import{" "}
-          <InlineCode>.vault</InlineCode>; tab Backup nhắc khi bản sao lưu quá cũ
-          (&gt;30 ngày).
-        </li>
-      </Bullets>
-
-      <H3>Cài như app (PWA)</H3>
-      <P>
-        Bấm Install / Add to Home Screen để cài. App mở nhanh, load app shell offline,
-        và hiện thông báo <strong>Có bản cập nhật mới</strong> khi có phiên bản mới
-        (bấm Tải lại để cập nhật).
-      </P>
     </DocSection>
   );
 }

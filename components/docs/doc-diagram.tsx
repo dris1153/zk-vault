@@ -1,16 +1,16 @@
-// Presentational flow-diagram primitives in the DESIGN.md azure system.
-// Color language: keys/secrets = azure, ciphertext = smoke/ash, client
-// plaintext = snow. No external deps, responsive (no fixed SVG coordinates).
+// Presentational flow-diagram primitives in the DESIGN.md Campsite system.
+// Color language: keys/secrets = warm accent wash, ciphertext = muted inset,
+// client plaintext = white surface. No external deps, responsive.
 
 import type { ReactNode } from "react";
 
 type Tone = "plain" | "key" | "cipher" | "muted";
 
 const TONES: Record<Tone, string> = {
-  plain: "border-slate bg-obsidian text-snow",
-  key: "border-azure/40 bg-azure/[0.08] text-azure",
-  cipher: "border-charcoal bg-ash text-smoke",
-  muted: "border-charcoal bg-obsidian text-silver",
+  plain: "border-line bg-surface text-ink shadow-row",
+  key: "border-accent/30 bg-accent-wash text-accent-ink",
+  cipher: "border-line bg-inset text-ink-2",
+  muted: "border-line bg-canvas text-ink-2",
 };
 
 export function FlowNode({
@@ -24,7 +24,7 @@ export function FlowNode({
 }) {
   return (
     <div
-      className={`rounded-2xl border px-4 py-3 text-center text-sm leading-snug ${
+      className={`rounded-xl border px-4 py-3 text-center text-sm leading-snug ${
         mono ? "font-mono text-[13px]" : ""
       } ${TONES[tone]}`}
     >
@@ -42,18 +42,18 @@ export function Arrow({
 }) {
   if (dir === "right") {
     return (
-      <div className="flex items-center gap-1 px-1 text-azure">
-        <span className="h-px w-5 bg-azure" />
+      <div className="flex items-center gap-1 px-1 text-ink-2">
+        <span className="h-px w-5 bg-ink-2" />
         <span className="-ml-1 text-xs">›</span>
-        {label && <span className="ml-1 text-[11px] text-smoke">{label}</span>}
+        {label && <span className="ml-1 text-[11px] text-muted">{label}</span>}
       </div>
     );
   }
   return (
-    <div className="flex flex-col items-center py-1 text-azure">
-      <span className="h-4 w-px bg-azure" />
+    <div className="flex flex-col items-center py-1 text-ink-2">
+      <span className="h-4 w-px bg-ink-2" />
       <span className="-mt-2 text-xs leading-none">▼</span>
-      {label && <span className="mt-0.5 text-[11px] text-smoke">{label}</span>}
+      {label && <span className="mt-0.5 text-[11px] text-muted">{label}</span>}
     </div>
   );
 }
@@ -77,10 +77,10 @@ export function DiagramFrame({
   caption?: string;
 }) {
   return (
-    <figure className="my-6 rounded-2xl border border-charcoal bg-obsidian p-5">
+    <figure className="my-6 rounded-xl border border-line bg-surface p-5 shadow-card">
       <div className="flex flex-col gap-0">{children}</div>
       {caption && (
-        <figcaption className="mt-4 text-center text-xs text-smoke">
+        <figcaption className="mt-4 text-center text-xs text-muted">
           {caption}
         </figcaption>
       )}
@@ -95,7 +95,7 @@ export function Legend() {
     { tone: "cipher", label: "Ciphertext (lưu Supabase)" },
   ];
   return (
-    <div className="mt-4 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-silver">
+    <div className="mt-4 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-ink-2">
       {items.map((i) => (
         <span key={i.label} className="flex items-center gap-1.5">
           <span

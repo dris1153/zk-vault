@@ -39,12 +39,12 @@ export function SettingsAccount() {
     setStatus(null);
     setError(null);
     if (next.length < MIN_LEN)
-      return setError(`New password must be at least ${MIN_LEN} characters.`);
-    if (next !== confirm) return setError("New passwords do not match.");
+      return setError(`Mật khẩu mới phải có ít nhất ${MIN_LEN} ký tự.`);
+    if (next !== confirm) return setError("Mật khẩu mới không khớp.");
     setBusy(true);
     try {
       await changeMasterPassword(current, next);
-      setStatus("Master password changed.");
+      setStatus("Đã đổi master password.");
       setCurrent("");
       setNext("");
       setConfirm("");
@@ -57,15 +57,15 @@ export function SettingsAccount() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="text-[11px] uppercase tracking-[0.12em] text-smoke">
-        Change master password
+      <div className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted">
+        Đổi master password
       </div>
-      <p className="text-sm text-silver">
-        Re-wraps your key without re-encrypting items. Your recovery key stays
-        valid.
+      <p className="text-sm text-ink-2">
+        Chỉ bọc lại khóa giải mã mà không mã hóa lại các mục. Recovery key vẫn
+        còn hiệu lực.
       </p>
 
-      <Field label="Current master password">
+      <Field label="Mật khẩu hiện tại">
         <TextInput
           mono
           type="password"
@@ -73,7 +73,7 @@ export function SettingsAccount() {
           onChange={(e) => setCurrent(e.target.value)}
         />
       </Field>
-      <Field label="New master password">
+      <Field label="Mật khẩu mới">
         <TextInput
           mono
           type="password"
@@ -81,7 +81,7 @@ export function SettingsAccount() {
           onChange={(e) => setNext(e.target.value)}
         />
       </Field>
-      <Field label="Confirm new password">
+      <Field label="Xác nhận mật khẩu mới">
         <TextInput
           mono
           type="password"
@@ -91,27 +91,27 @@ export function SettingsAccount() {
       </Field>
 
       {error && <p className="text-sm text-danger">{error}</p>}
-      {status && <p className="text-sm text-azure">{status}</p>}
+      {status && <p className="text-sm font-medium text-ink">{status}</p>}
 
       <PillButton onClick={submit} disabled={busy} className="self-end">
-        {busy ? "Changing..." : "Change password"}
+        {busy ? "Đang đổi..." : "Đổi mật khẩu"}
       </PillButton>
 
-      <div className="h-px bg-charcoal" />
+      <div className="h-px bg-line" />
 
-      <div className="text-[11px] uppercase tracking-[0.12em] text-smoke">
+      <div className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted">
         Recovery key
       </div>
-      <p className="text-sm text-silver">
-        Tạo lại bộ 24 từ recovery (ví dụ khi lỡ mất giấy). Recovery key cũ sẽ ngừng
-        hoạt động; master password không đổi.
+      <p className="text-sm text-ink-2">
+        Tạo lại bộ 24 từ recovery (ví dụ khi lỡ mất giấy). Recovery key cũ sẽ
+        ngừng hoạt động; master password không đổi.
       </p>
       {rotError && <p className="text-sm text-danger">{rotError}</p>}
       {rotating ? (
-        <div className="rounded-2xl border border-danger/40 bg-danger/[0.06] p-4">
-          <p className="text-sm text-silver">
+        <div className="rounded-xl border border-danger/30 bg-danger/5 p-4">
+          <p className="text-sm text-ink-2">
             Recovery key cũ sẽ{" "}
-            <strong className="text-snow">không dùng được nữa</strong>. Hãy lưu kỹ
+            <strong className="text-ink">không dùng được nữa</strong>. Hãy lưu kỹ
             24 từ mới hiện ra ngay sau đó.
           </p>
           <div className="mt-3 flex justify-end gap-2">
@@ -120,7 +120,7 @@ export function SettingsAccount() {
               onClick={() => setRotating(false)}
               disabled={rotBusy}
             >
-              Huỷ
+              Hủy
             </PillButton>
             <PillButton variant="danger" onClick={rotate} disabled={rotBusy}>
               {rotBusy ? "Đang tạo..." : "Xác nhận tạo lại"}

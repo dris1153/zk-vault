@@ -38,13 +38,17 @@ export function ServicePicker({
       if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
     };
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") {
+        e.stopPropagation();
+        e.preventDefault();
+        setOpen(false);
+      }
     };
     document.addEventListener("pointerdown", onPointer);
-    document.addEventListener("keydown", onKey);
+    document.addEventListener("keydown", onKey, true);
     return () => {
       document.removeEventListener("pointerdown", onPointer);
-      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("keydown", onKey, true);
     };
   }, [open]);
 
@@ -68,7 +72,7 @@ export function ServicePicker({
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="flex w-full items-center gap-2.5 rounded-lg border border-slate bg-obsidian px-3 py-2.5 text-left text-sm text-snow transition focus:border-azure"
+        className="flex w-full items-center gap-2.5 rounded-lg border border-transparent bg-inset px-3 py-2.5 text-left text-sm text-ink transition hover:bg-line/70 focus:border-line focus:bg-surface"
       >
         {value ? (
           <>
@@ -77,19 +81,19 @@ export function ServicePicker({
           </>
         ) : (
           <>
-            <Cube size={18} className="text-smoke" />
-            <span className="text-smoke">Chọn dịch vụ</span>
+            <Cube size={18} className="text-ink-2" />
+            <span className="text-ink-2">Chọn dịch vụ</span>
           </>
         )}
-        <CaretDown size={15} className="ml-auto shrink-0 text-smoke" />
+        <CaretDown size={15} className="ml-auto shrink-0 text-ink-2" />
       </button>
 
       {open && (
-        <div className="rounded-lg border border-charcoal bg-ash p-1.5">
-          <div className="relative mb-1.5">
+        <div className="rounded-xl border border-line bg-surface p-2 shadow-card">
+          <div className="relative mb-2">
             <MagnifyingGlass
               size={15}
-              className="absolute left-2.5 top-1/2 -translate-y-1/2 text-smoke"
+              className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted"
             />
             <input
               value={query}
@@ -100,11 +104,11 @@ export function ServicePicker({
               data-lpignore="true"
               data-bwignore=""
               data-form-type="other"
-              className="w-full rounded-md border border-slate bg-obsidian py-2 pl-8 pr-2 text-sm text-snow outline-none placeholder:text-smoke focus:border-azure"
+              className="w-full rounded-lg border border-transparent bg-inset py-2 pl-8 pr-2 text-sm text-ink placeholder:text-faint focus:border-ink/30 focus:bg-surface"
             />
           </div>
 
-          <div className="mb-1.5 flex flex-wrap gap-1">
+          <div className="mb-2 flex flex-wrap gap-1">
             <Chip active={cat === "all"} onClick={() => setCat("all")}>
               Tất cả
             </Chip>
@@ -117,7 +121,7 @@ export function ServicePicker({
 
           <div className="max-h-72 overflow-y-auto">
             {groups.length === 0 ? (
-              <div className="px-2 py-6 text-center text-sm text-smoke">
+              <div className="px-2 py-6 text-center text-sm text-muted">
                 Không tìm thấy dịch vụ.
               </div>
             ) : (
@@ -127,7 +131,7 @@ export function ServicePicker({
                   className="mb-1 grid grid-cols-2 gap-1 sm:grid-cols-3"
                 >
                   {cat === "all" && (
-                    <div className="col-span-full px-2 pt-1 text-[11px] uppercase tracking-[0.1em] text-smoke">
+                    <div className="col-span-full px-2 pt-1 text-[11px] uppercase tracking-[0.1em] text-muted">
                       {SERVICE_CATEGORY_LABELS[g.cat]}
                     </div>
                   )}
@@ -137,7 +141,7 @@ export function ServicePicker({
                       type="button"
                       onClick={() => pick(s)}
                       title={s.name}
-                      className="flex min-w-0 items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm text-snow transition hover:bg-obsidian"
+                      className="flex min-w-0 items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm text-ink transition hover:bg-inset"
                     >
                       <span className="shrink-0">
                         <ServiceIcon service={s.name} size={18} />
@@ -150,14 +154,14 @@ export function ServicePicker({
             )}
           </div>
 
-          <div className="my-1 h-px bg-charcoal" />
+          <div className="my-1.5 h-px bg-line" />
           <button
             type="button"
             onClick={() => {
               setCustomOpen(true);
               setOpen(false);
             }}
-            className="flex w-full items-center gap-2.5 rounded-md px-2 py-1.5 text-left text-sm text-azure-link transition hover:bg-obsidian"
+            className="flex w-full items-center gap-2.5 rounded-lg px-2 py-1.5 text-left text-sm font-medium text-ink transition hover:bg-inset"
           >
             <Cube size={18} /> Dịch vụ khác
           </button>
@@ -190,8 +194,8 @@ function Chip({
       onClick={onClick}
       className={`rounded-full px-2.5 py-1 text-xs transition ${
         active
-          ? "bg-azure font-medium text-[#08233f]"
-          : "bg-obsidian text-silver hover:text-snow"
+          ? "bg-ink font-medium text-white"
+          : "bg-inset text-muted hover:text-ink"
       }`}
     >
       {children}

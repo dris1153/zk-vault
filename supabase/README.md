@@ -23,7 +23,10 @@ confirmation ON, the first session is blocked until you click an email link.
 (If you prefer to keep it ON, confirm the one signup email once, then unlock works.)
 
 ## 3. Apply the schema
-Run the migration in `supabase/migrations/0001_init.sql`:
+Run the migrations in `supabase/migrations/` in order:
+1. `0001_init.sql`
+2. `0002_add_database_type.sql`
+3. `0003_add_authenticator_type.sql` (must be applied before deploying client code that creates `authenticator` items)
 
 - **Dashboard:** SQL Editor → paste the file contents → Run.
 - **CLI:** `supabase link` then `supabase db push` (or `supabase migration up`).

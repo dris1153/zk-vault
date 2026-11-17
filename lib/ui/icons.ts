@@ -2,6 +2,7 @@
 
 import {
   UserCircle,
+  ShieldCheck,
   Wallet,
   TerminalWindow,
   NoteBlank,
@@ -13,6 +14,7 @@ import type { VaultItemType } from "@/lib/supabase/types";
 
 export const TYPE_ICON: Record<VaultItemType, Icon> = {
   login: UserCircle,
+  authenticator: ShieldCheck,
   wallet: Wallet,
   ssh_key: TerminalWindow,
   database: Database,
@@ -21,16 +23,18 @@ export const TYPE_ICON: Record<VaultItemType, Icon> = {
 };
 
 export const TYPE_LABEL: Record<VaultItemType, string> = {
-  login: "Login",
-  wallet: "Wallet",
+  login: "Đăng nhập",
+  authenticator: "Mã 2FA",
+  wallet: "Ví crypto",
   ssh_key: "SSH Key",
   database: "Database",
-  secure_note: "Secure Note",
+  secure_note: "Ghi chú",
   api_key: "API Key",
 };
 
 export const TYPE_ORDER: VaultItemType[] = [
   "login",
+  "authenticator",
   "wallet",
   "ssh_key",
   "database",

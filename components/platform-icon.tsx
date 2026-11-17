@@ -7,11 +7,13 @@ import { domainOf } from "@/lib/ui/platforms";
 export function PlatformIcon({
   platform,
   url,
+  fallbackLabel,
   size = 18,
   favicon = false,
 }: {
   platform?: Platform | null;
   url?: string;
+  fallbackLabel?: string;
   size?: number;
   favicon?: boolean;
 }) {
@@ -24,10 +26,12 @@ export function PlatformIcon({
   }
 
   const host = url ? domainOf(url) : "";
-  if (favicon && host) {
+  const validDomain =
+    host.includes(".") && /^[a-z0-9.-]+$/i.test(host) && !/\.\./.test(host);
+  if (favicon && validDomain) {
     return <FaviconIcon host={host} size={size} />;
   }
-  return <Monogram label={host} size={size} />;
+  return <Monogram label={fallbackLabel || host} size={size} />;
 }
 
 // Local brand PNG; falls back to a monogram if the file is missing/placeholder.
@@ -52,7 +56,7 @@ function FaviconIcon({ host, size }: { host: string; size: number }) {
   if (broken) return <Monogram label={host} size={size} />;
   return (
     <img
-      src={`https://icons.duckduckgo.com/ip3/${host}.ico`}
+      src={`https://icons.duckduckgo.com/ip3/${encodeURIComponent(host)}.ico`}
       alt={host}
       width={size}
       height={size}
@@ -71,11 +75,11 @@ export function Monogram({ label, size }: { label: string; size: number }) {
   const hue = Math.abs(h) % 360;
   return (
     <span
-      className="inline-flex items-center justify-center rounded-[5px] font-medium text-snow"
+      className="inline-flex items-center justify-center rounded-[5px] font-medium text-white"
       style={{
         width: size,
         height: size,
-        background: `hsl(${hue} 42% 30%)`,
+        background: `hsl(${hue} 42% 32%)`,
         fontSize: Math.round(size * 0.5),
       }}
     >

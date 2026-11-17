@@ -8,10 +8,10 @@ import { useAutoLock } from "@/lib/vault/auto-lock";
 import { useSettings, hydrateSettings } from "@/lib/vault/settings-store";
 
 export function VaultProvider({ children }: { children: React.ReactNode }) {
-  const { autoLockMs, lockOnHidden } = useSettings((s) => s.settings);
+  const { autoLockMs, lockOnHiddenAfterMs } = useSettings((s) => s.settings);
 
   useEffect(() => hydrateSettings(), []);
-  useAutoLock(autoLockMs, lockOnHidden);
+  useAutoLock(autoLockMs, lockOnHiddenAfterMs);
 
   return <>{children}</>;
 }

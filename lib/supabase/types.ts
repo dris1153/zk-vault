@@ -4,6 +4,7 @@ import type { KdfParams, WrappedKey } from "@/lib/crypto";
 
 export type VaultItemType =
   | "login"
+  | "authenticator"
   | "wallet"
   | "ssh_key"
   | "secure_note"

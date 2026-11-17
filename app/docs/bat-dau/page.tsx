@@ -50,14 +50,17 @@ export default function GettingStartedPage() {
 
       <Callout tone="warn" title="Không có nút Quên mật khẩu">
         Mất master mà không có recovery key + file backup thì dữ liệu mất vĩnh viễn.
-        Hãy lưu recovery key ngay từ đầu, và thỉnh thoảng Export một file backup
-        (Settings &rarr; Backup).
+        Hãy lưu recovery key ngay từ đầu, và thỉnh thoảng xuất một file backup
+        (Cài đặt &rarr; Sao lưu).
       </Callout>
 
       <H3>Tiếp theo</H3>
       <P>
         Xem{" "}
-        <Link href="/docs/tinh-nang" className="text-azure-link hover:underline">
+        <Link
+          href="/docs/tinh-nang"
+          className="font-medium text-ink underline underline-offset-2"
+        >
           Hướng dẫn dùng
         </Link>{" "}
         để biết cách thêm mục, bật 2FA, mở khóa sinh trắc, kiểm tra mật khẩu và hơn

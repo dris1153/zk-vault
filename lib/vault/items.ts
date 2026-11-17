@@ -4,7 +4,7 @@
 import { supabase } from "@/lib/supabase/client";
 import { encryptJSON, decryptJSON } from "@/lib/crypto";
 import type { VaultItemRow, VaultItemType } from "@/lib/supabase/types";
-import { parseItemData, type ItemData } from "./schemas";
+import { parseItemData, schemaByType, type ItemData } from "./schemas";
 
 const TABLE = "vault_items";
 
@@ -39,7 +39,7 @@ export async function fetchItems(dek: CryptoKey): Promise<VaultItem[]> {
     .select("*")
     .order("updated_at", { ascending: false });
   if (error) throw error;
-  const rows = (data ?? []) as VaultItemRow[];
+  const rows = ((data ?? []) as VaultItemRow[]).filter((r) => r.type in schemaByType);
   return Promise.all(rows.map((r) => rowToItem(r, dek)));
 }
 

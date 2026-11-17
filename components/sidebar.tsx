@@ -1,201 +1,97 @@
 "use client";
 
 import {
-  SquaresFour,
-  Star,
-  Gear,
-  Hash,
   ShieldCheck,
+  SquaresFour,
+  Gear,
+  LockLaminated,
+  LockKey,
 } from "@phosphor-icons/react/dist/ssr";
 import type { Icon } from "@phosphor-icons/react";
 import type { VaultItem } from "@/lib/vault/items";
-import type { VaultItemType } from "@/lib/supabase/types";
-import { TYPE_ICON, TYPE_LABEL, TYPE_ORDER } from "@/lib/ui/icons";
-import { CheckboxBox } from "./ui-kit";
+import { hasTotp } from "@/lib/ui/item-filters";
+import type { AppTab } from "@/lib/ui/use-tab";
 import { BrandMark } from "./brand-mark";
-
-export type Category = "all" | "favorites" | VaultItemType;
-
-export type TagMode = "any" | "all";
 
 interface SidebarProps {
   items: VaultItem[];
-  category: Category;
-  onCategory: (c: Category) => void;
-  tags: string[];
-  onToggleTag: (t: string) => void;
-  tagMode: TagMode;
-  onTagMode: (m: TagMode) => void;
-  onClearTags: () => void;
+  tab: AppTab;
+  onTab: (t: AppTab) => void;
   onOpenSettings: () => void;
   onOpenSecurity: () => void;
+  onLock: () => void;
   issueCount: number;
   className?: string;
-  onNavigate?: () => void;
 }
 
 export function Sidebar({
   items,
-  category,
-  onCategory,
-  tags,
-  onToggleTag,
-  tagMode,
-  onTagMode,
-  onClearTags,
+  tab,
+  onTab,
   onOpenSettings,
   onOpenSecurity,
+  onLock,
   issueCount,
   className = "",
-  onNavigate,
 }: SidebarProps) {
-  const countOf = (t: VaultItemType) =>
-    items.filter((i) => i.type === t).length;
-  const favCount = items.filter((i) => i.favorite).length;
-  const allTags = uniqueTags(items);
-  // Wrap an action so mobile (drawer) usage closes after selecting.
-  const nav = (fn: () => void) => () => {
-    fn();
-    onNavigate?.();
-  };
+  const codeCount = items.filter(hasTotp).length;
 
   return (
     <aside
-      className={`flex w-60 shrink-0 flex-col gap-1 overflow-y-auto border-r border-charcoal bg-obsidian p-3 ${className}`}
+      className={`flex w-60 shrink-0 flex-col gap-1 border-r border-line bg-canvas p-3 ${className}`}
     >
-      <div className="flex items-center gap-2.5 px-2.5 pb-4 pt-2 font-medium">
-        <BrandMark variant="tile" size={22} />
-        ZKVault
+      <div className="flex items-center gap-2.5 px-3 pb-5 pt-2 font-semibold text-ink">
+        <BrandMark variant="tile" size={26} />
+        <span>ZKVault</span>
       </div>
 
       <NavItem
-        icon={SquaresFour}
-        label="All items"
-        count={items.length}
-        active={category === "all"}
-        onClick={nav(() => onCategory("all"))}
+        icon={ShieldCheck}
+        label="Mã 2FA"
+        count={codeCount}
+        active={tab === "codes"}
+        onClick={() => onTab("codes")}
       />
-      {TYPE_ORDER.map((t) => (
-        <NavItem
-          key={t}
-          icon={TYPE_ICON[t]}
-          label={pluralize(TYPE_LABEL[t])}
-          count={countOf(t)}
-          active={category === t}
-          onClick={nav(() => onCategory(t))}
-        />
-      ))}
       <NavItem
-        icon={Star}
-        label="Favorites"
-        count={favCount}
-        active={category === "favorites"}
-        onClick={nav(() => onCategory("favorites"))}
+        icon={SquaresFour}
+        label="Vault"
+        count={items.length}
+        active={tab === "vault"}
+        onClick={() => onTab("vault")}
       />
 
-      {allTags.length > 0 && (
-        <>
-          <div className="my-3 h-px bg-charcoal" />
-          <div className="flex items-center justify-between px-2.5 py-1">
-            <span className="text-[11px] uppercase tracking-[0.12em] text-smoke">
-              Tags
+      <div className="mt-auto flex flex-col gap-1 border-t border-line pt-3">
+        <button
+          type="button"
+          onClick={onOpenSecurity}
+          className="flex items-center gap-2.5 rounded-full px-3 py-2 text-sm font-medium text-muted transition hover:bg-inset hover:text-ink"
+        >
+          <LockLaminated size={18} />
+          <span>Kiểm tra bảo mật</span>
+          {issueCount > 0 && (
+            <span className="ml-auto rounded-full bg-accent-wash px-2 py-0.5 text-xs font-semibold text-accent-ink">
+              {issueCount}
             </span>
-            <div className="flex items-center gap-1">
-              {tags.length > 0 && (
-                <button
-                  onClick={onClearTags}
-                  className="text-[11px] text-azure-link hover:underline"
-                >
-                  Xoá
-                </button>
-              )}
-              <div className="flex overflow-hidden rounded-md border border-charcoal text-[10px]">
-                <ModePill
-                  active={tagMode === "any"}
-                  onClick={() => onTagMode("any")}
-                  title="Hiện item có bất kỳ tag đã chọn"
-                >
-                  Bất kỳ
-                </ModePill>
-                <ModePill
-                  active={tagMode === "all"}
-                  onClick={() => onTagMode("all")}
-                  title="Hiện item có tất cả tag đã chọn"
-                >
-                  Tất cả
-                </ModePill>
-              </div>
-            </div>
-          </div>
-          {allTags.map((t) => {
-            const on = tags.includes(t);
-            return (
-              <button
-                key={t}
-                onClick={() => onToggleTag(t)}
-                className={`flex items-center justify-between rounded-lg px-2.5 py-1.5 text-sm max-w-full overflow-hidden transition ${
-                  on
-                    ? "bg-azure/8 text-snow"
-                    : "text-silver hover:bg-ash hover:text-snow"
-                }`}
-              >
-                <div className="flex items-center gap-2 flex-1 overflow-hidden">
-                  <Hash size={14} className="text-graphite shrink-0" />
-                  <span className="truncate">{t}</span>
-                </div>
-                <CheckboxBox checked={on} />
-              </button>
-            );
-          })}
-        </>
-      )}
-
-      <div className="mt-auto" />
-      <button
-        onClick={nav(onOpenSecurity)}
-        className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm text-silver transition hover:bg-ash hover:text-snow"
-      >
-        <ShieldCheck size={18} />
-        Kiểm tra bảo mật
-        {issueCount > 0 && (
-          <span className="ml-auto rounded-full bg-azure px-1.5 text-xs font-medium text-[#08233f]">
-            {issueCount}
-          </span>
-        )}
-      </button>
-      <button
-        onClick={nav(onOpenSettings)}
-        className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm text-silver transition hover:bg-ash hover:text-snow"
-      >
-        <Gear size={18} />
-        Settings
-      </button>
+          )}
+        </button>
+        <button
+          type="button"
+          onClick={onOpenSettings}
+          className="flex items-center gap-2.5 rounded-full px-3 py-2 text-sm font-medium text-muted transition hover:bg-inset hover:text-ink"
+        >
+          <Gear size={18} />
+          <span>Cài đặt</span>
+        </button>
+        <button
+          type="button"
+          onClick={onLock}
+          className="flex items-center gap-2.5 rounded-full px-3 py-2 text-sm font-medium text-muted transition hover:bg-inset hover:text-ink"
+        >
+          <LockKey size={18} />
+          <span>Khóa vault</span>
+        </button>
+      </div>
     </aside>
-  );
-}
-
-function ModePill({
-  active,
-  onClick,
-  title,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      title={title}
-      className={`px-1.5 py-0.5 transition ${
-        active ? "bg-azure text-[#08233f]" : "text-smoke hover:text-snow"
-      }`}
-    >
-      {children}
-    </button>
   );
 }
 
@@ -214,33 +110,21 @@ function NavItem({
 }) {
   return (
     <button
+      type="button"
       onClick={onClick}
-      className={`relative flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm transition ${
+      className={`flex items-center gap-2.5 rounded-full px-3 py-2 text-sm font-medium transition ${
         active
-          ? "bg-azure/[0.08] text-snow"
-          : "text-silver hover:bg-ash hover:text-snow"
+          ? "bg-inset text-ink"
+          : "text-muted hover:bg-inset/70 hover:text-ink"
       }`}
     >
-      {active && (
-        <span className="absolute bottom-2 left-0 top-2 w-0.5 rounded bg-azure" />
-      )}
-      <Icon size={18} className={active ? "text-azure" : ""} />
-      {label}
-      <span className="ml-auto text-xs text-smoke">{count}</span>
+      <Icon
+        size={18}
+        weight={active ? "fill" : "regular"}
+        className={active ? "text-ink" : "text-muted"}
+      />
+      <span>{label}</span>
+      <span className="ml-auto text-xs text-muted tabular-nums">{count}</span>
     </button>
   );
-}
-
-function pluralize(label: string): string {
-  // All five labels pluralize by appending "s" (Login -> Logins, SSH Key -> SSH Keys).
-  return label + "s";
-}
-
-function uniqueTags(items: VaultItem[]): string[] {
-  const set = new Set<string>();
-  for (const i of items) {
-    const t = i.data.tags;
-    if (Array.isArray(t)) t.forEach((x) => typeof x === "string" && set.add(x));
-  }
-  return [...set].sort();
 }

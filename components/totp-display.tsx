@@ -2,8 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { Copy, Check } from "@phosphor-icons/react/dist/ssr";
-import { parseTotp, currentCode, formatCode } from "@/lib/ui/totp";
+import {
+  parseTotp,
+  currentCode,
+  nextCode,
+  formatCode,
+} from "@/lib/ui/totp";
 import { IconButton } from "./ui-kit";
+import { CountdownRing } from "./code-row";
 
 export function TotpDisplay({
   secret,
@@ -26,8 +32,8 @@ export function TotpDisplay({
   if (!secret.trim()) return null;
 
   return (
-    <div className="border-b border-charcoal py-3.5">
-      <div className="mb-1.5 text-[11px] uppercase tracking-[0.1em] text-smoke">
+    <div className="border-b border-line py-3.5">
+      <div className="mb-1.5 text-[11px] font-medium uppercase tracking-[0.1em] text-muted">
         Mã 2FA
       </div>
       {!totp ? (
@@ -56,46 +62,38 @@ function Live({
   copied: boolean;
   onCopy: (code: string) => void;
 }) {
-  const { code, secondsRemaining, period } = currentCode(totp);
+  const now = Date.now();
+  const { code, secondsRemaining, period } = currentCode(totp, now);
+  const expiring = secondsRemaining <= 5;
+  const next = expiring ? nextCode(totp, now) : null;
   return (
     <div className="flex items-center gap-3">
-      <span className="font-mono text-xl tracking-[3px] text-azure">
-        {formatCode(code)}
-      </span>
-      <Ring remaining={secondsRemaining} period={period} />
+      <div>
+        <span
+          className={`font-mono text-xl font-semibold tracking-[3px] tabular-nums ${
+            expiring ? "text-danger" : "text-ink"
+          }`}
+        >
+          {formatCode(code)}
+        </span>
+        {expiring && next && (
+          <div className="font-mono text-[11px] font-medium text-danger tabular-nums">
+            Tiếp theo: {formatCode(next)}
+          </div>
+        )}
+      </div>
+      <CountdownRing
+        remaining={secondsRemaining}
+        period={period}
+        expiring={expiring}
+      />
       <IconButton
         onClick={() => onCopy(code)}
-        aria-label="Copy"
+        aria-label="Sao chép mã 2FA"
         className="ml-auto"
       >
-        {copied ? <Check size={17} className="text-azure" /> : <Copy size={17} />}
+        {copied ? <Check size={17} className="text-ink" /> : <Copy size={17} />}
       </IconButton>
     </div>
-  );
-}
-
-function Ring({ remaining, period }: { remaining: number; period: number }) {
-  const r = 9;
-  const circ = 2 * Math.PI * r;
-  const frac = remaining / period;
-  return (
-    <span className="relative inline-flex h-6 w-6 items-center justify-center">
-      <svg width="24" height="24" viewBox="0 0 24 24">
-        <circle cx="12" cy="12" r={r} fill="none" stroke="#2e2e2e" strokeWidth="2" />
-        <circle
-          cx="12"
-          cy="12"
-          r={r}
-          fill="none"
-          stroke="#3e9bff"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeDasharray={circ}
-          strokeDashoffset={circ * (1 - frac)}
-          transform="rotate(-90 12 12)"
-        />
-      </svg>
-      <span className="absolute font-mono text-[9px] text-smoke">{remaining}</span>
-    </span>
   );
 }

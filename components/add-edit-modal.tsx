@@ -14,13 +14,17 @@ export function AddEditModal({
   onClose,
   dek,
   editing,
+  presetType = "login",
+  presetData,
 }: {
   open: boolean;
   onClose: () => void;
   dek: CryptoKey;
   editing: VaultItem | null;
+  presetType?: VaultItemType;
+  presetData?: FormData;
 }) {
-  const [type, setType] = useState<VaultItemType>("login");
+  const [type, setType] = useState<VaultItemType>(presetType);
   const [data, setData] = useState<FormData>({ tags: [] });
   const [favorite, setFavorite] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -34,11 +38,11 @@ export function AddEditModal({
       setData(editing.data);
       setFavorite(editing.favorite);
     } else {
-      setType("login");
-      setData({ tags: [] });
+      setType(presetType);
+      setData(presetData ? { tags: [], ...presetData } : { tags: [] });
       setFavorite(false);
     }
-  }, [open, editing]);
+  }, [open, editing, presetType, presetData]);
 
   async function save() {
     setError(null);
@@ -51,7 +55,12 @@ export function AddEditModal({
       }
       onClose();
     } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
+      if (err && typeof err === "object" && "issues" in err && Array.isArray((err as { issues: unknown[] }).issues)) {
+        const first = (err as { issues: { message?: string }[] }).issues[0];
+        setError(first?.message ?? "Dữ liệu không hợp lệ.");
+      } else {
+        setError(err instanceof Error ? err.message : String(err));
+      }
     } finally {
       setSaving(false);
     }
@@ -59,11 +68,11 @@ export function AddEditModal({
 
   return (
     <Modal open={open} onClose={onClose}>
-      <div className="flex items-center justify-between border-b border-charcoal p-5">
-        <h2 className="text-base font-medium">
-          {editing ? "Edit item" : "New item"}
+      <div className="flex items-center justify-between border-b border-line p-5">
+        <h2 className="text-base font-semibold">
+          {editing ? "Sửa mục" : "Thêm mục mới"}
         </h2>
-        <IconButton onClick={onClose} aria-label="Close">
+        <IconButton onClick={onClose} aria-label="Đóng">
           <X size={18} />
         </IconButton>
       </div>
@@ -77,11 +86,12 @@ export function AddEditModal({
               return (
                 <button
                   key={t}
+                  type="button"
                   onClick={() => setType(t)}
-                  className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm transition ${
+                  className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium transition ${
                     active
-                      ? "bg-azure text-[#08233f]"
-                      : "border border-slate text-silver hover:border-graphite hover:text-snow"
+                      ? "bg-ink text-white shadow-button"
+                      : "border border-line bg-surface text-muted hover:bg-inset hover:text-ink"
                   }`}
                 >
                   <Icon size={15} />
@@ -101,18 +111,18 @@ export function AddEditModal({
             type="button"
             onClick={() => setFavorite((f) => !f)}
             className={`flex items-center gap-1.5 text-sm transition ${
-              favorite ? "text-azure" : "text-smoke hover:text-silver"
+              favorite ? "font-medium text-accent-ink" : "text-muted hover:text-ink"
             }`}
           >
             <Star size={16} weight={favorite ? "fill" : "regular"} />
-            Favorite
+            Yêu thích
           </button>
           <div className="flex gap-2">
             <PillButton variant="ghost" onClick={onClose}>
-              Cancel
+              Hủy
             </PillButton>
             <PillButton onClick={save} disabled={saving}>
-              {saving ? "Saving..." : "Save item"}
+              {saving ? "Đang lưu..." : "Lưu"}
             </PillButton>
           </div>
         </div>

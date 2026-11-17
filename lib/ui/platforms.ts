@@ -7,7 +7,7 @@
 
 import { svg, png, webp, type BrandIconRef } from "./brand";
 import {
-  GitHubLight,
+  GitHubDark,
   GitLab,
   Cloudflare,
   Notion,
@@ -18,15 +18,14 @@ import {
   Messenger,
   WhatsApp,
   Facebook,
-  XLight,
+  XDark,
   Instagram,
   LinkedIn,
   Reddit,
   YouTube,
   Google,
-  Gmail,
   Microsoft,
-  AppleLight,
+  AppleDark,
 } from "developer-icons";
 
 export type PlatformCategory =
@@ -52,7 +51,7 @@ export const PLATFORMS: Platform[] = [
     name: "GitHub",
     category: "dev",
     domains: ["github.com"],
-    icon: svg(GitHubLight),
+    icon: svg(GitHubDark),
   },
   {
     id: "gitlab",
@@ -138,7 +137,7 @@ export const PLATFORMS: Platform[] = [
     name: "X (Twitter)",
     category: "social",
     domains: ["x.com", "twitter.com"],
-    icon: svg(XLight),
+    icon: svg(XDark),
   },
   {
     id: "instagram",
@@ -196,7 +195,7 @@ export const PLATFORMS: Platform[] = [
     name: "Apple",
     category: "other",
     domains: ["apple.com", "icloud.com"],
-    icon: svg(AppleLight),
+    icon: svg(AppleDark),
   },
   {
     id: "spotify",
@@ -240,15 +239,21 @@ export function domainOf(url: string): string {
   return host.replace(/^www\./, "");
 }
 
-/** Resolve a platform from a URL: exact domain match first, then subdomain. */
+/** Resolve a platform from a URL or issuer/service name: domain first, then name/id. */
 export function findPlatform(url: string): Platform | null {
   const host = domainOf(url);
-  if (!host) return null;
-  for (const p of PLATFORMS) {
-    if (p.domains.includes(host)) return p;
+  if (host) {
+    for (const p of PLATFORMS) {
+      if (p.domains.includes(host)) return p;
+    }
+    for (const p of PLATFORMS) {
+      if (p.domains.some((d) => host.endsWith("." + d))) return p;
+    }
   }
+  const q = url.trim().toLowerCase();
+  if (!q) return null;
   for (const p of PLATFORMS) {
-    if (p.domains.some((d) => host.endsWith("." + d))) return p;
+    if (p.name.toLowerCase() === q || p.id.toLowerCase() === q) return p;
   }
   return null;
 }

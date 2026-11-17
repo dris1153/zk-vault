@@ -1,4 +1,4 @@
-// Presentational text primitives for the docs page (DESIGN.md typography).
+// Presentational text primitives for the docs page (DESIGN.md Campsite typography).
 
 import type { ReactNode } from "react";
 
@@ -13,7 +13,9 @@ export function DocSection({
 }) {
   return (
     <section id={id} className="mb-16 scroll-mt-24">
-      <h2 className="mb-4 text-2xl font-medium text-snow">{title}</h2>
+      <h2 className="mb-4 text-[29px] font-semibold leading-[1.2] tracking-[-0.52px] text-ink">
+        {title}
+      </h2>
       {children}
     </section>
   );
@@ -21,19 +23,19 @@ export function DocSection({
 
 export function H3({ children }: { children: ReactNode }) {
   return (
-    <h3 className="mb-2 mt-8 text-lg font-medium text-snow">{children}</h3>
+    <h3 className="mb-2 mt-8 text-[18px] font-semibold text-ink">{children}</h3>
   );
 }
 
 export function P({ children }: { children: ReactNode }) {
   return (
-    <p className="mb-3 text-[15px] leading-relaxed text-silver">{children}</p>
+    <p className="mb-3 text-[15px] leading-relaxed text-ink-2">{children}</p>
   );
 }
 
 export function InlineCode({ children }: { children: ReactNode }) {
   return (
-    <code className="rounded bg-ash px-1.5 py-0.5 font-mono text-[13px] text-snow">
+    <code className="rounded bg-inset px-1.5 py-0.5 font-mono text-[13px] text-ink">
       {children}
     </code>
   );
@@ -41,7 +43,7 @@ export function InlineCode({ children }: { children: ReactNode }) {
 
 export function CodeBlock({ children }: { children: ReactNode }) {
   return (
-    <pre className="my-4 overflow-x-auto rounded-lg border border-charcoal bg-ash p-4 font-mono text-[13px] leading-relaxed text-snow">
+    <pre className="my-4 overflow-x-auto rounded-xl border border-line bg-inset p-4 font-mono text-[13px] leading-relaxed text-ink">
       <code>{children}</code>
     </pre>
   );
@@ -60,15 +62,15 @@ export function Callout({
 }) {
   const styles =
     tone === "warn"
-      ? "border-danger/40 bg-danger/[0.06]"
-      : "border-azure/40 bg-azure/[0.06]";
-  const titleColor = tone === "warn" ? "text-danger" : "text-azure";
+      ? "border-danger/30 bg-danger/5"
+      : "border-line bg-accent-wash/60";
+  const titleColor = tone === "warn" ? "text-danger" : "text-accent-ink";
   return (
-    <div className={`my-4 rounded-2xl border p-4 ${styles}`}>
+    <div className={`my-4 rounded-xl border p-4 ${styles}`}>
       {title && (
-        <div className={`mb-1 text-sm font-medium ${titleColor}`}>{title}</div>
+        <div className={`mb-1 text-sm font-semibold ${titleColor}`}>{title}</div>
       )}
-      <div className="text-[14px] leading-relaxed text-silver">{children}</div>
+      <div className="text-[14px] leading-relaxed text-ink-2">{children}</div>
     </div>
   );
 }
@@ -88,12 +90,12 @@ export function Step({
 }) {
   return (
     <li className="flex gap-3">
-      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-azure/10 font-mono text-sm text-azure">
+      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent-wash font-mono text-sm font-semibold text-accent-ink">
         {n}
       </span>
       <div className="min-w-0 flex-1">
-        <div className="mb-1 font-medium text-snow">{title}</div>
-        <div className="text-[14px] leading-relaxed text-silver">{children}</div>
+        <div className="mb-1 font-semibold text-ink">{title}</div>
+        <div className="text-[14px] leading-relaxed text-ink-2">{children}</div>
       </div>
     </li>
   );
@@ -101,7 +103,7 @@ export function Step({
 
 export function Bullets({ children }: { children: ReactNode }) {
   return (
-    <ul className="my-3 flex list-disc flex-col gap-1.5 pl-5 text-[15px] leading-relaxed text-silver marker:text-graphite">
+    <ul className="my-3 flex list-disc flex-col gap-1.5 pl-5 text-[15px] leading-relaxed text-ink-2 marker:text-muted">
       {children}
     </ul>
   );
