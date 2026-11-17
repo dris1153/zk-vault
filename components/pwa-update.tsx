@@ -45,13 +45,13 @@ export function PwaUpdate() {
   if (!skip) return null;
 
   return (
-    <div className="fixed bottom-4 left-1/2 z-50 w-max max-w-[96vw] flex -translate-x-1/2 items-center gap-3 rounded-xl border border-charcoal bg-ash px-4 py-3 shadow-lg">
-      <span className="text-sm text-silver">Có bản cập nhật mới</span>
+    <div className="fixed bottom-4 left-1/2 z-50 flex w-max max-w-[96vw] -translate-x-1/2 items-center gap-3 rounded-full border border-line bg-surface px-4 py-2.5 shadow-card">
+      <span className="text-sm text-ink-2">Có bản cập nhật mới</span>
       <button
         onClick={skip}
-        className="flex items-center w-max gap-1.5 rounded-lg bg-azure px-3 py-1.5 text-sm font-medium text-[#08233f] transition hover:brightness-110"
+        className="flex w-max items-center gap-1.5 rounded-full bg-ink px-3 py-1.5 text-xs font-medium text-white shadow-button transition hover:bg-ink/90"
       >
-        <ArrowClockwise size={15} /> Tải lại
+        <ArrowClockwise size={14} /> Tải lại
       </button>
     </div>
   );

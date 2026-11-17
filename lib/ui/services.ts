@@ -3,9 +3,7 @@
 // /brand/<id>.(png|webp) (shared with platforms/engines), monogram fallback.
 
 import {
-  OpenAI,
   ChatGPT,
-  ClaudeAI,
   Anthropic,
   DeepSeek,
   HuggingFace,
@@ -13,12 +11,12 @@ import {
   Azure,
   GoogleCloud,
   Cloudflare,
-  VercelLight,
+  VercelDark,
   Netlify,
   Supabase,
   DigitalOcean,
   Railway,
-  GitHubLight,
+  GitHubDark,
   GitLab,
   NPM,
   Docker,
@@ -88,7 +86,7 @@ export const SERVICES: Service[] = [
     category: "cloud",
     icon: svg(Cloudflare),
   },
-  { id: "vercel", name: "Vercel", category: "cloud", icon: svg(VercelLight) },
+  { id: "vercel", name: "Vercel", category: "cloud", icon: svg(VercelDark) },
   { id: "netlify", name: "Netlify", category: "cloud", icon: svg(Netlify) },
   { id: "supabase", name: "Supabase", category: "cloud", icon: svg(Supabase) },
   {
@@ -99,7 +97,7 @@ export const SERVICES: Service[] = [
   },
   { id: "railway", name: "Railway", category: "cloud", icon: svg(Railway) },
   // Dev
-  { id: "github", name: "GitHub", category: "dev", icon: svg(GitHubLight) },
+  { id: "github", name: "GitHub", category: "dev", icon: svg(GitHubDark) },
   { id: "gitlab", name: "GitLab", category: "dev", icon: svg(GitLab) },
   { id: "npm", name: "npm", category: "dev", icon: svg(NPM) },
   { id: "docker", name: "Docker", category: "dev", icon: svg(Docker) },
@@ -124,7 +122,7 @@ export const SERVICES: Service[] = [
     id: "resend",
     name: "Resend",
     category: "comms",
-    icon: png("resend-white"),
+    icon: svg(ReSend),
   },
   { id: "mailgun", name: "Mailgun", category: "comms", icon: png("mailgun") },
   // Software / license

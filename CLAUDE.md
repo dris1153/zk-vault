@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Project guidance for AI assistants. ZKVault is a single-user, zero-knowledge credential vault (Next.js App Router + Supabase, dark-only, Tailwind v4). See `README.md` (dev reference), the in-app `/docs`, and `docs/journals/` for history.
+Project guidance for AI assistants. ZKVault is a single-user, zero-knowledge credential vault (Next.js App Router + Supabase, light theme per DESIGN.md (Campsite), Tailwind v4). See `README.md` (dev reference), the in-app `/docs`, and `docs/journals/` for history.
 
 ## Release process
 

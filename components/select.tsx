@@ -32,13 +32,17 @@ export function Select<T extends string | number>({
       if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
     };
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") {
+        e.stopPropagation();
+        e.preventDefault();
+        setOpen(false);
+      }
     };
     document.addEventListener("pointerdown", onPointer);
-    document.addEventListener("keydown", onKey);
+    document.addEventListener("keydown", onKey, true);
     return () => {
       document.removeEventListener("pointerdown", onPointer);
-      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("keydown", onKey, true);
     };
   }, [open]);
 
@@ -54,7 +58,7 @@ export function Select<T extends string | number>({
         onClick={() => setOpen((o) => !o)}
         aria-haspopup="listbox"
         aria-expanded={open}
-        className="flex w-full items-center gap-2.5 rounded-lg border border-slate bg-obsidian px-3 py-2.5 text-left text-sm text-snow transition focus:border-azure"
+        className="flex w-full items-center gap-2.5 rounded-lg border border-transparent bg-inset px-3 py-2.5 text-left text-sm text-ink transition hover:bg-line/70 focus:border-line focus:bg-surface"
       >
         {selected?.icon && (
           <span className="flex shrink-0 items-center">{selected.icon}</span>
@@ -62,7 +66,7 @@ export function Select<T extends string | number>({
         <span className="truncate">{selected?.label ?? ""}</span>
         <CaretDown
           size={15}
-          className={`ml-auto shrink-0 text-smoke transition-transform ${
+          className={`ml-auto shrink-0 text-muted transition-transform ${
             open ? "rotate-180" : ""
           }`}
         />
@@ -71,7 +75,7 @@ export function Select<T extends string | number>({
       {open && (
         <div
           role="listbox"
-          className="absolute z-10 left-0 right-0 -bottom-2 flex flex-col gap-1 translate-y-full max-h-72 overflow-y-auto rounded-lg border border-charcoal bg-ash p-1.5"
+          className="absolute z-10 left-0 right-0 -bottom-2 flex flex-col gap-1 translate-y-full max-h-72 overflow-y-auto rounded-xl border border-line bg-surface p-1.5 shadow-card"
         >
           {options.map((o) => {
             const active = o.value === value;
@@ -82,17 +86,17 @@ export function Select<T extends string | number>({
                 role="option"
                 aria-selected={active}
                 onClick={() => pick(o.value)}
-                className={`flex w-full items-center gap-2.5 rounded-md px-2 py-1.5 text-left text-sm transition ${
+                className={`flex w-full items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-left text-sm transition ${
                   active
-                    ? "bg-azure/8 text-snow"
-                    : "text-snow hover:bg-charcoal"
+                    ? "bg-inset font-medium text-ink"
+                    : "text-ink hover:bg-inset/70"
                 }`}
               >
                 {o.icon && (
                   <span className="flex shrink-0 items-center">{o.icon}</span>
                 )}
                 <span className="flex-1 truncate">{o.label}</span>
-                {active && <Check size={15} className="shrink-0 text-azure" />}
+                {active && <Check size={15} className="shrink-0 text-ink" />}
               </button>
             );
           })}

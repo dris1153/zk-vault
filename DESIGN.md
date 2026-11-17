@@ -1,223 +1,261 @@
-# Supabase — Style Reference
-> Midnight code editor with electric azure caret — a single chromatic pulse on a sea of charcoal.
+# Campsite — Style Reference
+> sunlit editorial workspace — warm cream paper with one orange stamp of intent
 
-**Theme:** dark
+**Theme:** light
 
-Supabase is a midnight IDE with electric azure punctuation: a near-black canvas, monochrome UI surfaces, and a single vivid azure that marks emphasis, headings, and primary actions. The interface borrows its rhythm from code editors — hairline borders, pill controls, generous vertical breathing room, and tight geometric typography (Circular) that whispers in regular weight rather than shouting in bold. Color is rationed: the page is 99% grayscale, and every azure pixel earns its place by being a CTA, a highlighted keyword, or a logo. Cards float one elevation level above the canvas using subtle border contrast rather than shadow. The overall feel is fast, terminal-native, and quietly confident — designed to disappear so the product and its developer audience can take the spotlight.
+Source measurements are normalized; roles and recommendations are interpreted. Font summary lists are independent, not paired by position. HTML examples are reconstructions, not source components.
+
+Campsite is a sunlit editorial workspace — warm cream canvas, near-black Inter typography, and a single vivid orange that marks brand moments. The interface reads like a thoughtfully arranged bulletin board: compact rows, pill-shaped controls, soft 5%-black shadows, and generous breathing room between sections. Color is rationed — chromatic notes appear only in the logo, the paint-splash decorative motifs, a few tags, and semantic states. The density is compact but the layout feels open because of wide gutters and generous section padding; everything important sits on pure white cards floating just above the cream paper beneath them.
 
 ## Tokens — Colors
 
 | Name | Value | Token | Role |
 |------|-------|-------|------|
-| Electric Azure | `#3e9bff` | `--color-electric-azure` | Bright azure supporting accent for decorative details and low-frequency emphasis. Do not promote it to the primary CTA color |
-| Azure Link | `#2b8bff` | `--color-azure-link` | Link text and inline accent — a slightly cooler azure variant for textual references that shouldn't compete with primary CTAs |
-| Azure Depth | `#1f3a6b` | `--color-azure-depth` | Hover and pressed borders on azure CTAs — keeps the button identifiable when the fill darkens on interaction |
-| Midnight Azure | `#0a3d80` | `--color-midnight-azure` | Deepest azure surface — for low-key brand-tinted backgrounds, subtle section washes, and disabled-brand states |
-| Snow | `#fafafa` | `--color-snow` | Primary text, icon strokes, button labels — the dominant foreground across the entire interface |
-| Silver Mist | `#b4b4b4` | `--color-silver-mist` | Secondary headings, nav items, body emphasis — readable but never competing with Snow |
-| Smoke | `#898989` | `--color-smoke` | Tertiary text, captions, helper text, muted icon fills — the voice of metadata and annotations |
-| Graphite | `#4d4d4d` | `--color-graphite` | Icon outlines, low-emphasis borders, divider lines, and stroke color for illustrative line work |
-| Slate | `#393939` | `--color-slate` | Input borders, subtle dividers, hairline separators between nav and content |
-| Charcoal | `#2e2e2e` | `--color-charcoal` | Card and component borders — the most-used border color, giving surfaces their defined edge without a visible shadow |
-| Ash | `#242424` | `--color-ash` | Elevated surface tier for nested cards, hover states, and popover backgrounds |
-| Obsidian | `#121212` | `--color-obsidian` | Page canvas — the deep near-black foundation behind every section and card |
+| Campfire Orange | `#ff6b1a` | `--color-campfire-orange` | Logo badge, notification pills, and brand-punctuation moments — a single warm coral that anchors the entire palette against the cream canvas |
+| Ember Brown | `#451a03` | `--color-ember-brown` | Deep brown accent for paint-splash illustration shadows and inline highlight text in testimonials |
+| Sunlit Cream | `#fef3c7` | `--color-sunlit-cream` | Soft warm wash behind tags, badges, and inline highlights |
+| Forest Pulse | `#22c55e` | `--color-forest-pulse` | Green supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color |
+| Ember Alert | `#ef4444` | `--color-ember-alert` | Red supporting accent for decorative details and low-frequency emphasis. Use as a supporting accent, not as a status color |
+| Midnight Ink | `#171717` | `--color-midnight-ink` | Primary text, headings, icon strokes, and dark filled buttons |
+| Paper White | `#ffffff` | `--color-paper-white` | Card surfaces, elevated panels, and the top of the surface stack |
+| Parchment | `#fffdf9` | `--color-parchment` | Page canvas — a barely-warm off-white that gives the whole site its sunlit feel |
+| Fog Gray | `#f5f5f5` | `--color-fog-gray` | Muted backgrounds, secondary surface fills, and input field chrome |
+| Linen | `#f0f0f0` | `--color-linen` | Subtle dividers, hover wash on rows, and tag backgrounds |
+| Ash Gray | `#a3a3a3` | `--color-ash-gray` | Muted helper text, placeholder copy, and disabled labels |
+| Slate | `#737373` | `--color-slate` | Secondary text, timestamps, and metadata in lists |
+| Graphite | `#525252` | `--color-graphite` | Tertiary text and muted icon strokes |
+| Stone | `#8f7668` | `--color-stone` | Warm muted accent for body copy that should feel quieter than Midnight Ink |
 
 ## Tokens — Typography
 
-### Circular — All UI typography — nav, body, buttons, headings, display. Circular is a geometric humanist sans with rounded terminals; its regular 400 weight carries headlines (a deliberate anti-bold choice) and the 500 weight is reserved for emphasis and button labels. · `--font-circular`
-- **Substitute:** Inter or Manrope — both share Circular's geometric warmth and humanist proportions
-- **Weights:** 400, 500
-- **Sizes:** 12px, 14px, 16px, 18px, 24px, 36px, 72px
-- **Line height:** 1.00–1.56 (tight: 1.0 at 72px display, 1.5–1.56 at body sizes)
-- **Letter spacing:** -0.007em across all sizes (≈ -0.5px at 72px display, near 0 at body sizes) — the uniform negative tracking is a signature; it tightens the geometric forms into a single cohesive voice
-- **Role:** All UI typography — nav, body, buttons, headings, display. Circular is a geometric humanist sans with rounded terminals; its regular 400 weight carries headlines (a deliberate anti-bold choice) and the 500 weight is reserved for emphasis and button labels.
+### Inter — Sole typeface across UI, headings, and body — no display or serif counterpart. The single-family commitment is deliberate: Inter's geometric neutrality keeps focus on content, and the three-weight range (400 body, 500 metadata, 600 display) carries all hierarchy. · `--font-inter`
+- **Substitute:** Inter Tight or IBM Plex Sans
+- **Weights:** 400, 500, 600
+- **Sizes:** 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 22, 29, 58
+- **Line height:** 1.00–1.80
+- **Letter spacing:** -1.8px at 58px display, -0.52px at 29px heading, -0.37px at 22px subheading, +0.25px at 10–12px captions
+- **OpenType features:** `"ss01" on, "cv11" on`
+- **Role:** Sole typeface across UI, headings, and body — no display or serif counterpart. The single-family commitment is deliberate: Inter's geometric neutrality keeps focus on content, and the three-weight range (400 body, 500 metadata, 600 display) carries all hierarchy.
 
-### Source Code Pro — Inline code and terminal snippets — only for code-style UI fragments, never body copy · `--font-source-code-pro`
+### ui-monospace — Inline code fragments and keyboard shortcuts inside the feed · `--font-ui-monospace`
 - **Substitute:** JetBrains Mono or IBM Plex Mono
-- **Weights:** 400
-- **Sizes:** 12px
-- **Line height:** 1.33
-- **Letter spacing:** 0.100em — wide tracking on mono to match the airy terminal aesthetic
-- **Role:** Inline code and terminal snippets — only for code-style UI fragments, never body copy
+- **Weights:** 400, 600
+- **Sizes:** 12
+- **Line height:** 1.00
+- **Role:** Inline code fragments and keyboard shortcuts inside the feed
+
+### emoji — emoji — detected in extracted data but not described by AI · `--font-emoji`
+- **Weights:** 500, 600
+- **Sizes:** 12px, 14px
+- **Line height:** 1
+- **Role:** emoji — detected in extracted data but not described by AI
 
 ### Type Scale
 
-| Role | Size | Line Height | Letter Spacing | Token |
-|------|------|-------------|----------------|-------|
-| caption | 12px | 1.5 | -0.084px | `--text-caption` |
-| body-sm | 14px | 1.43 | -0.098px | `--text-body-sm` |
-| body | 16px | 1.5 | -0.112px | `--text-body` |
-| subheading | 18px | 1.38 | -0.126px | `--text-subheading` |
-| heading-sm | 24px | 1.33 | -0.168px | `--text-heading-sm` |
-| heading | 36px | 1.2 | -0.252px | `--text-heading` |
-| display | 72px | 1 | -0.504px | `--text-display` |
+| Role | Family | Weight | Size | Line Height | Letter Spacing | Token |
+|------|--------|--------|------|-------------|----------------|-------|
+| caption | — | — | 12px | 1.2 | 0.3px | `--text-caption` |
+| body | — | — | 15px | 1.5 | — | `--text-body` |
+| subheading | — | — | 18px | 1.56 | — | `--text-subheading` |
+| heading-sm | — | — | 22px | 1.4 | -0.37px | `--text-heading-sm` |
+| heading | — | — | 29px | 1.2 | -0.52px | `--text-heading` |
+| display | — | — | 58px | 1 | -1.8px | `--text-display` |
 
 ## Tokens — Spacing & Shapes
 
-**Base unit:** 8px
+**Base unit:** 4px
 
-**Density:** comfortable
+**Density:** compact
 
 ### Spacing Scale
 
 | Name | Value | Token |
 |------|-------|-------|
+| 4 | 4px | `--spacing-4` |
 | 8 | 8px | `--spacing-8` |
+| 12 | 12px | `--spacing-12` |
 | 16 | 16px | `--spacing-16` |
+| 20 | 20px | `--spacing-20` |
 | 24 | 24px | `--spacing-24` |
 | 32 | 32px | `--spacing-32` |
-| 40 | 40px | `--spacing-40` |
 | 48 | 48px | `--spacing-48` |
 | 64 | 64px | `--spacing-64` |
+| 72 | 72px | `--spacing-72` |
 | 80 | 80px | `--spacing-80` |
 | 96 | 96px | `--spacing-96` |
-| 112 | 112px | `--spacing-112` |
-| 128 | 128px | `--spacing-128` |
-| 224 | 224px | `--spacing-224` |
+| 160 | 160px | `--spacing-160` |
 
 ### Border Radius
 
 | Element | Value |
 |---------|-------|
 | tags | 9999px |
-| cards | 16px |
+| cards | 8-12px |
+| pills | 9999px |
 | inputs | 8px |
+| avatars | 9999px |
 | buttons | 9999px |
 
 ### Shadows
 
 | Name | Value | Token |
 |------|-------|-------|
-| sm | `rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.1) 0...` | `--shadow-sm` |
+| sm | `rgba(0, 0, 0, 0.05) 0px 3px 6px -3px, rgba(0, 0, 0, 0.05)...` | `--shadow-sm` |
+| subtle | `rgba(0, 0, 0, 0.08) 0px 1px 1px -1px, rgba(0, 0, 0, 0.08)...` | `--shadow-subtle` |
+| subtle-2 | `rgba(0, 0, 0, 0.05) 0px 1px 2px 0px` | `--shadow-subtle-2` |
 
 ### Layout
 
 - **Page max-width:** 1200px
-- **Section gap:** 64-96px
-- **Card padding:** 24px
-- **Element gap:** 8-16px
+- **Section gap:** 64-80px
+- **Card padding:** 16-24px
+- **Element gap:** 8px
 
 ## Components
 
-### Pill Primary Button
-**Role:** Main call-to-action — azure fill, white text, fully rounded
+### Brand Logo Badge
+**Role:** Persistent brand mark in the top-left of every page
 
-Background #3e9bff, text #fafafa, border 1px solid #3e9bff (on hover border shifts to #1f3a6b). Padding 8px 16px. Radius 9999px. Circular 500 weight, 14px, line-height 1.43. The azure is the only filled chromatic surface in the system — every azure button should feel like a deliberate decision.
+28px rounded square (radius 8px) filled with Campfire Orange (#ff6b1a), white 'C' glyph at 16px Inter weight 600 centered inside. Acts as the home button.
 
-### Pill Ghost Button
-**Role:** Secondary action — transparent fill, subtle border, monochrome
+### Notification Pill Banner
+**Role:** Headline-area announcement strip
 
-Background transparent, border 1px solid #393939, text #fafafa. Padding 8px 16px. Radius 9999px. Circular 400 weight, 14px. On hover border shifts to #4d4d4d and background fills with rgba(255,255,255,0.04).
+Inline pill, 9999px radius, 8px 16px padding, Campfire Orange fill, white text at 13px Inter weight 500. Optional leading 'NEW' tag in a 2-tone orange + dot indicator. Sits above the hero headline.
 
-### Pill GitHub Stars
-**Role:** Social proof pill in nav — shows repo star count
+### Hero Headline
+**Role:** First-screen page title
 
-Background #242424, border 1px solid #2e2e2e, text #fafafa, small GitHub icon in #fafafa. Padding 6px 10px. Radius 9999px. Circular 400, 12px. Compact, unobtrusive — it's a status indicator, not a CTA.
+58px Inter weight 600 in Midnight Ink, centered, line-height 1.00, letter-spacing -1.8px. Two short lines max. Followed by a 17–18px Inter weight 400 subtitle in Slate (#737373), centered.
 
-### Feature Card
-**Role:** Primary product capability card in 2x2 or 4-column grid
+### Section Heading
+**Role:** Inter-section title in marketing pages
 
-Background #121212 (same as canvas, defined only by border). Border 1px solid #2e2e2e. Radius 16px. Padding 24px. Each card has a small icon in #3e9bff, a heading in #fafafa (Circular 500, 18px), body text in #b4b4b4 (Circular 400, 14px), and a dark illustration area in the lower half with line-art or wireframe graphics in #4d4d4d on #0d0d0d backgrounds.
+29px Inter weight 600 Midnight Ink, centered, line-height 1.20, letter-spacing -0.52px. One to two lines.
 
-### Product Showcase Card
-**Role:** Larger feature card with embedded visual — used for headline product capabilities like Database, Auth, Realtime
+### Filled Pill Button
+**Role:** Primary interactive action
 
-Same surface as Feature Card: background #121212, border 1px solid #2e2e2e, radius 16px, padding 24px. The visual area fills the card with a 3D geometric or wireframe illustration in #4d4d4d line work on #0d0d0d. Electric azure dots or highlights appear as accent within the illustration — not as UI chrome.
+9999px radius, 8px 16px padding, Midnight Ink background, white text at 14px Inter weight 500. No border. Soft inset highlight from the elevation stack to suggest a tactile surface.
 
-### Testimonial Card
-**Role:** Social proof card with avatar, handle, and quote
+### Ghost Pill Button
+**Role:** Secondary action / link-style button
 
-Background #121212, border 1px solid #2e2e2e, radius 16px, padding 20px. Circular avatar 40px, handle in #fafafa (Circular 500, 14px), quote body in #b4b4b4 (Circular 400, 14px, line-height 1.5). Cards vary in height — masonry-style layout.
+9999px radius, 8px 16px padding, transparent background, 1px Linen (#f0f0f0) border, Slate text. On hover: Fog Gray wash.
 
-### Announcement Pill
-**Role:** Compact announcement banner above the hero
+### App Preview Frame
+**Role:** Wrapping frame around product screenshots in marketing
 
-Background #242424, border 1px solid #2e2e2e, radius 9999px, padding 6px 16px. Circular 400, 12px, text #b4b4b4. Small chevron icon in #b4b4b4 on the right.
+White surface, 12px radius, subtle 5%-black shadow stack from the elevation set, optional browser-chrome header (traffic-light dots, title text) at top. Acts as the visual proof artifact for each feature.
 
-### Logo Cloud Item
-**Role:** Company logos in the trust strip
+### Sidebar Nav Item
+**Role:** Navigation row inside the product app
 
-Logos rendered in #898989 (monochrome) at uniform height ~24px. No backgrounds or borders — just floating marks on the canvas.
+Compact row, 8px 12px padding, small 16px icon in Slate, 14px Inter weight 500 label in Midnight Ink. Active state: Fog Gray fill, Midnight Ink icon. 9999px radius to match the pill language.
 
-### Top Navigation Bar
-**Role:** Sticky site-wide navigation
+### Post List Item
+**Role:** Single row inside the main feed
 
-Full-width, background transparent or #121212 on scroll. Height ~64px. Left: azure Supabase logo (mark + wordmark in #fafafa). Center: nav links in #b4b4b4 (Circular 400, 14px). Right: GitHub stars pill, Sign in ghost button, Start your project azure pill. 1px bottom border #2e2e2e for separation.
+White card surface, 16px padding, 12px radius. Left: 24px avatar (9999px, colored fill or image). Center: author name 14px Inter weight 600, body 14px weight 400 in Midnight Ink. Right: tag pill (9999px, Sunlit Cream fill, Ember Brown text) and timestamp in Ash Gray.
 
-### Input Field
-**Role:** Text input — used in demo request forms
+### Channel Card
+**Role:** Discoverable team space tile in the channels section
 
-Background #121212, border 1px solid #393939, radius 8px, padding 8px 12px. Text in #fafafa, placeholder in #898989 (Circular 400, 14px). Focus: border shifts to #3e9bff with no glow ring — the azure border IS the focus indicator.
+White card, 12px radius, 16px padding, 1px Linen border. Title 18px Inter weight 600, member avatars stacked (16px, 9999px), and a ghost pill CTA in the corner with a small icon.
+
+### Tag / Status Pill
+**Role:** Inline metadata badge
+
+9999px radius, 4px 10px padding, 12px Inter weight 500. Variants: Sunlit Cream fill with Ember Brown text, Forest Pulse fill with white text for success, Ember Alert fill with white text for error.
+
+### Search Input
+**Role:** People and content search field
+
+Full-width input, 8px radius, 8px 12px padding, Fog Gray fill, Ash Gray placeholder at 14px Inter weight 400. No visible border — the fill is the chrome. Leading 16px search icon in Ash Gray.
+
+### People List Item
+**Role:** Right-rail entry showing a person in the app
+
+32px avatar (9999px), 14px Inter weight 500 name in Midnight Ink, 12px Inter weight 400 status in Ash Gray. 8px 12px padding, no card chrome — sits directly on the Fog Gray panel.
+
+### Testimonial Block
+**Role:** Pull-quote between feature sections
+
+Left-aligned body copy at 17px Inter weight 400 in Midnight Ink, with the brand-defining sentence set in Inter weight 600 in Ember Brown. Attribution row below: 24px avatar + 13px Inter weight 500 name in Slate, 12px role in Ash Gray.
+
+### Decorative Paint Splash
+**Role:** Page-edge ornamental motif
+
+Organic orange + Ember Brown splatter illustration clipped to the far left/right of the viewport on the hero and mid-page sections. Pure decoration — never carries content, never overlaps text. Anchors the 'creative workspace' mood.
 
 ## Do's and Don'ts
 
 ### Do
-- Use #3e9bff (Electric Azure) exclusively for primary CTAs, emphasized headline keywords, the logo, and active nav indicators — ration the azure to one element per visual region
-- Set all button radius to 9999px (pill) and all card radius to 16px — the pill/card duality defines the system
-- Use Circular weight 400 for headlines and weight 500 for emphasis and button labels — never bold weight; the 500 is the loudest voice available
-- Separate surfaces with 1px solid #2e2e2e borders on #121212 backgrounds — never rely on shadow to define elevation
-- Keep letter-spacing at -0.007em uniformly across all sizes — the negative tracking is what makes Circular feel custom and tight
-- Use #3e9bff as the focus border color on inputs (1px, no glow ring) — the chromatic border replaces the conventional focus shadow
-- Maintain page canvas at #121212 with no alternative — the single dark surface is the system's anchor
+- Use 9999px radius for every interactive element — buttons, tags, avatars, and pills all share the same full-curve language
+- Set hero headlines at 58px Inter weight 600 with -1.8px letter-spacing so the type settles into a confident, compressed silhouette
+- Layer surfaces as Parchment (#fffdf9) canvas → Paper White (#ffffff) card → Fog Gray (#f5f5f5) inset — never use pure gray borders to separate layers
+- Reserve Campfire Orange (#ff6b1a) for logo, notification pills, and one or two brand moments per page — never use it for routine CTAs
+- Keep the 4px base unit: use 8px for element gaps, 12–16px for card padding, 64–80px for section gaps
+- Apply the soft 5%-black shadow stack to any card that floats above another surface — inset highlight shadows belong only on filled buttons
+- Use Inter weight 600 for all display sizes and weight 500 for metadata, never let body copy go above weight 400
 
 ### Don't
-- Don't introduce any chromatic color beyond the four azures — the monochrome discipline is the brand
-- Don't use weight 600 or 700 in Circular — the type system tops out at 500; if you need more emphasis, increase size or use Electric Azure
-- Don't add box-shadows to cards, popovers, or modals — the design is deliberately flat; use #2e2e2e borders instead
-- Don't use radius values other than 9999px (buttons/tags), 16px (cards), or 8px (inputs) — the limited radius vocabulary is intentional
-- Don't place Electric Azure on large background areas — it should appear as small functional punctuation, not as a section background
-- Don't use light text on light backgrounds or any non-#121212 canvas — Snow (#fafafa) is the only text color
-- Don't add gradients — the system is strictly flat, terminal-native, and gradient-free
+- Don't introduce a second typeface — the single-family Inter system is the design, not a limitation to work around
+- Don't add blue, purple, or any cool chromatic accent — the palette is intentionally warm-only, and a cool note would break the cream-paper mood
+- Don't use hard 1px gray borders to separate cards from the canvas — the warm off-white background already does the work
+- Don't use Campfire Orange for everyday buttons, links, or icon states — chromatic color is rationed to brand punctuation only
+- Don't set headlines above 60px or below 22px without a structural reason — the 22/29/58 scale carries the rhythm
+- Don't use sharp 0px or 2px radii on surfaces — the 8–12px range is what makes the cards feel like paper, not glass
+- Don't place photography or lifestyle imagery inside the marketing flow — paint splashes and product screenshots are the only visual registers
 
 ## Surfaces
 
 | Level | Name | Value | Purpose |
 |-------|------|-------|---------|
-| 0 | Obsidian Canvas | `#121212` | Page background — the base layer every surface sits on |
-| 1 | Ash Card | `#242424` | Nested or elevated card surfaces one tier above the canvas |
-| 2 | Charcoal Border | `#2e2e2e` | Card and component outline — defines edges without shadow |
+| 1 | Parchment Canvas | `#fffdf9` | Page background — warm off-white that absorbs the site into editorial paper |
+| 2 | Paper White | `#ffffff` | Card surfaces and the main feed container — pure white lifts content above the canvas |
+| 3 | Fog Gray | `#f5f5f5` | Hover states, secondary panels, and the inside of the people sidebar |
+| 4 | Sunlit Cream | `#fef3c7` | Occasional warm wash for highlighted tags and inline callouts |
 
 ## Elevation
 
-Supabase deliberately avoids shadows. The interface relies on hairline #2e2e2e borders to separate surfaces from the #121212 canvas. This terminal-native approach keeps the UI flat and code-editor-like — shadows would feel out of place against the otherwise geometric, line-driven aesthetic. A single shadow detection (rgba(0,0,0,0.1) on one button) is an exception, not a pattern.
+- **Card / surface elevation:** `0 3px 6px -3px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05), 0 1px 2px -1px rgba(0,0,0,0.05), 0 1px 1px -1px rgba(0,0,0,0.05), 0 1px 0 -1px rgba(0,0,0,0.05)`
+- **Filled button / interactive inset:** `0 1px 1px -1px rgba(0,0,0,0.08), 0 2px 2px -1px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.06), inset 0 1px 0 #fff, inset 0 1px 2px 1px #fff, inset 0 1px 2px 0 rgba(0,0,0,0.06)`
+- **Subtle row / chip:** `0 1px 2px 0 rgba(0,0,0,0.05)`
 
 ## Imagery
 
-Line-art and wireframe illustrations dominate — 3D geometric shapes (cubes, grids, network nodes) rendered in #4d4d4d stroke on #0d0d0d backgrounds with occasional Electric Azure dot accents. Product screenshots appear in dark frames within cards. No photography, no lifestyle imagery. Icons are thin-stroke outlined (1.5px), monochrome in #fafafa or #b4b4b4, with Electric Azure reserved for active/brand-icon contexts. The visual language is diagrammatic and technical — the aesthetic of a developer tool schematic, not a marketing site.
+Imagery is split into three strict registers and nothing else. (1) Decorative paint-splash illustrations in Campfire Orange and Ember Brown clipped to the far left and right of the viewport on hero and mid-page sections — organic, asymmetric, never overlapping text, never carrying meaning. (2) Product screenshots wrapped in a white App Preview Frame with optional browser-chrome header and soft 5%-black shadow — these are the proof artifacts for each feature and always sit centered below their section heading. (3) Avatar circles only — 24–32px, 9999px radius, either a photo or a solid color block with initials, no decorative imagery attached. There is no lifestyle photography, no stock illustration, no 3D renders. Icons throughout the UI are simple, single-weight, monochrome in Slate or Midnight Ink; the brand mark is the only place color lives.
 
 ## Layout
 
-Full-width dark canvas at 1200px max-width centered. Hero is centered text with a 72px display headline (two lines, second line in Electric Azure), 16px subtitle, and two side-by-side pill buttons. Below hero, a horizontal logo cloud strip. Feature sections alternate between centered text blocks and 2x2 card grids (4 columns at full width). Cards are uniform 16px radius with equal padding. Vertical rhythm uses 64-96px section gaps with seamless flow — no visible dividers between sections, just generous breathing room. Testimonials appear in a 4-column masonry grid. Footer is a single dark band. The navigation is a fixed 64px top bar with transparent background that may darken on scroll.
+Marketing pages follow a centered, max-width-1200px column with generous vertical rhythm. The hero is a single centered stack: notification pill → 58px headline → 17px subtitle → App Preview Frame screenshot, with Campfire Orange paint-splash motifs bleeding off the left and right edges of the viewport. Below the hero, sections alternate between two patterns: a centered section heading followed by an App Preview Frame, and a centered heading followed by a Testimonial Block. All sections use 64–80px vertical padding. The product app itself uses a three-column shell: a compact left sidebar (icons + labels, Fog Gray hover), a white main feed, and a right-side people/online panel on Fog Gray. Navigation is a minimal top bar with right-aligned text links — no dropdowns, no mega-menu, no sticky behavior on marketing pages.
 
 ## Agent Prompt Guide
 
-## Quick Color Reference
-- text: #fafafa
-- background: #121212
-- card surface: #121212 (with #2e2e2e border)
-- border: #2e2e2e (cards), #393939 (inputs), #4d4d4d (icons)
-- accent: #3e9bff (Electric Azure)
+QUICK COLOR REFERENCE
+- text: #171717 (Midnight Ink)
+- background (page): #fffdf9 (Parchment)
+- background (card): #ffffff (Paper White)
+- background (muted panel): #f5f5f5 (Fog Gray)
+- border / divider: #f0f0f0 (Linen)
+- accent: #ff6b1a (Campfire Orange) — use sparingly for logo, pills, brand moments
 - primary action: no distinct CTA color
 
-## Example Component Prompts
-
-1. **Hero Section**: Centered on #121212 canvas. Display headline at 72px Circular weight 400, #fafafa, letter-spacing -0.5px. Second line in #3e9bff. Subtitle at 16px Circular 400, #b4b4b4, line-height 1.5. Two pill buttons side by side: azure primary (#3e9bff fill, #fafafa text, 9999px radius, 8px 16px padding) and ghost secondary (transparent, 1px #393939 border, #fafafa text, 9999px radius).
-
-2. **Feature Card Grid**: 2x2 grid on #121212. Each card: 16px radius, 1px solid #2e2e2e border, 24px padding. Icon in #3e9bff at 24px stroke. Heading in #fafafa Circular 500 18px. Body in #b4b4b4 Circular 400 14px line-height 1.5. Lower half of card has dark illustration area (#0d0d0d background) with #4d4d4d line-art.
-
-3. **Top Navigation**: 64px height, full-width, #121212 background. Left: Supabase logo (azure mark + #fafafa wordmark). Center: nav links in #b4b4b4 Circular 400 14px. Right: GitHub stars pill (#242424 bg, #2e2e2e border, 9999px radius), Sign in ghost button, azure Start your project pill.
-
-4. **Testimonial Card**: 16px radius, 1px solid #2e2e2e border, 20px padding. 40px circular avatar, handle in #fafafa Circular 500 14px, quote in #b4b4b4 Circular 400 14px line-height 1.5. Masonry layout in 4-column grid.
-
-5. **Input Field**: Background #121212, border 1px solid #393939, radius 8px, padding 8px 12px. Text in #fafafa Circular 400 14px, placeholder in #898989. On focus: border changes to #3e9bff — no glow ring or shadow.
+EXAMPLE COMPONENT PROMPTS
+1. Hero headline block. Centered on Parchment (#fffdf9) page background. Eyebrow pill: Campfire Orange (#ff6b1a) fill, white 'NEW' text, 9999px radius, 8px 16px padding. Headline: 58px Inter weight 600 in Midnight Ink (#171717), letter-spacing -1.8px, line-height 1.00, two lines max. Subtitle: 18px Inter weight 400 in Slate (#737373), centered, max-width 640px.
+2. Feature section with App Preview Frame. Centered 29px Inter weight 600 heading in Midnight Ink with -0.52px letter-spacing. Below: a 1200px max-width white card, 12px radius, 16px padding, wrapping a product screenshot. Soft 5%-black shadow stack applied: 0 3px 6px -3px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05), 0 1px 2px -1px rgba(0,0,0,0.05).
+No distinct primary action color was observed; use the extracted neutral button treatments instead of inventing a filled CTA color.
+4. Pill notification banner. Inline element, 9999px radius, 8px 16px padding, Campfire Orange (#ff6b1a) fill, 13px Inter weight 500 white text. Leading 'NEW' label as a smaller 2-tone orange dot or chip inside the pill. Optional trailing close icon at 12px.
+5. Feed post row. White card surface, 12px radius, 16px padding, 1px Linen border. Left: 24px avatar (9999px, solid color or photo). Center column: author name 14px Inter weight 600 Midnight Ink, body text 14px Inter weight 400 Midnight Ink. Right: Sunlit Cream (#fef3c7) tag pill — 9999px radius, 4px 10px padding, 12px Inter weight 500 Ember Brown (#451a03) text — plus timestamp in Ash Gray (#a3a3a3).
 
 ## Similar Brands
 
-- **Vercel** — Same monochrome dark canvas, single accent color strategy, and pill-button primary actions — Vercel leans on a cooler white/blue, Supabase uses a brighter electric azure
-- **Railway** — Dark developer-tool aesthetic with tight geometric typography and minimal surface treatment — similar card grid patterns and code-editor visual language
-- **Linear** — Dark-mode product UI with rationed color usage, hairline borders instead of shadows, and pill-shaped interactive elements
-- **PlanetScale** — Dark database-platform marketing site with centered hero, monochrome palette, and a single vivid accent for emphasis
-- **Neon** — Similar dark devtools aesthetic with an electric-toned accent color and terminal-inspired UI — the azure-on-black visual heritage is shared
+- **Notion** — Same warm cream canvas with near-black Inter typography and rationed color use; both treat white cards as paper floating on a slightly warm page
+- **Basecamp** — Team-communication product with a similar warm, editorial tone; flat surfaces, compact list rows, and pill-shaped controls over a muted background
+- **Linear** — Inter-only typography system with tight letter-spacing on display sizes and a compact, list-driven UI rhythm
+- **Coda** — Collaborative workspace that pairs warm off-white surfaces with single-accent brand moments and pill-shaped chips
+- **Read.cv** — Editorial product voice with cream backgrounds, Inter typography, and orange as the singular brand color reserved for punctuation moments
 
 ## Quick Start
 
@@ -226,90 +264,96 @@ Full-width dark canvas at 1200px max-width centered. Hero is centered text with 
 ```css
 :root {
   /* Colors */
-  --color-electric-azure: #3e9bff;
-  --color-azure-link: #2b8bff;
-  --color-azure-depth: #1f3a6b;
-  --color-midnight-azure: #0a3d80;
-  --color-snow: #fafafa;
-  --color-silver-mist: #b4b4b4;
-  --color-smoke: #898989;
-  --color-graphite: #4d4d4d;
-  --color-slate: #393939;
-  --color-charcoal: #2e2e2e;
-  --color-ash: #242424;
-  --color-obsidian: #121212;
+  --color-campfire-orange: #ff6b1a;
+  --color-ember-brown: #451a03;
+  --color-sunlit-cream: #fef3c7;
+  --color-forest-pulse: #22c55e;
+  --color-ember-alert: #ef4444;
+  --color-midnight-ink: #171717;
+  --color-paper-white: #ffffff;
+  --color-parchment: #fffdf9;
+  --color-fog-gray: #f5f5f5;
+  --color-linen: #f0f0f0;
+  --color-ash-gray: #a3a3a3;
+  --color-slate: #737373;
+  --color-graphite: #525252;
+  --color-stone: #8f7668;
 
   /* Typography — Font Families */
-  --font-circular: 'Circular', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-source-code-pro: 'Source Code Pro', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-inter: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-ui-monospace: 'ui-monospace', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-emoji: 'emoji', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
   /* Typography — Scale */
   --text-caption: 12px;
-  --leading-caption: 1.5;
-  --tracking-caption: -0.084px;
-  --text-body-sm: 14px;
-  --leading-body-sm: 1.43;
-  --tracking-body-sm: -0.098px;
-  --text-body: 16px;
+  --leading-caption: 1.2;
+  --tracking-caption: 0.3px;
+  --text-body: 15px;
   --leading-body: 1.5;
-  --tracking-body: -0.112px;
   --text-subheading: 18px;
-  --leading-subheading: 1.38;
-  --tracking-subheading: -0.126px;
-  --text-heading-sm: 24px;
-  --leading-heading-sm: 1.33;
-  --tracking-heading-sm: -0.168px;
-  --text-heading: 36px;
+  --leading-subheading: 1.56;
+  --text-heading-sm: 22px;
+  --leading-heading-sm: 1.4;
+  --tracking-heading-sm: -0.37px;
+  --text-heading: 29px;
   --leading-heading: 1.2;
-  --tracking-heading: -0.252px;
-  --text-display: 72px;
+  --tracking-heading: -0.52px;
+  --text-display: 58px;
   --leading-display: 1;
-  --tracking-display: -0.504px;
+  --tracking-display: -1.8px;
 
   /* Typography — Weights */
   --font-weight-regular: 400;
   --font-weight-medium: 500;
+  --font-weight-semibold: 600;
 
   /* Spacing */
-  --spacing-unit: 8px;
+  --spacing-unit: 4px;
+  --spacing-4: 4px;
   --spacing-8: 8px;
+  --spacing-12: 12px;
   --spacing-16: 16px;
+  --spacing-20: 20px;
   --spacing-24: 24px;
   --spacing-32: 32px;
-  --spacing-40: 40px;
   --spacing-48: 48px;
   --spacing-64: 64px;
+  --spacing-72: 72px;
   --spacing-80: 80px;
   --spacing-96: 96px;
-  --spacing-112: 112px;
-  --spacing-128: 128px;
-  --spacing-224: 224px;
+  --spacing-160: 160px;
 
   /* Layout */
   --page-max-width: 1200px;
-  --section-gap: 64-96px;
-  --card-padding: 24px;
-  --element-gap: 8-16px;
+  --section-gap: 64-80px;
+  --card-padding: 16-24px;
+  --element-gap: 8px;
 
   /* Border Radius */
+  --radius-md: 4px;
   --radius-lg: 8px;
-  --radius-lg-2: 11px;
-  --radius-2xl: 16px;
+  --radius-xl: 12px;
+  --radius-2xl: 18px;
   --radius-full: 9999px;
 
   /* Named Radii */
   --radius-tags: 9999px;
-  --radius-cards: 16px;
+  --radius-cards: 8-12px;
+  --radius-pills: 9999px;
   --radius-inputs: 8px;
+  --radius-avatars: 9999px;
   --radius-buttons: 9999px;
 
   /* Shadows */
-  --shadow-sm: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.1) 0px 2px 4px -2px;
+  --shadow-sm: rgba(0, 0, 0, 0.05) 0px 3px 6px -3px, rgba(0, 0, 0, 0.05) 0px 2px 4px -2px, rgba(0, 0, 0, 0.05) 0px 1px 2px -1px, rgba(0, 0, 0, 0.05) 0px 1px 1px -1px, rgba(0, 0, 0, 0.05) 0px 1px 0px -1px;
+  --shadow-subtle: rgba(0, 0, 0, 0.08) 0px 1px 1px -1px, rgba(0, 0, 0, 0.08) 0px 2px 2px -1px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px, rgb(255, 255, 255) 0px 1px 0px 0px inset, rgb(255, 255, 255) 0px 1px 2px 1px inset, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px inset;
+  --shadow-subtle-2: rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
 
   /* Surfaces */
-  --surface-obsidian-canvas: #121212;
-  --surface-ash-card: #242424;
-  --surface-charcoal-border: #2e2e2e;
+  --surface-parchment-canvas: #fffdf9;
+  --surface-paper-white: #ffffff;
+  --surface-fog-gray: #f5f5f5;
+  --surface-sunlit-cream: #fef3c7;
 }
 ```
 
@@ -318,67 +362,69 @@ Full-width dark canvas at 1200px max-width centered. Hero is centered text with 
 ```css
 @theme {
   /* Colors */
-  --color-electric-azure: #3e9bff;
-  --color-azure-link: #2b8bff;
-  --color-azure-depth: #1f3a6b;
-  --color-midnight-azure: #0a3d80;
-  --color-snow: #fafafa;
-  --color-silver-mist: #b4b4b4;
-  --color-smoke: #898989;
-  --color-graphite: #4d4d4d;
-  --color-slate: #393939;
-  --color-charcoal: #2e2e2e;
-  --color-ash: #242424;
-  --color-obsidian: #121212;
+  --color-campfire-orange: #ff6b1a;
+  --color-ember-brown: #451a03;
+  --color-sunlit-cream: #fef3c7;
+  --color-forest-pulse: #22c55e;
+  --color-ember-alert: #ef4444;
+  --color-midnight-ink: #171717;
+  --color-paper-white: #ffffff;
+  --color-parchment: #fffdf9;
+  --color-fog-gray: #f5f5f5;
+  --color-linen: #f0f0f0;
+  --color-ash-gray: #a3a3a3;
+  --color-slate: #737373;
+  --color-graphite: #525252;
+  --color-stone: #8f7668;
 
   /* Typography */
-  --font-circular: 'Circular', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-source-code-pro: 'Source Code Pro', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-inter: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-ui-monospace: 'ui-monospace', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-emoji: 'emoji', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
   /* Typography — Scale */
   --text-caption: 12px;
-  --leading-caption: 1.5;
-  --tracking-caption: -0.084px;
-  --text-body-sm: 14px;
-  --leading-body-sm: 1.43;
-  --tracking-body-sm: -0.098px;
-  --text-body: 16px;
+  --leading-caption: 1.2;
+  --tracking-caption: 0.3px;
+  --text-body: 15px;
   --leading-body: 1.5;
-  --tracking-body: -0.112px;
   --text-subheading: 18px;
-  --leading-subheading: 1.38;
-  --tracking-subheading: -0.126px;
-  --text-heading-sm: 24px;
-  --leading-heading-sm: 1.33;
-  --tracking-heading-sm: -0.168px;
-  --text-heading: 36px;
+  --leading-subheading: 1.56;
+  --text-heading-sm: 22px;
+  --leading-heading-sm: 1.4;
+  --tracking-heading-sm: -0.37px;
+  --text-heading: 29px;
   --leading-heading: 1.2;
-  --tracking-heading: -0.252px;
-  --text-display: 72px;
+  --tracking-heading: -0.52px;
+  --text-display: 58px;
   --leading-display: 1;
-  --tracking-display: -0.504px;
+  --tracking-display: -1.8px;
 
   /* Spacing */
+  --spacing-4: 4px;
   --spacing-8: 8px;
+  --spacing-12: 12px;
   --spacing-16: 16px;
+  --spacing-20: 20px;
   --spacing-24: 24px;
   --spacing-32: 32px;
-  --spacing-40: 40px;
   --spacing-48: 48px;
   --spacing-64: 64px;
+  --spacing-72: 72px;
   --spacing-80: 80px;
   --spacing-96: 96px;
-  --spacing-112: 112px;
-  --spacing-128: 128px;
-  --spacing-224: 224px;
+  --spacing-160: 160px;
 
   /* Border Radius */
+  --radius-md: 4px;
   --radius-lg: 8px;
-  --radius-lg-2: 11px;
-  --radius-2xl: 16px;
+  --radius-xl: 12px;
+  --radius-2xl: 18px;
   --radius-full: 9999px;
 
   /* Shadows */
-  --shadow-sm: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.1) 0px 2px 4px -2px;
+  --shadow-sm: rgba(0, 0, 0, 0.05) 0px 3px 6px -3px, rgba(0, 0, 0, 0.05) 0px 2px 4px -2px, rgba(0, 0, 0, 0.05) 0px 1px 2px -1px, rgba(0, 0, 0, 0.05) 0px 1px 1px -1px, rgba(0, 0, 0, 0.05) 0px 1px 0px -1px;
+  --shadow-subtle: rgba(0, 0, 0, 0.08) 0px 1px 1px -1px, rgba(0, 0, 0, 0.08) 0px 2px 2px -1px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px, rgb(255, 255, 255) 0px 1px 0px 0px inset, rgb(255, 255, 255) 0px 1px 2px 1px inset, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px inset;
+  --shadow-subtle-2: rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
 }
 ```

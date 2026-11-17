@@ -35,17 +35,17 @@ export function DocsNav() {
             key={g.label}
             className="flex shrink-0 gap-1 lg:mb-4 lg:flex-col lg:gap-0.5"
           >
-            <div className="hidden px-2.5 pb-1 text-[11px] uppercase tracking-[0.12em] text-smoke lg:block">
+            <div className="hidden px-3 pb-1 text-[11px] font-medium uppercase tracking-[0.12em] text-muted lg:block">
               {g.label}
             </div>
             {g.pages.map((p) => (
               <Link
                 key={p.href}
                 href={p.href}
-                className={`shrink-0 whitespace-nowrap rounded-lg px-2.5 py-1.5 text-sm transition ${
+                className={`shrink-0 whitespace-nowrap rounded-full px-3 py-1.5 text-sm font-medium transition ${
                   active(p.href)
-                    ? "bg-azure/[0.08] text-snow"
-                    : "text-silver hover:bg-ash hover:text-snow"
+                    ? "bg-inset text-ink"
+                    : "text-muted hover:bg-inset/70 hover:text-ink"
                 }`}
               >
                 {p.label}

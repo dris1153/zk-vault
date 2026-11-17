@@ -9,16 +9,16 @@ export default function DocsLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-[100dvh]">
-      <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b border-charcoal bg-obsidian/90 px-5 backdrop-blur">
-        <div className="flex items-center gap-2.5 font-medium">
-          <BrandMark variant="tile" size={22} />
+    <div className="min-h-[100dvh] bg-canvas">
+      <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b border-line bg-canvas/90 px-5 backdrop-blur">
+        <div className="flex items-center gap-2.5 font-semibold text-ink">
+          <BrandMark variant="tile" size={24} />
           ZKVault
-          <span className="text-smoke">· Tài liệu</span>
+          <span className="font-normal text-muted">· Tài liệu</span>
         </div>
         <Link
           href="/"
-          className="flex items-center gap-1.5 rounded-full border border-slate px-3 py-1.5 text-sm text-silver transition hover:border-graphite hover:text-snow"
+          className="flex items-center gap-1.5 rounded-full border border-line bg-surface px-3.5 py-1.5 text-sm font-medium text-muted transition hover:bg-inset hover:text-ink"
         >
           <ArrowLeft size={15} /> Quay lại vault
         </Link>

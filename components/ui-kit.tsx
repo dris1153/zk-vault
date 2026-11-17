@@ -1,26 +1,30 @@
 "use client";
 
-// Small shared primitives in the DESIGN.md azure system. Pill buttons (9999px),
-// 8px inputs, hairline borders, flat (no shadow), azure focus.
+// Small shared primitives in the DESIGN.md Campsite system. Pill buttons (9999px),
+// 8px inputs with Fog Gray chrome, Paper White cards with 5%-black shadows.
 
-import { forwardRef } from "react";
+import { forwardRef, useEffect, useId, useRef } from "react";
 import { Check } from "@phosphor-icons/react/dist/ssr";
 
+// Module-level stack so Escape only ever closes the topmost open Modal.
+const modalStack: string[] = [];
+
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: "azure" | "ghost" | "danger";
+  variant?: "primary" | "ghost" | "danger";
 };
 
 export function PillButton({
-  variant = "azure",
+  variant = "primary",
   className = "",
   ...props
 }: ButtonProps) {
   const styles = {
-    azure:
-      "bg-azure text-[#08233f] hover:brightness-105 active:translate-y-px disabled:opacity-50",
+    primary:
+      "bg-ink text-white shadow-button hover:bg-ink/90 active:translate-y-px disabled:opacity-50",
     ghost:
-      "border border-slate text-snow hover:border-graphite hover:bg-white/[0.04]",
-    danger: "text-danger hover:bg-danger/10",
+      "border border-line bg-surface text-ink-2 hover:bg-inset hover:text-ink disabled:opacity-50",
+    danger:
+      "border border-danger/30 bg-danger/5 text-danger hover:bg-danger/10 disabled:opacity-50",
   }[variant];
   return (
     <button
@@ -33,9 +37,25 @@ export function PillButton({
 export function IconButton({ className = "", ...props }: ButtonProps) {
   return (
     <button
-      className={`inline-flex h-9 w-9 items-center justify-center rounded-full text-silver transition hover:bg-ash hover:text-snow ${className}`}
+      className={`inline-flex h-9 w-9 items-center justify-center rounded-full text-ink-2 transition hover:bg-inset hover:text-ink ${className}`}
       {...props}
     />
+  );
+}
+
+export function Tag({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <span
+      className={`inline-flex items-center rounded-full bg-accent-wash px-2.5 py-0.5 text-xs font-medium text-accent-ink ${className}`}
+    >
+      {children}
+    </span>
   );
 }
 
@@ -47,12 +67,12 @@ interface FieldProps {
 
 export function Field({ label, children, hint }: FieldProps) {
   return (
-    <label className="flex flex-col gap-2">
-      <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-smoke">
+    <label className="flex flex-col gap-1.5">
+      <span className="text-[12px] font-medium tracking-[0.3px] text-muted">
         {label}
       </span>
       {children}
-      {hint && <span className="text-xs text-smoke">{hint}</span>}
+      {hint && <span className="text-xs text-muted">{hint}</span>}
     </label>
   );
 }
@@ -77,7 +97,7 @@ export const TextInput = forwardRef<
       data-lpignore="true"
       data-bwignore=""
       data-form-type="other"
-      className={`w-full rounded-lg border border-slate bg-obsidian px-3 py-2.5 text-sm text-snow outline-none transition placeholder:text-smoke focus:border-azure ${
+      className={`w-full rounded-lg border border-transparent bg-inset px-3 py-2.5 text-sm text-ink transition placeholder:text-faint focus:border-ink/30 focus:bg-surface ${
         mono ? "font-mono tracking-normal" : ""
       } ${className}`}
       {...props}
@@ -98,36 +118,61 @@ export function TextArea({
       data-lpignore="true"
       data-bwignore=""
       data-form-type="other"
-      className={`w-full resize-y rounded-lg border border-slate bg-obsidian px-3 py-2.5 text-sm text-snow outline-none transition placeholder:text-smoke focus:border-azure ${className}`}
+      className={`w-full resize-y rounded-lg border border-transparent bg-inset px-3 py-2.5 text-sm text-ink transition placeholder:text-faint focus:border-ink/30 focus:bg-surface ${className}`}
       {...props}
     />
   );
 }
 
-/** Centered modal backdrop + panel. */
+/** Centered modal backdrop + panel. Closes only if it is the topmost modal. */
 export function Modal({
   open,
   onClose,
   children,
   width = "max-w-lg",
+  dismissable = true,
 }: {
   open: boolean;
   onClose: () => void;
   children: React.ReactNode;
   width?: string;
+  dismissable?: boolean;
 }) {
+  const id = useId();
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
+
+  useEffect(() => {
+    if (!open) return;
+    modalStack.push(id);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape" || e.defaultPrevented) return;
+      if (modalStack[modalStack.length - 1] !== id) return;
+      if (!dismissable) return;
+      e.stopPropagation();
+      e.preventDefault();
+      onCloseRef.current();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      const idx = modalStack.lastIndexOf(id);
+      if (idx !== -1) modalStack.splice(idx, 1);
+    };
+  }, [open, id, dismissable]);
+
   if (!open) return null;
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-      // Close only when the press STARTS on the backdrop (mousedown), so selecting
-      // text in an input and releasing outside does not dismiss the modal.
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4 backdrop-blur-[1px]"
       onMouseDown={(e) => {
-        if (e.target === e.currentTarget) onClose();
+        if (dismissable && e.target === e.currentTarget) onClose();
       }}
     >
       <div
-        className={`w-full ${width} max-h-[90dvh] overflow-y-auto rounded-2xl border border-charcoal bg-obsidian`}
+        role="dialog"
+        aria-modal="true"
+        className={`w-full ${width} max-h-[90dvh] overflow-y-auto rounded-xl border border-line bg-surface shadow-card`}
       >
         {children}
       </div>
@@ -148,8 +193,8 @@ export function CheckboxBox({
     <span
       className={`flex h-4.5 w-4.5 shrink-0 items-center justify-center rounded-[5px] border transition ${
         checked
-          ? "border-azure bg-azure text-[#08233f]"
-          : "border-slate bg-obsidian text-transparent"
+          ? "border-ink bg-ink text-white"
+          : "border-line bg-inset text-transparent"
       } ${className}`}
     >
       <Check size={13} weight="bold" />
@@ -178,7 +223,7 @@ export function Checkbox({
         onChange={(e) => onChange(e.target.checked)}
         className="peer absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0 disabled:cursor-not-allowed"
       />
-      <span className="flex h-full w-full items-center justify-center rounded-[5px] border border-slate bg-obsidian text-transparent transition peer-hover:border-graphite peer-checked:border-azure peer-checked:bg-azure peer-checked:text-[#08233f] peer-focus-visible:ring-2 peer-focus-visible:ring-azure/50 peer-disabled:opacity-50">
+      <span className="flex h-full w-full items-center justify-center rounded-[5px] border border-line bg-inset text-transparent transition peer-hover:border-muted peer-checked:border-ink peer-checked:bg-ink peer-checked:text-white peer-focus-visible:ring-2 peer-focus-visible:ring-ink/30 peer-disabled:opacity-50">
         <Check size={13} weight="bold" />
       </span>
     </span>
@@ -203,11 +248,11 @@ export function Switch({
       disabled={disabled}
       onClick={() => onChange(!checked)}
       className={`relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition disabled:opacity-50 ${
-        checked ? "bg-azure" : "bg-charcoal"
+        checked ? "bg-ink" : "bg-line"
       }`}
     >
       <span
-        className={`inline-block h-4 w-4 rounded-full bg-snow transition-transform ${
+        className={`inline-block h-4 w-4 rounded-full bg-surface shadow-row transition-transform ${
           checked ? "translate-x-4.5" : "translate-x-0.5"
         }`}
       />

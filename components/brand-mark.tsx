@@ -1,13 +1,13 @@
-// App brand mark: an isometric "vault cube" with an ajar lid + azure opening
-// rim (DESIGN.md line-art + Electric Azure accent). One source, two variants:
-//   tile - azure gradient app-icon container (lock screen, sidebar, docs, favicon)
-//   flat - currentColor wireframe + azure accent, transparent (inline / empty state)
+// App brand mark: an isometric "vault cube" with an ajar lid + orange opening
+// rim (DESIGN.md Campsite accent). One source, two variants:
+//   tile - Campfire Orange rounded square app-icon container
+//   flat - currentColor wireframe + Campfire Orange accent, transparent
 
 import type { CSSProperties } from "react";
 
 const BODY = "M4 7.5 L4 16.5 L12 21 L20 16.5 L20 7.5"; // open box silhouette
 const INNER = "M12 12 L20 7.5 M12 12 L12 21 M12 12 L4 7.5"; // 3D cube edges
-const RIM = "M4 7.5 L12 12 L20 7.5"; // azure opening rim (the glow)
+const RIM = "M4 7.5 L12 12 L20 7.5"; // opening rim highlight
 const LID = "M12 0.6 L20 5.1 L12 9.6 L4 5.1 Z"; // lifted lid rhombus
 
 function Cube({
@@ -55,14 +55,14 @@ export function BrandMark({
     };
     return (
       <span
-        className={`inline-flex items-center justify-center bg-gradient-to-br from-azure to-azure-depth ${className}`}
+        className={`inline-flex items-center justify-center bg-accent shadow-row ${className}`}
         style={style}
       >
-        <Cube size={Math.round(size * 0.62)} stroke="#ffffff" accent="#bfe0ff" />
+        <Cube size={Math.round(size * 0.62)} stroke="#ffffff" accent="#fef3c7" />
       </span>
     );
   }
   return (
-    <Cube size={size} stroke="currentColor" accent="#3e9bff" className={className} />
+    <Cube size={size} stroke="currentColor" accent="#ff6b1a" className={className} />
   );
 }
