@@ -22,23 +22,23 @@ export default function RecoveryPage() {
         an toàn để lưu ở Drive/USB).
       </P>
       <Steps>
-        <Step n={1} title="Export định kỳ khi còn nhớ master">
-          Vào <InlineCode>Settings &rarr; Backup &rarr; Export</InlineCode> để tải
+        <Step n={1} title="Xuất sao lưu định kỳ khi còn nhớ master">
+          Vào <InlineCode>Cài đặt &rarr; Sao lưu &rarr; Xuất .vault</InlineCode> để tải
           file <InlineCode>.vault</InlineCode>. Nên làm định kỳ.
         </Step>
         <Step n={2} title="Khi lỡ quên master">
           Tạo vault mới (master mới) trên bất kỳ thiết bị nào.
         </Step>
-        <Step n={3} title="Import bằng recovery key">
-          Vào <InlineCode>Settings &rarr; Backup &rarr; Import</InlineCode>, chọn file{" "}
-          <InlineCode>.vault</InlineCode>, tick &quot;dùng recovery key&quot;, nhập
+        <Step n={3} title="Khôi phục bằng recovery key">
+          Vào <InlineCode>Cài đặt &rarr; Sao lưu &rarr; Khôi phục</InlineCode>, chọn file{" "}
+          <InlineCode>.vault</InlineCode>, tick &quot;Dùng recovery key thay cho master password&quot;, nhập
           24 từ. App giải mã các mục từ file rồi mã hóa lại bằng DEK của vault mới.
         </Step>
       </Steps>
 
       <H3>Đổi master password</H3>
       <P>
-        Trong <InlineCode>Settings &rarr; Account</InlineCode>. Thao tác này chỉ bọc
+        Trong <InlineCode>Cài đặt &rarr; Tài khoản</InlineCode>. Thao tác này chỉ bọc
         lại DEK chứ không mã hóa lại các mục, recovery key vẫn còn nguyên hiệu lực,
         nhưng đăng ký sinh trắc trên thiết bị sẽ bị xóa (bật lại nếu muốn).
       </P>
@@ -46,7 +46,7 @@ export default function RecoveryPage() {
       <H3>Tạo lại recovery key</H3>
       <P>
         Lỡ mất giấy ghi 24 từ? Khi đang mở khóa, vào{" "}
-        <InlineCode>Settings &rarr; Account &rarr; Tạo lại recovery key</InlineCode>{" "}
+        <InlineCode>Cài đặt &rarr; Tài khoản &rarr; Tạo lại recovery key</InlineCode>{" "}
         để sinh bộ 24 từ mới. Recovery key cũ <strong>ngừng hiệu lực ngay</strong>;
         master password không đổi. Lưu kỹ 24 từ mới (chỉ hiện một lần).
       </P>
@@ -67,10 +67,9 @@ export default function RecoveryPage() {
 
       <H3>Có những loại mục nào?</H3>
       <P>
-        Sáu loại: Login, Wallet, SSH Key, Secure Note, API Key, và Database (kèm
-        engine picker). Seed phrase nằm trong Wallet; cụm từ bảo mật dùng Secure
-        Note. Thêm loại mới chủ yếu là việc ở client (loại database cần thêm một dòng
-        CHECK constraint - migration 0002).
+        Bảy loại: Đăng nhập (Login), Mã 2FA (Authenticator), Ví crypto, SSH Key,
+        Database (kèm engine picker), Ghi chú bảo mật, và API Key. Seed phrase
+        nằm trong Ví crypto; mã 2FA độc lập nằm ở loại Mã 2FA (migration 0003).
       </P>
 
       <H3>Sinh trắc / 2FA có làm vault an toàn hơn không?</H3>

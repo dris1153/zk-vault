@@ -97,8 +97,10 @@ export default function SecurityPage() {
       <Bullets>
         <li>
           <strong>Chỉ ciphertext:</strong> Supabase nhận về dữ liệu đã mã hóa; hai
-          cột công khai duy nhất là <InlineCode>type</InlineCode> và{" "}
-          <InlineCode>favorite</InlineCode> (để đếm + lọc).
+          cột công khai duy nhất là <InlineCode>type</InlineCode> (bao gồm{" "}
+          <InlineCode>authenticator</InlineCode> để đếm/lọc loại mục) và{" "}
+          <InlineCode>favorite</InlineCode> (để ghim/lọc yêu thích). Mọi bí mật,
+          issuer, tài khoản và seed TOTP đều nằm trong phần mã hóa.
         </li>
         <li>
           <strong>RLS nghiêm ngặt:</strong> mọi dòng gắn{" "}

@@ -25,17 +25,12 @@ DEK (random 256-bit, RAM only when unlocked)
   needs no prior DB read (avoids a read-config-before-auth circular dependency).
 - **AES-256-GCM** with a fresh random 12-byte IV per encryption; the auth tag
   rejects any tampering or wrong key.
-- **DEK** lives only in browser RAM while unlocked; wiped on lock/auto-lock.
-  Raw key bytes are `fill(0)`-scrubbed after each wrap/unwrap (best-effort).
+- **DEK** lives only in browser RAM while unlocked; wiped on lock/auto-lock. Raw key bytes are `fill(0)`-scrubbed after each wrap/unwrap (best-effort). When `lockOnHiddenAfterMs` is > 0 (default 60s), switching tabs or apps keeps the DEK in RAM for that grace window so users can paste 2FA codes without re-unlocking; users requiring zero grace window can set it to `0` (Immediate).
 
 ## Data stored in Supabase
 
-- `vault_config` (1 row/user): `version`, `kdf_params` (costs + saltMaster +
-  saltRecovery), `wrapped_dek_master`, `wrapped_dek_recovery`. All non-secret
-  or ciphertext. **No saltAuth** (email-derived).
-- `vault_items`: `type` + `favorite` (plaintext, for category counts/filters),
-  `encrypted_data` + `iv` (ciphertext). Everything sensitive is inside the
-  ciphertext.
+- `vault_config` (1 row/user): `version`, `kdf_params` (costs + saltMaster + saltRecovery), `wrapped_dek_master`, `wrapped_dek_recovery`. All non-secret or ciphertext. **No saltAuth** (email-derived).
+- `vault_items`: `type` + `favorite` (plaintext, for category counts/filters/pinning), `encrypted_data` + `iv` (ciphertext). Note that `type = 'authenticator'` reveals how many standalone 2FA items exist (same plaintext level as other item types), while issuers, accounts, and TOTP seeds remain encrypted inside `encrypted_data`. Everything sensitive is inside the ciphertext.
 - **RLS:** `auth.uid() = user_id` on every operation, both tables.
 
 ## Recovery (Option A)
