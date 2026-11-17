@@ -5,6 +5,7 @@ import { Eye, EyeSlash, ArrowsClockwise } from "@phosphor-icons/react/dist/ssr";
 import type { VaultItemType } from "@/lib/supabase/types";
 import { FIELDS_BY_TYPE } from "@/lib/ui/item-fields";
 import { generatePassword } from "@/lib/ui/password-gen";
+import { parseTotpMeta } from "@/lib/ui/totp";
 import { scorePassword } from "@/lib/vault/password-health";
 import { OAUTH_PROVIDERS } from "@/lib/ui/oauth-providers";
 import { Field, TextInput, TextArea } from "./ui-kit";
@@ -27,6 +28,21 @@ export function ItemForm({
   onChange: (v: FormData) => void;
 }) {
   const set = (name: string, v: unknown) => onChange({ ...value, [name]: v });
+  const setTotp = (name: string, v: string) => {
+    const next: FormData = { ...value, [name]: v };
+    const meta = parseTotpMeta(v);
+    if (meta) {
+      const has = (k: string) =>
+        typeof value[k] === "string" && (value[k] as string).trim().length > 0;
+      if (!has("title") && meta.issuer) next.title = meta.issuer;
+      if (type === "authenticator" && !has("account") && meta.account) {
+        next.account = meta.account;
+      } else if (type === "login" && !has("username") && meta.account) {
+        next.username = meta.account;
+      }
+    }
+    onChange(next);
+  };
 
   return (
     <div className="flex flex-col gap-4">
@@ -66,7 +82,7 @@ export function ItemForm({
             ) : f.kind === "platform" ? (
               <PlatformPicker value={str} onChange={(v) => set(f.name, v)} />
             ) : f.kind === "totp" ? (
-              <TotpField value={str} onChange={(v) => set(f.name, v)} />
+              <TotpField value={str} onChange={(v) => setTotp(f.name, v)} />
             ) : f.kind === "db_engine" ? (
               <EngineSelect value={str} onChange={(v) => set(f.name, v)} />
             ) : f.kind === "service" ? (
@@ -101,16 +117,16 @@ function AuthMethodToggle({
     { v: "oauth", label: "OAuth" },
   ];
   return (
-    <div className="flex overflow-hidden rounded-lg border border-slate">
+    <div className="flex rounded-full bg-inset p-1">
       {opts.map((o) => (
         <button
           key={o.v}
           type="button"
           onClick={() => onChange(o.v)}
-          className={`flex-1 px-3 py-2 text-sm transition ${
+          className={`flex-1 rounded-full px-3 py-1.5 text-sm transition ${
             value === o.v
-              ? "bg-azure font-medium text-[#08233f]"
-              : "text-silver hover:bg-ash hover:text-snow"
+              ? "bg-surface font-medium text-ink shadow-row"
+              : "text-muted hover:text-ink"
           }`}
         >
           {o.label}
@@ -123,9 +139,9 @@ function AuthMethodToggle({
 const STRENGTH = [
   { label: "Rất yếu", color: "bg-danger", w: "w-1/5" },
   { label: "Yếu", color: "bg-danger", w: "w-2/5" },
-  { label: "Trung bình", color: "bg-amber-500", w: "w-3/5" },
-  { label: "Khá", color: "bg-azure", w: "w-4/5" },
-  { label: "Mạnh", color: "bg-emerald-500", w: "w-full" },
+  { label: "Trung bình", color: "bg-accent", w: "w-3/5" },
+  { label: "Khá", color: "bg-ink", w: "w-4/5" },
+  { label: "Mạnh", color: "bg-success", w: "w-full" },
 ];
 
 function SecretInput({
@@ -174,7 +190,7 @@ function SecretInput({
               onChange(generatePassword());
               setShow(true);
             }}
-            className="absolute right-9 top-1/2 -translate-y-1/2 text-silver transition hover:text-azure"
+            className="absolute right-9 top-1/2 -translate-y-1/2 text-muted transition hover:text-ink"
             aria-label="Tạo mật khẩu mạnh"
             title="Tạo mật khẩu mạnh"
           >
@@ -184,20 +200,20 @@ function SecretInput({
         <button
           type="button"
           onClick={() => setShow((s) => !s)}
-          className="absolute right-2 top-1/2 -translate-y-1/2 text-silver hover:text-snow"
-          aria-label={show ? "Hide" : "Show"}
+          className="absolute right-2 top-1/2 -translate-y-1/2 text-muted hover:text-ink"
+          aria-label={show ? "Ẩn" : "Hiện"}
         >
           {show ? <EyeSlash size={18} /> : <Eye size={18} />}
         </button>
       </div>
       {withTools && score !== null && (
         <div className="mt-1.5 flex items-center gap-2">
-          <div className="h-1 flex-1 overflow-hidden rounded-full bg-charcoal">
+          <div className="h-1 flex-1 overflow-hidden rounded-full bg-line">
             <div
               className={`h-full rounded-full transition-all ${STRENGTH[score].color} ${STRENGTH[score].w}`}
             />
           </div>
-          <span className="w-20 text-right text-xs text-smoke">
+          <span className="w-20 text-right text-xs text-muted">
             {STRENGTH[score].label}
           </span>
         </div>
@@ -217,7 +233,7 @@ function TagsInput({
   return (
     <TextInput
       value={raw}
-      placeholder="comma, separated, tags"
+      placeholder="cong-viec, ca-nhan, ..."
       onChange={(e) => {
         setRaw(e.target.value);
         onChange(

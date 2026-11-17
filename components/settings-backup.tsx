@@ -5,10 +5,12 @@ import {
   DownloadSimple,
   UploadSimple,
   Warning,
+  QrCode,
 } from "@phosphor-icons/react/dist/ssr";
 import { exportVault, importVault } from "@/lib/vault/export";
 import { useSettings } from "@/lib/vault/settings-store";
 import { PillButton, TextInput, TextArea, Field, Checkbox } from "./ui-kit";
+import { ImportGaModal } from "./import-ga-modal";
 
 export function SettingsBackup({ dek }: { dek: CryptoKey }) {
   const lastExportAt = useSettings((s) => s.settings.lastExportAt);
@@ -27,19 +29,20 @@ export function SettingsBackup({ dek }: { dek: CryptoKey }) {
   const [words, setWords] = useState("");
   const [status, setStatus] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [gaOpen, setGaOpen] = useState(false);
 
   async function doExport() {
     setStatus(null);
     try {
       await exportVault();
-      setStatus("Backup downloaded.");
+      setStatus("Đã tải xuống bản sao lưu.");
     } catch (e) {
       setStatus(e instanceof Error ? e.message : String(e));
     }
   }
 
   async function doImport() {
-    if (!file) return setStatus("Choose a .vault file first.");
+    if (!file) return setStatus("Hãy chọn file .vault trước.");
     setBusy(true);
     setStatus(null);
     try {
@@ -47,7 +50,7 @@ export function SettingsBackup({ dek }: { dek: CryptoKey }) {
         ? { recoveryWords: words.trim().split(/\s+/) }
         : { master };
       const { imported, total } = await importVault(file, secret, dek);
-      setStatus(`Imported ${imported} of ${total} item${total === 1 ? "" : "s"}.`);
+      setStatus(`Đã nhập ${imported} / ${total} mục.`);
       setFile(null);
       setMaster("");
       setWords("");
@@ -61,51 +64,68 @@ export function SettingsBackup({ dek }: { dek: CryptoKey }) {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="text-[11px] uppercase tracking-[0.12em] text-smoke">
-        Backup &amp; restore
+      <div className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted">
+        Google Authenticator
+      </div>
+      <div className="flex items-center justify-between gap-3">
+        <p className="max-w-[65%] text-sm text-ink-2">
+          Nhập hàng loạt mã 2FA từ mã QR xuất tài khoản của Google
+          Authenticator.
+        </p>
+        <PillButton variant="ghost" onClick={() => setGaOpen(true)}>
+          <QrCode size={16} /> Import 2FA
+        </PillButton>
       </div>
 
-      <div className="flex items-center justify-between">
-        <p className="max-w-[60%] text-sm text-silver">
-          Download an encrypted <span className="font-mono">.vault</span> backup.
-          Store it safely - it is your recovery if you lose your master password.
+      <div className="h-px bg-line" />
+
+      <div className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted">
+        Sao lưu &amp; khôi phục
+      </div>
+
+      <div className="flex items-center justify-between gap-3">
+        <p className="max-w-[65%] text-sm text-ink-2">
+          Tải file sao lưu mã hóa <span className="font-mono">.vault</span>. Hãy
+          cất nơi an toàn để khôi phục nếu quên master password.
         </p>
         <PillButton variant="ghost" onClick={doExport}>
-          <DownloadSimple size={16} /> Export
+          <DownloadSimple size={16} /> Xuất .vault
         </PillButton>
       </div>
 
       <div
         className={`flex items-center gap-1.5 text-xs ${
-          backup.stale ? "text-amber-500" : "text-smoke"
+          backup.stale ? "font-medium text-accent-ink" : "text-muted"
         }`}
       >
-        {backup.stale && <Warning size={13} weight="fill" />}
+        {backup.stale && (
+          <Warning size={13} weight="fill" className="text-accent-ink" />
+        )}
         {backup.label}
-        {backup.stale && " - nên export một bản mới."}
+        {backup.stale && " - nên xuất một bản mới."}
       </div>
 
-      <div className="h-px bg-charcoal" />
+      <div className="h-px bg-line" />
 
-      <p className="text-sm text-silver">
-        Restore from a backup into this vault. Unlock the file with its master
-        password, or with the recovery key if you forgot it.
+      <p className="text-sm text-ink-2">
+        Khôi phục từ file sao lưu vào vault hiện tại. Mở khóa file bằng master
+        password hoặc bằng recovery key nếu bạn quên mật khẩu cũ.
       </p>
       <input
         ref={fileRef}
         type="file"
         accept=".vault,application/json"
         onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-        className="text-sm text-silver file:mr-3 file:rounded-full file:border file:border-slate file:bg-transparent file:px-3 file:py-1.5 file:text-snow"
+        className="text-sm text-ink-2 file:mr-3 file:rounded-full file:border file:border-line file:bg-inset file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-ink"
       />
 
-      <label className="flex cursor-pointer items-center gap-2 text-sm text-silver">
+      <label className="flex cursor-pointer items-center gap-2 text-sm text-ink-2">
         <Checkbox checked={useRecovery} onChange={setUseRecovery} />
-        Use recovery key instead of master password
+        Dùng recovery key thay cho master password
       </label>
 
       {useRecovery ? (
-        <Field label="Recovery key (24 words)">
+        <Field label="Recovery key (24 từ)">
           <TextArea
             value={words}
             onChange={(e) => setWords(e.target.value)}
@@ -114,7 +134,7 @@ export function SettingsBackup({ dek }: { dek: CryptoKey }) {
           />
         </Field>
       ) : (
-        <Field label="Backup's master password">
+        <Field label="Master password của bản sao lưu">
           <TextInput
             mono
             type="password"
@@ -124,12 +144,14 @@ export function SettingsBackup({ dek }: { dek: CryptoKey }) {
         </Field>
       )}
 
-      <div className="flex items-center justify-between">
-        {status && <span className="text-sm text-azure">{status}</span>}
+      <div className="flex items-center justify-between gap-3">
+        {status && <span className="text-sm font-medium text-ink">{status}</span>}
         <PillButton onClick={doImport} disabled={busy} className="ml-auto">
-          <UploadSimple size={16} /> {busy ? "Importing..." : "Import"}
+          <UploadSimple size={16} /> {busy ? "Đang nhập..." : "Khôi phục"}
         </PillButton>
       </div>
+
+      <ImportGaModal open={gaOpen} onClose={() => setGaOpen(false)} dek={dek} />
     </div>
   );
 }

@@ -49,12 +49,13 @@ export function clearItems(): void {
 export function countByType(items: VaultItem[]): Record<VaultItemType, number> {
   const base: Record<VaultItemType, number> = {
     login: 0,
+    authenticator: 0,
     wallet: 0,
     ssh_key: 0,
     secure_note: 0,
     api_key: 0,
     database: 0,
   };
-  for (const i of items) base[i.type] += 1;
+  for (const i of items) if (i.type in base) base[i.type] += 1;
   return base;
 }

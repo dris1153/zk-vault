@@ -19,6 +19,38 @@ export function parseTotp(input: string): OTPAuth.TOTP | null {
   }
 }
 
+export interface TotpMeta {
+  issuer: string;
+  account: string;
+}
+
+/** Extract issuer + account from an otpauth:// URI; null for bare secrets or invalid URIs. */
+export function parseTotpMeta(input: string): TotpMeta | null {
+  const raw = input.trim();
+  if (!/^otpauth:\/\//i.test(raw)) return null;
+  try {
+    const parsed = OTPAuth.URI.parse(raw);
+    if (!(parsed instanceof OTPAuth.TOTP)) return null;
+    const rawIssuer = (parsed.issuer ?? "").trim();
+    const rawLabel = (parsed.label ?? "").trim();
+    const colonIdx = rawLabel.indexOf(":");
+    if (colonIdx !== -1) {
+      const prefix = rawLabel.slice(0, colonIdx).trim();
+      const rest = rawLabel.slice(colonIdx + 1).trim();
+      return {
+        issuer: rawIssuer || prefix,
+        account: rest,
+      };
+    }
+    return {
+      issuer: rawIssuer,
+      account: rawLabel,
+    };
+  } catch {
+    return null;
+  }
+}
+
 export interface TotpState {
   code: string;
   secondsRemaining: number;
@@ -36,6 +68,14 @@ export function currentCode(
     period,
     secondsRemaining: period - (Math.floor(now / 1000) % period),
   };
+}
+
+/** Next period's code (shown in the last 5 seconds before rotation). */
+export function nextCode(
+  totp: OTPAuth.TOTP,
+  now: number = Date.now(),
+): string {
+  return totp.generate({ timestamp: now + totp.period * 1000 });
 }
 
 /** Group a code for readability: "123456" -> "123 456". */

@@ -8,6 +8,8 @@ import type { VaultItem } from "./items";
 const KEYS = [
   "data.title",
   "data.username",
+  "data.account",
+  "data.oauth_account",
   "data.url",
   "data.service",
   "data.host",

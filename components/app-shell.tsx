@@ -1,232 +1,131 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useState } from "react";
 import { useVault } from "@/lib/vault/use-vault";
 import { useItems } from "@/lib/vault/items-store";
 import { removeItem } from "@/lib/vault/item-actions";
-import { searchItems } from "@/lib/vault/search";
 import type { VaultItem } from "@/lib/vault/items";
 import type { VaultItemType } from "@/lib/supabase/types";
-import {
-  FACET_BY_TYPE,
-  sortItems,
-  hasTotp,
-  type SortKey,
-} from "@/lib/ui/item-filters";
-import { Sidebar, type Category } from "./sidebar";
-import { TopBar } from "./top-bar";
-import { FilterBar, showsFavFilter, shows2FAFilter } from "./filter-bar";
-import { ItemGrid } from "./item-grid";
-import { DetailDrawer } from "./detail-drawer";
+import { useSettings } from "@/lib/vault/settings-store";
+import { usePasswordHealth } from "@/lib/vault/use-password-health";
+import { useTab } from "@/lib/ui/use-tab";
+import { useMediaQuery } from "@/lib/ui/use-media-query";
+import { Sidebar } from "./sidebar";
+import { BottomNav } from "./bottom-nav";
+import { CodesScreen } from "./codes-screen";
+import { VaultScreen } from "./vault-screen";
 import { AddEditModal } from "./add-edit-modal";
 import { SettingsDialog } from "./settings-dialog";
 import { SecurityCheckModal } from "./security-check-modal";
-import { useSettings } from "@/lib/vault/settings-store";
-import { usePasswordHealth } from "@/lib/vault/use-password-health";
+import type { FormData } from "./item-form";
 
 export function AppShell() {
   const { dek, lock } = useVault();
   const items = useItems((s) => s.items);
   const itemsLoading = useItems((s) => s.loading);
-  const clearSeconds = useSettings((s) => s.settings.clipboardClearSeconds);
   const breachEnabled = useSettings((s) => s.settings.breachCheckEnabled);
+  const isDesktop = useMediaQuery("(min-width: 1024px)");
 
-  const [category, setCategory] = useState<Category>("all");
-  const [tags, setTags] = useState<string[]>([]);
-  const [tagMode, setTagMode] = useState<"any" | "all">("any");
-  const [facet, setFacet] = useState("");
-  const [sort, setSort] = useState<SortKey>("updated");
-  const [favOnly, setFavOnly] = useState(false);
-  const [twoFAOnly, setTwoFAOnly] = useState(false);
-  const [query, setQuery] = useState("");
-  const [selected, setSelected] = useState<VaultItem | null>(null);
+  const { tab, setTab, detailId, openDetail, closeDetail } = useTab();
+
   const [editing, setEditing] = useState<VaultItem | null>(null);
   const [addOpen, setAddOpen] = useState(false);
+  const [presetType, setPresetType] = useState<VaultItemType>("login");
+  const [presetData, setPresetData] = useState<FormData | undefined>(undefined);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [securityOpen, setSecurityOpen] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(false); // mobile drawer
   const [healthDeep, setHealthDeep] = useState(false); // latches once the panel is opened
-  const searchRef = useRef<HTMLInputElement>(null);
 
   const { report, loading: healthLoading } = usePasswordHealth({
     breach: breachEnabled && securityOpen,
     weak: healthDeep,
   });
 
-  useEffect(() => {
-    if (!sidebarOpen) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setSidebarOpen(false);
-    };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [sidebarOpen]);
-
-  const toggleTag = (t: string) =>
-    setTags((prev) =>
-      prev.includes(t) ? prev.filter((x) => x !== t) : [...prev, t],
-    );
-
-  // Reset the per-type facet when the category changes (different field per type).
-  useEffect(() => setFacet(""), [category]);
-
-  // Items in the current category only - the facet options derive from this.
-  const categoryItems = useMemo(() => {
-    if (category === "favorites") return items.filter((i) => i.favorite);
-    if (category === "all") return items;
-    return items.filter((i) => i.type === category);
-  }, [items, category]);
-
-  const filtered = useMemo(() => {
-    let list = categoryItems;
-    if (tags.length)
-      list = list.filter((i) => {
-        const t = Array.isArray(i.data.tags) ? (i.data.tags as string[]) : [];
-        return tagMode === "all"
-          ? tags.every((x) => t.includes(x))
-          : tags.some((x) => t.includes(x));
-      });
-    // Apply a toggle ONLY where its control is shown (see shows*Filter), so a
-    // filter left on in one category never silently empties another.
-    if (favOnly && showsFavFilter(category)) list = list.filter((i) => i.favorite);
-    if (twoFAOnly && shows2FAFilter(category)) list = list.filter(hasTotp);
-    const f =
-      category !== "all" && category !== "favorites"
-        ? FACET_BY_TYPE[category as VaultItemType]
-        : undefined;
-    if (f && facet) list = list.filter((i) => f.value(i) === facet);
-    return sortItems(searchItems(list, query), sort);
-  }, [categoryItems, category, tags, tagMode, favOnly, twoFAOnly, facet, sort, query]);
-
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
-        e.preventDefault();
-        searchRef.current?.focus();
-      }
-      if (e.key === "Escape") {
-        setSelected(null);
-        setAddOpen(false);
-        setEditing(null);
-        setSettingsOpen(false);
-      }
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, []);
-
   if (!dek) return null;
 
+  const openAdd = (type: VaultItemType, data?: FormData) => {
+    setEditing(null);
+    setPresetType(type);
+    setPresetData(data);
+    setAddOpen(true);
+  };
+
   const openEdit = (item: VaultItem) => {
-    setSelected(null);
+    setAddOpen(false);
     setEditing(item);
   };
+
   const handleDelete = async (item: VaultItem) => {
     await removeItem(item.id);
-    setSelected(null);
+    if (detailId === item.id) closeDetail();
   };
-  const modalOpen = addOpen || editing !== null;
+
+  const openSecurity = () => {
+    setHealthDeep(true);
+    setSecurityOpen(true);
+  };
+
+  const modalOpen = addOpen || editing !== null || settingsOpen || securityOpen;
 
   return (
-    <div className="grid h-dvh grid-cols-1 md:grid-cols-[240px_1fr]">
+    <div className="grid h-dvh grid-cols-1 bg-canvas md:grid-cols-[240px_1fr]">
       <Sidebar
         className="hidden md:flex"
         items={items}
-        category={category}
-        onCategory={setCategory}
-        tags={tags}
-        onToggleTag={toggleTag}
-        tagMode={tagMode}
-        onTagMode={setTagMode}
-        onClearTags={() => setTags([])}
+        tab={tab}
+        onTab={setTab}
         onOpenSettings={() => setSettingsOpen(true)}
-        onOpenSecurity={() => {
-          setHealthDeep(true);
-          setSecurityOpen(true);
-        }}
+        onOpenSecurity={openSecurity}
+        onLock={lock}
         issueCount={report?.totalIssues ?? 0}
       />
 
-      {/* Mobile sidebar drawer */}
-      <div
-        className={`fixed inset-0 z-40 bg-black/50 transition-opacity md:hidden ${
-          sidebarOpen ? "opacity-100" : "pointer-events-none opacity-0"
-        }`}
-        onMouseDown={(e) => {
-          if (e.target === e.currentTarget) setSidebarOpen(false);
-        }}
-      />
-      <div
-        className={`fixed inset-y-0 left-0 z-50 shadow-2xl transition-transform duration-200 md:hidden ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        <Sidebar
-          className="h-full"
-          items={items}
-          category={category}
-          onCategory={setCategory}
-          tags={tags}
-          onToggleTag={toggleTag}
-          tagMode={tagMode}
-          onTagMode={setTagMode}
-          onClearTags={() => setTags([])}
-          onOpenSettings={() => setSettingsOpen(true)}
-          onOpenSecurity={() => {
-            setHealthDeep(true);
-            setSecurityOpen(true);
-          }}
-          issueCount={report?.totalIssues ?? 0}
-          onNavigate={() => setSidebarOpen(false)}
-        />
-      </div>
-
-      <div className="flex min-w-0 flex-col">
-        <TopBar
-          ref={searchRef}
-          query={query}
-          onQuery={setQuery}
-          onAdd={() => setAddOpen(true)}
-          onLock={lock}
-          onMenu={() => setSidebarOpen(true)}
-        />
-        <FilterBar
-          category={category}
-          items={categoryItems}
-          facet={facet}
-          onFacet={setFacet}
-          sort={sort}
-          onSort={setSort}
-          favOnly={favOnly}
-          onFavOnly={setFavOnly}
-          twoFAOnly={twoFAOnly}
-          onTwoFAOnly={setTwoFAOnly}
-        />
-        <div className="flex-1 overflow-y-auto">
-          <ItemGrid
-            items={filtered}
-            onSelect={setSelected}
-            searching={query.trim().length > 0}
+      <main className="flex min-h-0 min-w-0 flex-col">
+        {tab === "codes" ? (
+          <CodesScreen
+            items={items}
             loading={itemsLoading}
+            dek={dek}
+            modalOpen={modalOpen}
+            onLock={lock}
+            onAddManual={(data) => openAdd("authenticator", data)}
+            onEdit={openEdit}
+            onOpenLoginDetail={(it) => openDetail(it.id, !isDesktop)}
           />
-        </div>
-      </div>
+        ) : (
+          <VaultScreen
+            items={items}
+            loading={itemsLoading}
+            selectedId={detailId}
+            modalOpen={modalOpen}
+            onSelect={openDetail}
+            onCloseDetail={closeDetail}
+            onAdd={() => openAdd("login")}
+            onEdit={openEdit}
+            onDelete={handleDelete}
+            onLock={lock}
+          />
+        )}
+      </main>
 
-      <DetailDrawer
-        item={selected}
-        clearSeconds={clearSeconds}
-        onClose={() => setSelected(null)}
-        onEdit={openEdit}
-        onDelete={handleDelete}
+      <BottomNav
+        tab={tab}
+        onTab={setTab}
+        onOpenSecurity={openSecurity}
+        onOpenSettings={() => setSettingsOpen(true)}
+        issueCount={report?.totalIssues ?? 0}
       />
 
       <AddEditModal
-        open={modalOpen}
+        open={addOpen || editing !== null}
         editing={editing}
+        presetType={presetType}
+        presetData={presetData}
         dek={dek}
         onClose={() => {
           setAddOpen(false);
           setEditing(null);
+          setPresetData(undefined);
         }}
       />
 
@@ -241,11 +140,8 @@ export function AppShell() {
         report={report}
         loading={healthLoading}
         onOpenItem={(id) => {
-          const it = items.find((i) => i.id === id);
-          if (it) {
-            setSelected(it);
-            setSecurityOpen(false);
-          }
+          setSecurityOpen(false);
+          openDetail(id, !isDesktop);
         }}
       />
     </div>

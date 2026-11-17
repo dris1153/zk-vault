@@ -71,7 +71,7 @@ export function TotpField({
         <button
           type="button"
           onClick={() => setShow((s) => !s)}
-          className="absolute right-2 top-1/2 -translate-y-1/2 text-silver hover:text-snow"
+          className="absolute right-2 top-1/2 -translate-y-1/2 text-muted hover:text-ink"
           aria-label={show ? "Ẩn" : "Hiện"}
         >
           {show ? <EyeSlash size={18} /> : <Eye size={18} />}
@@ -91,12 +91,12 @@ export function TotpField({
         <button
           type="button"
           onClick={() => setScannerOpen(true)}
-          className="flex shrink-0 items-center gap-1 text-xs text-azure-link hover:underline"
+          className="flex shrink-0 items-center gap-1 text-xs font-medium text-ink hover:underline"
         >
           <QrCode size={14} /> Quét QR
         </button>
         {scan === "scanning" && (
-          <span className="text-xs text-smoke">Đang quét...</span>
+          <span className="text-xs text-muted">Đang quét...</span>
         )}
         {scan === "error" && (
           <span className="text-xs text-danger">
@@ -119,9 +119,9 @@ function Preview({ totp }: { totp: ReturnType<typeof parseTotp> }) {
   if (!totp) return null;
   const { code, secondsRemaining } = currentCode(totp);
   return (
-    <span className="text-xs text-azure">
+    <span className="text-xs font-medium text-ink">
       Mã hiện tại: <span className="font-mono">{formatCode(code)}</span>{" "}
-      <span className="text-smoke">({secondsRemaining}s)</span>
+      <span className="text-muted">({secondsRemaining}s)</span>
     </span>
   );
 }

@@ -5,7 +5,7 @@ import { z } from "zod";
 import type { VaultItemType } from "@/lib/supabase/types";
 
 const tags = z.array(z.string()).default([]);
-const title = z.string().min(1, "Title is required");
+const title = z.string().min(1, "Vui lòng nhập tiêu đề");
 
 export const loginSchema = z.object({
   title,
@@ -16,6 +16,14 @@ export const loginSchema = z.object({
   totp_secret: z.string().optional(), // wired in v1.5
   oauth_provider: z.string().optional(), // OAuth mode: provider id
   oauth_account: z.string().optional(), // OAuth mode: account email/username
+  notes: z.string().optional(),
+  tags,
+});
+
+export const authenticatorSchema = z.object({
+  title,
+  account: z.string().default(""),
+  totp_secret: z.string().min(1, "Vui lòng nhập secret hoặc quét QR"),
   notes: z.string().optional(),
   tags,
 });
@@ -71,6 +79,7 @@ export const databaseSchema = z.object({
 
 export const schemaByType: Record<VaultItemType, z.ZodTypeAny> = {
   login: loginSchema,
+  authenticator: authenticatorSchema,
   wallet: walletSchema,
   ssh_key: sshKeySchema,
   secure_note: secureNoteSchema,
